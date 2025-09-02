@@ -3,8 +3,8 @@ import lombok.*;
 import java.util.UUID;
 
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class User {
 
     @NonNull
