@@ -3,7 +3,6 @@ package clf.integra.backend.controller;
 
 import clf.integra.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,10 +16,11 @@ import java.util.UUID;
 public class TestController {
     private final UserRepository userRepository;
     private final UserService userService;
-
-    public TestController(UserRepository userRepository, UserService userService) {
+    private final UserController userController;
+    public TestController(UserRepository userRepository, UserService userService, UserController userController) {
         this.userRepository = userRepository;
         this.userService = userService;
+        this.userController = userController;
     }
 
     @GetMapping("/test")
@@ -35,21 +35,10 @@ public class TestController {
         return userRepository.getAllUsers().toString();
     }
 
-    // Endpoint to get users by branchId
-    @GetMapping("branches/{branchId}/users")
-    public ResponseEntity<List<String>> getUsersByBranch(@PathVariable UUID branchId) {
-        List<String> users = userService.getAllUsersByBranch(branchId);
-        if (users.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-
-        return ResponseEntity.ok(users);
-    }
-
     // Test endpoint to get users by branchId
     @GetMapping("/test/users")
     public ResponseEntity<List<String>> testFirstBranchUsers() {
         UUID existingBranchId = userRepository.getAllUsers().getFirst().getBranchId();
-        return getUsersByBranch(existingBranchId);
+        return userController.getUsersByBranch(existingBranchId);
     }
 }
