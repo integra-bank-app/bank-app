@@ -1,5 +1,11 @@
 package clf.integra.backend.model;
-import lombok.*;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.util.UUID;
 
 @Getter
