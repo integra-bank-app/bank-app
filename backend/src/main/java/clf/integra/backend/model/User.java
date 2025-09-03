@@ -27,4 +27,7 @@ public class User {
 
     @Setter
     private double balance;
+
+    @Setter
+    private UUID branchId;
 }
