@@ -14,10 +14,15 @@ public class UserInMemoryRepository implements UserRepository
 
     public UserInMemoryRepository() {
         this.userRepository = new HashMap<>();
-        User newUser = new User(UUID.randomUUID(), "John", "", "Doe", 1000.55);
-        this.userRepository.put(newUser.getId(), newUser);
-        this.userRepository.put(UUID.randomUUID(), new User(UUID.randomUUID(), "Andrei", "Mihai", "Popescu", 2500.00));
-        this.userRepository.put(UUID.randomUUID(), new User(UUID.randomUUID(), "Jane", "", "Smith", 1500.25));
+
+        UUID user1Id = UUID.randomUUID();
+        this.userRepository.put(user1Id, new User(user1Id, "John", "", "Doe", 1000.55));
+
+        UUID user2Id = UUID.randomUUID();
+        this.userRepository.put(user2Id, new User(user2Id, "Andrei", "Mihai", "Popescu", 2500.00));
+
+        UUID user3Id = UUID.randomUUID();
+        this.userRepository.put(user3Id, new User(user3Id, "Jane", "", "Smith", 1500.25));
     }
 
     public void addUser(User newUser)
@@ -49,6 +54,4 @@ public class UserInMemoryRepository implements UserRepository
     {
         return this.userRepository.containsKey(id);
     }
-
-
 }

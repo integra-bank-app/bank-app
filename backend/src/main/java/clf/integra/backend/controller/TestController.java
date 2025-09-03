@@ -11,7 +11,6 @@ import clf.integra.backend.repository.UserRepository;
 @RestController
 public class TestController {
 
-
     private final UserRepository userRepository;
 
     public TestController(UserRepository userRepository) {
