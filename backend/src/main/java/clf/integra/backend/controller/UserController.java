@@ -16,6 +16,6 @@ public class UserController {
 
     @PostMapping("/users")
     public UUID addUser(@RequestBody UserDTO user) {
-        return userService.addUserByName(user.firstName(), user.middleName(), user.lastName());
+        return userService.addUserWithName(user.firstName(), user.middleName(), user.lastName());
     }
 }
