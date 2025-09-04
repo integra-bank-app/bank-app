@@ -1,20 +1,22 @@
 package clf.integra.backend.controller;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
+import clf.integra.backend.service.UserService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-import clf.integra.backend.model.User;
 import clf.integra.backend.repository.UserRepository;
 
+import java.util.UUID;
 
 @RestController
 public class TestController {
-
     private final UserRepository userRepository;
+    private final UserService userService;
 
-    public TestController(UserRepository userRepository) {
+    public TestController(UserRepository userRepository, UserService userService) {
         this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @GetMapping("/test")
