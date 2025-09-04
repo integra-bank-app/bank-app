@@ -12,7 +12,7 @@ import java.util.UUID;
 public class UserService {
     private final UserRepository userRepository;
 
-    public UUID addUserByName(String firstName, String middleName, String lastName) {
+    public UUID addUserWithName(String firstName, String middleName, String lastName) {
         UUID uuid = generateUUID();
         User newUser = new User(uuid, firstName, middleName, lastName, 0);
         userRepository.addUser(newUser);
