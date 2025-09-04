@@ -21,9 +21,7 @@ public class UserController {
 
     @PostMapping("/users")
     public UUID addUser(@RequestBody UserDTO user) {
-        return userService.addUserByName(user.firstName(), user.middleName(), user.lastName());
-    public UserController(UserService userService) {
-        this.userService = userService;
+        return userService.addUserWithName(user.firstName(), user.middleName(), user.lastName());
     }
 
     // Endpoint to get users by branchId
