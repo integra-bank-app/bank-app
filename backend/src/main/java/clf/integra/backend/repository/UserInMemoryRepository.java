@@ -55,5 +55,10 @@ public class UserInMemoryRepository implements UserRepository
         return this.userRepository.containsKey(id);
     }
 
-
+    public Double getUserBalanceById(UUID id) {
+        if (this.userRepository.get(id) == null) {
+            return null;
+        }
+        return this.userRepository.get(id).getBalance();
+    }
 }

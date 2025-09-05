@@ -25,6 +25,10 @@ public class UserService {
         return UUID.randomUUID();
     }
 
+    public Double getUserBalanceById(UUID id) {
+        return userRepository.getUserBalanceById(id);
+    }
+
     public List<String> getAllUsersByBranch(UUID branchId) {
         return userRepository.getAllUsers().stream()
                 .filter(user -> branchId.equals(user.getBranchId()))
