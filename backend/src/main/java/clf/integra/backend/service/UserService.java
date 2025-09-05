@@ -22,6 +22,10 @@ public class UserService {
     }
 
     public double collectTaxesAndFeesFromBranch(UUID branchId) {
+        if (branchId == null) {
+            throw new IllegalArgumentException("Branch ID can not be null!");
+        }
+
         // We will be able to use the method of get clients for a branch implemented by Madalina
         // after merging the develop branch with the branch she created.
         List<User> allUsers = userRepository.getAllUsers();

@@ -34,7 +34,12 @@ public class TestController {
         return userRepository.getAllUsers().toString();
     }
 
-    //Testing the taxes and fees system
+    /**
+    * Endpoint to collect taxes and fees from a branch
+    * If the branchId is null or the branch has no customers, returns 404 NOT FOUND
+    * If the revenue collected is 0, returns 417 EXPECTATION FAILED
+    * Otherwise, returns 200 OK with the revenue amount
+     */
     @PostMapping("branches/{branchId}/collect-taxes-and-fees")
     public ResponseEntity<Double> collectTaxesAndFeesFromBranch(@PathVariable UUID branchId) {
         try {
