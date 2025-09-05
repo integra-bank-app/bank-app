@@ -35,8 +35,8 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-    @GetMapping("/users/{id}/balances")
-    public ResponseEntity<Double> getUserBalancesById(@PathVariable UUID id) {
+    @GetMapping("/users/{id}/balance")
+    public ResponseEntity<Double> getUserBalanceById(@PathVariable UUID id) {
         Double balance= userService.getUserBalanceById(id);
         if (balance == null) {
             return ResponseEntity.notFound().build();

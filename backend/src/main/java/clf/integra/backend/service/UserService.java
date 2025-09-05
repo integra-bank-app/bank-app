@@ -27,7 +27,6 @@ public class UserService {
 
     public Double getUserBalanceById(UUID id) {
         return userRepository.getUserBalanceById(id);
-
     }
 
     public List<String> getAllUsersByBranch(UUID branchId) {
