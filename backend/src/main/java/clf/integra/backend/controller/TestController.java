@@ -2,12 +2,10 @@ package clf.integra.backend.controller;
 
 
 import clf.integra.backend.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-import clf.integra.backend.model.User;
 import clf.integra.backend.repository.UserRepository;
 import java.util.UUID;
 
@@ -36,7 +34,7 @@ public class TestController {
 
     @GetMapping("/users/{id}/balance")
     public ResponseEntity<Double> getBalance(@PathVariable UUID id) {
-        Double balance = userService.getBalance(id);
+        Double balance = userService.getUserBalanceById(id);
         if (balance == null) {
             return ResponseEntity.notFound().build();
         }

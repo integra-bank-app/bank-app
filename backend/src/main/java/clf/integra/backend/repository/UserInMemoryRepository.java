@@ -57,4 +57,10 @@ public class UserInMemoryRepository implements UserRepository
 
     public double getBalance(UUID id) { return this.userRepository.get(id).getBalance(); }
 
+    public Double getUserBalanceById(UUID id) {
+        if (this.userRepository.get(id) == null) {
+            return null;
+        }
+        return this.userRepository.get(id).getBalance(); }
+
 }

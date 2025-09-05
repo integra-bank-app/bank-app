@@ -3,7 +3,6 @@ package clf.integra.backend.service;
 import clf.integra.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.UUID;
 
@@ -13,11 +12,8 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public Double getBalance(UUID id) {
-        try {
-            return userRepository.getBalance(id);
-        }catch (NullPointerException e){
-            return null;
-        }
+    public Double getUserBalanceById(UUID id) {
+        return userRepository.getUserBalanceById(id);
+
     }
 }

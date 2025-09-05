@@ -12,5 +12,5 @@ public interface UserRepository {
     void deleteUserById(UUID id);
     void updateUser(User updatedUser);
     boolean userExists(UUID id);
-    double getBalance(UUID id);
+    Double getUserBalanceById(UUID id);
 }
