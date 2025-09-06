@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import clf.integra.backend.repository.UserRepository;
-
 import java.util.UUID;
 
 
@@ -17,10 +16,12 @@ import java.util.UUID;
 public class TestController {
     private final UserRepository userRepository;
     private final UserService userService;
+    private final UserController userController;
 
-    public TestController(UserRepository userRepository, UserService userService) {
+    public TestController(UserRepository userRepository, UserService userService, UserController userController) {
         this.userRepository = userRepository;
         this.userService = userService;
+        this.userController = userController;
     }
 
     @GetMapping("/test")
@@ -31,6 +32,7 @@ public class TestController {
     //Testing creation of the repository
     @GetMapping("/test-repo")
     public String testRepo() {
+        userService.addUserByName("A", "B", "C");
         return userRepository.getAllUsers().toString();
     }
 

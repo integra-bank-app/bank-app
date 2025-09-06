@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -16,9 +17,21 @@ public class UserService {
 
     public UUID addUserWithName(String firstName, String middleName, String lastName) {
         UUID uuid = generateUUID();
-        User newUser = new User(uuid, firstName, middleName, lastName, 0);
+        User newUser = new User(uuid, firstName, middleName, lastName, 0, null);
         userRepository.addUser(newUser);
         return uuid;
+    }
+
+    public List<String> getAllUsersByBranch(UUID branchId) {
+        return userRepository.getAllUsers().stream()
+                .filter(user -> branchId.equals(user.getBranchId()))
+                .map(user -> {
+                    if (user.getMiddleName() == null || user.getMiddleName().isBlank()) {
+                        return user.getFirstName() + " " + user.getLastName();
+                    }
+                    return user.getFirstName() + " " + user.getMiddleName() + " " + user.getLastName();
+                })
+                .collect(Collectors.toList());
     }
 
     public double collectTaxesAndFeesFromBranch(UUID branchId) {
@@ -55,5 +68,9 @@ public class UserService {
 
     public UUID generateUUID() {
         return UUID.randomUUID();
+    }
+
+    public Double getUserBalanceById(UUID id) {
+        return userRepository.getUserBalanceById(id);
     }
 }
