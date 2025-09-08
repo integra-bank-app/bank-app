@@ -1,6 +1,7 @@
 package clf.integra.backend.controller;
 
 
+import clf.integra.backend.dto.UserDTO;
 import clf.integra.backend.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +33,7 @@ public class TestController {
     //Testing creation of the repository
     @GetMapping("/test-repo")
     public String testRepo() {
-        userService.addUserByName("A", "B", "C");
+        userService.addUserWithName("A", "B", "C");
         return userRepository.getAllUsers().toString();
     }
 

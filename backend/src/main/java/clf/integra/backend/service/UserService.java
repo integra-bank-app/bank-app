@@ -1,5 +1,6 @@
 package clf.integra.backend.service;
 
+import clf.integra.backend.dto.UserDTO;
 import clf.integra.backend.model.User;
 import clf.integra.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,9 +28,9 @@ public class UserService {
                 .filter(user -> branchId.equals(user.getBranchId()))
                 .map(user -> {
                     if (user.getMiddleName() == null || user.getMiddleName().isBlank()) {
-                        return user.getFirstName() + " " + user.getLastName();
+                        return new UserDTO(user.getFirstName(), "", user.getLastName());
                     }
-                    return user.getFirstName() + " " + user.getMiddleName() + " " + user.getLastName();
+                    return new UserDTO(user.getFirstName(), user.getMiddleName(), user.getLastName());
                 })
                 .collect(Collectors.toList());
     }

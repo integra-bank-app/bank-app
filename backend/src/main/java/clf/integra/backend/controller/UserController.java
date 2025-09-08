@@ -27,8 +27,8 @@ public class UserController {
      * Endpoint to get users by branchId
      * */
     @GetMapping("branches/{branchId}/users")
-    public ResponseEntity<List<String>> getUsersByBranch(@PathVariable UUID branchId) {
-        List<String> users = userService.getAllUsersByBranch(branchId);
+    public ResponseEntity<List<UserDTO>> getUsersByBranch(@PathVariable UUID branchId) {
+        List<UserDTO> users = userService.getAllUsersByBranch(branchId);
         if (users.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
