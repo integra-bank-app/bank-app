@@ -41,10 +41,6 @@ public class UserService {
         return user.getBalance();
     }
 
-    public UUID generateUUID() {
-        return UUID.randomUUID();
-    }
-
     public Double getUserBalanceById(UUID id) {
         return userRepository.getUserBalanceById(id);
     }
@@ -59,5 +55,39 @@ public class UserService {
                     return new UserDTO(user.getFirstName(), user.getMiddleName(), user.getLastName());
                 })
                 .collect(Collectors.toList());
+    }
+
+    public double collectTaxesAndFeesFromBranch(UUID branchId) {
+        if (branchId == null) {
+            throw new IllegalArgumentException("Branch ID can not be null!");
+        }
+
+        List<User> usersBranch = userRepository.getAllUsers().stream()
+                .filter(user -> branchId.equals(user.getBranchId()))
+                .toList();
+
+        if (usersBranch.isEmpty()) {
+            throw  new IllegalArgumentException("The branch does not have any customer!");
+        }
+
+        double revenue = 0;
+        for (User user : usersBranch) {
+            double userBalance = user.getBalance();
+            double fee = calculateFee(userBalance);
+
+            if (fee > 0) {
+                user.setBalance(userBalance - fee);
+                revenue += fee;
+            }
+        }
+        return revenue;
+    }
+
+    public UUID generateUUID() {
+        return UUID.randomUUID();
+    }
+
+    public double calculateFee(double balance) {
+        return balance < 100 ? balance * 0.1 : 10;
     }
 }

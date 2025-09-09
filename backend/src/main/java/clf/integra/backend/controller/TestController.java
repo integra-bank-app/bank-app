@@ -3,12 +3,18 @@ package clf.integra.backend.controller;
 
 import clf.integra.backend.dto.UserDTO;
 import clf.integra.backend.service.UserService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import clf.integra.backend.repository.UserRepository;
 
 import java.util.UUID;
+
+
 import java.util.List;
 
 @RestController
@@ -33,12 +39,5 @@ public class TestController {
     public String testRepo() {
         userService.addUserWithName("A", "B", "C");
         return userRepository.getAllUsers().toString();
-    }
-
-    // Test endpoint to get users by branchId
-    @GetMapping("/test/users")
-    public ResponseEntity<List<UserDTO>> testFirstBranchUsers() {
-        UUID existingBranchId = userRepository.getAllUsers().getFirst().getBranchId();
-        return userController.getUsersByBranch(existingBranchId);
     }
 }
