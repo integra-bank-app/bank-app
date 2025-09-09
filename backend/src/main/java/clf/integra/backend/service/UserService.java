@@ -48,7 +48,7 @@ public class UserService {
                 .toList();
 
         if (usersBranch.isEmpty()) {
-            throw  new IllegalArgumentException("The branch doesnt not have any customer!");
+            throw  new IllegalArgumentException("The branch does not have any customer!");
         }
 
         double revenue = 0;
