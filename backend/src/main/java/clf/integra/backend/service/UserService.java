@@ -41,10 +41,6 @@ public class UserService {
         return user.getBalance();
     }
 
-    public UUID generateUUID() {
-        return UUID.randomUUID();
-    }
-
     public Double getUserBalanceById(UUID id) {
         return userRepository.getUserBalanceById(id);
     }
