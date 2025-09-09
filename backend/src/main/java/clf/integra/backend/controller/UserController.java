@@ -1,15 +1,14 @@
 package clf.integra.backend.controller;
 
+import clf.integra.backend.dto.BalanceDTO;
 import clf.integra.backend.dto.UserDTO;
+import clf.integra.backend.exceptions.BalanceUpdateFailedException;
 import clf.integra.backend.service.UserService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 import java.util.UUID;
@@ -23,9 +22,27 @@ public class UserController {
     public UUID addUser(@RequestBody UserDTO user) {
         return userService.addUserWithName(user.firstName(), user.middleName(), user.lastName());
     }
+
+    @PostMapping("/users/{userId}/balance")
+    public ResponseEntity<Double> addUserBalance(@PathVariable("userId") UUID userId, @RequestBody BalanceDTO balance) {
+        double value = balance.value();
+        if (value < 0) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            double finalBalance = userService.addBalance(userId, value);
+            return new ResponseEntity<>(finalBalance, HttpStatus.OK);
+        } catch (BalanceUpdateFailedException e) {
+            return new ResponseEntity<>(HttpStatus.PAYMENT_REQUIRED);
+        }
+
+    }
+
     /**
      * Endpoint to get users by branchId
-     * */
+     *
+     */
     @GetMapping("branches/{branchId}/users")
     public ResponseEntity<List<UserDTO>> getUsersByBranch(@PathVariable UUID branchId) {
         List<UserDTO> users = userService.getAllUsersByBranch(branchId);
@@ -37,7 +54,7 @@ public class UserController {
 
     @GetMapping("/users/{id}/balance")
     public ResponseEntity<Double> getUserBalanceById(@PathVariable UUID id) {
-        Double balance= userService.getUserBalanceById(id);
+        Double balance = userService.getUserBalanceById(id);
         if (balance == null) {
             return ResponseEntity.notFound().build();
         }
