@@ -4,6 +4,8 @@ services:
     image: postgres
     environment:
       - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=user
+      - POSTGRES_DB=integrapaydb
     ports:
       - "5432:5432"
     volumes:
