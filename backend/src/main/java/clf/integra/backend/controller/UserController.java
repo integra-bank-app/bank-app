@@ -2,6 +2,9 @@ package clf.integra.backend.controller;
 
 import clf.integra.backend.dto.BalanceDTO;
 import clf.integra.backend.dto.UserDTO;
+import clf.integra.backend.exceptions.InsufficientFundsException;
+import clf.integra.backend.exceptions.UserNotFoundException;
+import clf.integra.backend.exceptions.BalanceUpdateFailedException;
 import clf.integra.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -58,5 +61,11 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(balance);
+    }
+
+    @PostMapping("/accounts/transfer")
+    public ResponseEntity<Double> transferMoney(@RequestParam UUID fromUserId, @RequestParam UUID toUserId, @RequestParam double amount) throws InsufficientFundsException, UserNotFoundException {
+        double newBalance = userService.transferMoney(fromUserId, toUserId, amount);
+        return ResponseEntity.ok(newBalance);
     }
 }
