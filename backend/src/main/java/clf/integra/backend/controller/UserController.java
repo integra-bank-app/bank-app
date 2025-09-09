@@ -2,15 +2,15 @@ package clf.integra.backend.controller;
 
 import clf.integra.backend.dto.BalanceDTO;
 import clf.integra.backend.dto.UserDTO;
+import clf.integra.backend.exceptions.BalanceUpdateFailedException;
 import clf.integra.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -30,14 +30,34 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        //Simulate a random chance of 20% (in the issue is 10%, but I had bad luck) for the operation to fail
-        double randomValue = Math.random();
-        if (randomValue >= 0.8) {
+        try {
+            double finalBalance = userService.addBalance(userId, value);
+            return new ResponseEntity<>(finalBalance, HttpStatus.OK);
+        } catch (BalanceUpdateFailedException e) {
             return new ResponseEntity<>(HttpStatus.PAYMENT_REQUIRED);
         }
 
-        double finalBalance = userService.addBalance(userId, value);
-        return new ResponseEntity<>(finalBalance, HttpStatus.OK);
+    }
 
+    /**
+     * Endpoint to get users by branchId
+     *
+     */
+    @GetMapping("branches/{branchId}/users")
+    public ResponseEntity<List<UserDTO>> getUsersByBranch(@PathVariable UUID branchId) {
+        List<UserDTO> users = userService.getAllUsersByBranch(branchId);
+        if (users.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity.ok(users);
+    }
+
+    @GetMapping("/users/{id}/balance")
+    public ResponseEntity<Double> getUserBalanceById(@PathVariable UUID id) {
+        Double balance = userService.getUserBalanceById(id);
+        if (balance == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(balance);
     }
 }
