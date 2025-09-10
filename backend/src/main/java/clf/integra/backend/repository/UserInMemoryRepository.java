@@ -1,4 +1,6 @@
 package clf.integra.backend.repository;
+
+import clf.integra.backend.model.Branch;
 import clf.integra.backend.dto.DepositDTO;
 import clf.integra.backend.model.Deposit;
 import clf.integra.backend.model.User;
@@ -10,9 +12,8 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public class UserInMemoryRepository implements UserRepository
-{
-    private HashMap<UUID, User> userRepository;
+public class UserInMemoryRepository implements IUserRepository {
+    private final HashMap<UUID, User> userRepository;
 
     public UserInMemoryRepository() {
         this.userRepository = new HashMap<>();
@@ -41,33 +42,27 @@ public class UserInMemoryRepository implements UserRepository
 
     }
 
-    public void addUser(User newUser)
-    {
+    public void addUser(User newUser) {
         this.userRepository.put(newUser.getId(), newUser);
     }
 
-    public User getUserById(UUID id)
-    {
+    public User getUserById(UUID id) {
         return this.userRepository.get(id);
     }
 
-    public List<User> getAllUsers()
-    {
+    public List<User> getAllUsers() {
         return new ArrayList<>(this.userRepository.values());
     }
 
-    public void deleteUserById(UUID id)
-    {
+    public void deleteUserById(UUID id) {
         this.userRepository.remove(id);
     }
 
-    public void updateUser(User updatedUser)
-    {
+    public void updateUser(User updatedUser) {
         this.userRepository.put(updatedUser.getId(), updatedUser);
     }
 
-    public boolean userExists(UUID id)
-    {
+    public boolean userExists(UUID id) {
         return this.userRepository.containsKey(id);
     }
 

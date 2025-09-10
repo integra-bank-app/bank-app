@@ -6,7 +6,7 @@ import clf.integra.backend.exceptions.BalanceUpdateFailedException;
 import clf.integra.backend.exceptions.NotFoundException;
 import clf.integra.backend.model.Deposit;
 import clf.integra.backend.model.User;
-import clf.integra.backend.repository.UserRepository;
+import clf.integra.backend.repository.IUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private final UserRepository userRepository;
+    private final IUserRepository userRepository;
 
     public UUID addUserWithName(String firstName, String middleName, String lastName) {
         UUID uuid = generateUUID();
@@ -50,7 +50,7 @@ public class UserService {
 
     public List<UserDTO> getAllUsersByBranch(UUID branchId) {
         return userRepository.getAllUsers().stream()
-                .filter(user -> branchId.equals(user.getBranchId()))
+                .filter(user -> branchId.equals(user.getBranch().getId()))
                 .map(user -> {
                     if (user.getMiddleName() == null || user.getMiddleName().isBlank()) {
                         return new UserDTO(user.getFirstName(), "", user.getLastName());
@@ -66,11 +66,11 @@ public class UserService {
         }
 
         List<User> usersBranch = userRepository.getAllUsers().stream()
-                .filter(user -> branchId.equals(user.getBranchId()))
+                .filter(user -> branchId.equals(user.getBranch().getId()))
                 .toList();
 
         if (usersBranch.isEmpty()) {
-            throw  new IllegalArgumentException("The branch does not have any customer!");
+            throw new IllegalArgumentException("The branch does not have any customer!");
         }
 
         double revenue = 0;
