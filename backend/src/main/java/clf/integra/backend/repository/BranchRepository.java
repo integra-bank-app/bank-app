@@ -1,9 +1,9 @@
 package clf.integra.backend.repository;
 
-import clf.integra.backend.model.User;
+import clf.integra.backend.model.Branch;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;
 
-public interface UserRepository extends JpaRepository<User, UUID> {
+public interface BranchRepository extends JpaRepository<Branch, UUID> {
 }
