@@ -21,7 +21,7 @@ public class UserService {
     @Transactional
     public UUID addUserWithName(String firstName, String middleName, String lastName) {
         UUID uuid = generateUUID();
-        User newUser = new User(uuid, firstName, middleName, lastName, 0, null);
+        User newUser = User.builder().firstName(firstName).middleName(middleName).lastName(lastName).build();
         userRepository.save(newUser);
         return uuid;
     }

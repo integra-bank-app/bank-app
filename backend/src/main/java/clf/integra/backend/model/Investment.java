@@ -9,8 +9,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Column;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,18 +17,16 @@ import lombok.ToString;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
 @Builder
-@Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
+@Getter
 @Entity
-@Table(name = "users")
-public class User implements Serializable {
+@Table(name = "investment")
+public class Investment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -38,25 +34,14 @@ public class User implements Serializable {
 
     @Setter
     @Column(nullable = false)
-    private String firstName;
-
-    @Setter
-    private String middleName;
+    private int risk;
 
     @Setter
     @Column(nullable = false)
-    private String lastName;
+    private Double balance;
 
-    @Setter
-    @Column(nullable = false)
-    private double balance;
-
-    @Setter
     @ManyToOne
-    @JoinColumn(name = "branch_id", nullable = false) // foreign key in users table
-    @JsonBackReference // Child
-    private Branch branch;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Investment> investments = new HashSet<>();
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference
+    private User user;
 }

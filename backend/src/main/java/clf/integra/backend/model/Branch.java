@@ -1,5 +1,6 @@
 package clf.integra.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,7 +19,6 @@ import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Getter
 @Entity
 public class Branch implements Serializable {
@@ -28,6 +28,7 @@ public class Branch implements Serializable {
     private UUID id;
 
     @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference // Parent
     private Set<User> users = new HashSet<>();
 
 }
