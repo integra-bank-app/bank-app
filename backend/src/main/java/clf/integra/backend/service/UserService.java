@@ -2,7 +2,9 @@ package clf.integra.backend.service;
 
 import clf.integra.backend.dto.UserDTO;
 import clf.integra.backend.exceptions.BalanceUpdateFailedException;
+import clf.integra.backend.exceptions.InsufficientFundsException;
 import clf.integra.backend.exceptions.NotFoundException;
+import clf.integra.backend.exceptions.UserNotFoundException;
 import clf.integra.backend.model.User;
 import clf.integra.backend.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -105,5 +107,25 @@ public class UserService {
 
     public double calculateFee(double balance) {
         return balance < 100 ? balance * 0.1 : 10;
+    }
+    public double transferMoney(UUID fromUserId, UUID toUserId, double amount) throws UserNotFoundException, InsufficientFundsException {
+        User fromUser = userRepository.getUserById(fromUserId);
+        User toUser = userRepository.getUserById(toUserId);
+
+        if (fromUser == null || toUser == null) {
+            throw new UserNotFoundException("One or both users not found");
+        }
+
+        if (fromUser.getBalance() < amount) {
+            throw new InsufficientFundsException("Insufficient funds");
+        }
+
+        fromUser.setBalance(fromUser.getBalance() - amount);
+        toUser.setBalance(toUser.getBalance() + amount);
+
+        userRepository.updateUser(fromUser);
+        userRepository.updateUser(toUser);
+
+        return fromUser.getBalance();
     }
 }
