@@ -46,7 +46,18 @@ public class UserService {
     }
 
     public Double getUserBalanceById(UUID id) {
-        return userRepository.findBalanceById(id);
+
+        if (id == null) {
+            throw new IllegalArgumentException("User ID can not be null!");
+        }
+
+        Double balance = userRepository.getBalanceById(id);
+
+        if (balance == null) {
+            throw new NotFoundException(String.format("User with the id %s not found", id));
+        }
+
+        return balance;
     }
 
     public List<UserDTO> getAllUsersByBranch(UUID branchId) {
