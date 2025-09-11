@@ -1,6 +1,7 @@
 package clf.integra.backend.controller;
 
 import clf.integra.backend.dto.BalanceDTO;
+import clf.integra.backend.dto.DepositDTO;
 import clf.integra.backend.dto.UserDTO;
 import clf.integra.backend.exceptions.BalanceUpdateFailedException;
 import clf.integra.backend.service.UserService;
@@ -59,5 +60,14 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(balance);
+    }
+
+    @GetMapping("users/{id}/deposit")
+    public ResponseEntity<List<DepositDTO>> getUserDeposits (@PathVariable UUID id) {
+        List<DepositDTO> deposits = userService.getUserDeposits(id);
+        if (deposits == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity.ok(deposits);
     }
 }

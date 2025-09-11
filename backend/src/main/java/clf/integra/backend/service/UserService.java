@@ -1,13 +1,16 @@
 package clf.integra.backend.service;
 
+import clf.integra.backend.dto.DepositDTO;
 import clf.integra.backend.dto.UserDTO;
 import clf.integra.backend.exceptions.BalanceUpdateFailedException;
 import clf.integra.backend.exceptions.NotFoundException;
+import clf.integra.backend.model.Deposit;
 import clf.integra.backend.model.User;
 import clf.integra.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -19,7 +22,7 @@ public class UserService {
 
     public UUID addUserWithName(String firstName, String middleName, String lastName) {
         UUID uuid = generateUUID();
-        User newUser = new User(uuid, firstName, middleName, lastName, 0, null);
+        User newUser = new User(uuid, firstName, middleName, lastName, 0, null, null);
         userRepository.addUser(newUser);
         return uuid;
     }
@@ -89,5 +92,9 @@ public class UserService {
 
     public double calculateFee(double balance) {
         return balance < 100 ? balance * 0.1 : 10;
+    }
+
+    public List<DepositDTO> getUserDeposits(UUID id) {
+        return userRepository.getUserDeposits(id);
     }
 }

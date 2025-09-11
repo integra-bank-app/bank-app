@@ -6,7 +6,7 @@ import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.UUID;
+import java.util.*;
 
 @Getter
 @AllArgsConstructor
@@ -30,4 +30,6 @@ public class User {
 
     @Setter
     private UUID branchId;
+
+    private List<Deposit> deposits= new ArrayList<>();
 }

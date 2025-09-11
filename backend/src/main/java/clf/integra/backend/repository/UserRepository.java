@@ -1,5 +1,6 @@
 package clf.integra.backend.repository;
 
+import clf.integra.backend.dto.DepositDTO;
 import clf.integra.backend.model.User;
 
 import java.util.List;
@@ -13,4 +14,5 @@ public interface UserRepository {
     void updateUser(User updatedUser);
     boolean userExists(UUID id);
     Double getUserBalanceById(UUID id);
+    List<DepositDTO> getUserDeposits(UUID id);
 }

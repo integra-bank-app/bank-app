@@ -1,4 +1,6 @@
 package clf.integra.backend.repository;
+import clf.integra.backend.dto.DepositDTO;
+import clf.integra.backend.model.Deposit;
 import clf.integra.backend.model.User;
 import org.springframework.stereotype.Repository;
 
@@ -15,14 +17,28 @@ public class UserInMemoryRepository implements UserRepository
     public UserInMemoryRepository() {
         this.userRepository = new HashMap<>();
 
+        List<Deposit> deposit1 = List.of(
+                new Deposit(UUID.randomUUID(), 3.5, 500.0),
+                new Deposit(UUID.randomUUID(), 4.0, 1200.0)
+        );
+        List<Deposit> deposit2 = List.of(
+                new Deposit(UUID.randomUUID(), 4.5, 770.0),
+                new Deposit(UUID.randomUUID(), 5.0, 3200.0)
+        );
+        List<Deposit> deposit3 = List.of(
+                new Deposit(UUID.randomUUID(), 1.5, 400.0),
+                new Deposit(UUID.randomUUID(), 6.0, 7200.0)
+        );
+
         UUID user1Id = UUID.randomUUID();
-        this.userRepository.put(user1Id, new User(user1Id, "John", "", "Doe", 1000.55, UUID.randomUUID()));
+        this.userRepository.put(user1Id, new User(user1Id, "John", "", "Doe", 1000.55, UUID.randomUUID(),deposit1));
 
         UUID user2Id = UUID.randomUUID();
-        this.userRepository.put(user2Id, new User(user2Id, "Andrei", "Mihai", "Popescu", 2500.00, UUID.randomUUID()));
+        this.userRepository.put(user2Id, new User(user2Id, "Andrei", "Mihai", "Popescu", 2500.00, UUID.randomUUID(),deposit2));
 
         UUID user3Id = UUID.randomUUID();
-        this.userRepository.put(user3Id, new User(user3Id, "Jane", "", "Smith", 1500.25, UUID.randomUUID()));
+        this.userRepository.put(user3Id, new User(user3Id, "Jane", "", "Smith", 1500.25, UUID.randomUUID(),deposit3));
+
     }
 
     public void addUser(User newUser)
@@ -60,5 +76,16 @@ public class UserInMemoryRepository implements UserRepository
             return null;
         }
         return this.userRepository.get(id).getBalance();
+    }
+
+    public List<DepositDTO> getUserDeposits(UUID id) {
+        if (this.userRepository.get(id) == null) {
+            return null;
+        }
+        User user = this.userRepository.get(id);
+        return user.getDeposits()
+                .stream()
+                .map(deposit -> new DepositDTO(deposit.getId(), deposit.getInterest_rate(), deposit.getAmount()))
+                .toList();
     }
 }
