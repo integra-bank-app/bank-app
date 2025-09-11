@@ -4,7 +4,6 @@ import clf.integra.backend.dto.UserDTO;
 import clf.integra.backend.exceptions.BalanceUpdateFailedException;
 import clf.integra.backend.exceptions.NotFoundException;
 import clf.integra.backend.model.User;
-import clf.integra.backend.repository.IUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
