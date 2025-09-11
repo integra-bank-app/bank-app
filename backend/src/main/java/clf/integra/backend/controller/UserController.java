@@ -27,7 +27,7 @@ public class UserController {
 
     @PostMapping("/users/{userId}/balance")
     public ResponseEntity<Double> addUserBalance(@PathVariable("userId") UUID userId, @RequestBody BalanceDTO balance) {
-        double value  = balance.value();
+        double value = balance.value();
         if (value < 0) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -59,7 +59,7 @@ public class UserController {
         return ResponseEntity.ok(balance);
     }
 
-    @PostMapping("/user/transfer")
+    @PostMapping("/users/transfer")
     public ResponseEntity<Double> transferMoney(@RequestParam UUID fromUserId, @RequestParam UUID toUserId, @RequestParam double amount) throws InsufficientFundsException, UserNotFoundException {
         double newBalance = userService.transferMoney(fromUserId, toUserId, amount);
         return ResponseEntity.ok(newBalance);
