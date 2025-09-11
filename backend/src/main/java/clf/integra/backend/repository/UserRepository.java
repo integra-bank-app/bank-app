@@ -1,5 +1,6 @@
 package clf.integra.backend.repository;
 
+import clf.integra.backend.dto.DepositDTO;
 import clf.integra.backend.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
