@@ -21,7 +21,6 @@ import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Getter
 @Builder
 @Entity
