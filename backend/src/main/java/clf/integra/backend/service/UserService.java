@@ -3,12 +3,14 @@ package clf.integra.backend.service;
 import clf.integra.backend.dto.UserDTO;
 import clf.integra.backend.exceptions.BalanceUpdateFailedException;
 import clf.integra.backend.exceptions.NotFoundException;
+import clf.integra.backend.model.Branch;
 import clf.integra.backend.model.User;
 import clf.integra.backend.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -21,7 +23,7 @@ public class UserService {
     @Transactional
     public UUID addUserWithName(String firstName, String middleName, String lastName) {
         UUID uuid = generateUUID();
-        User newUser = new User(uuid, firstName, middleName, lastName, 0, null);
+        User newUser = new User(uuid, firstName, middleName, lastName, 0, new Branch(), new ArrayList<>());
         userRepository.save(newUser);
         return uuid;
     }
