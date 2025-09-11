@@ -1,20 +1,20 @@
 package clf.integra.backend.model;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -22,14 +22,21 @@ import java.util.UUID;
 @NoArgsConstructor
 @ToString
 @Entity
-public class Branch implements Serializable {
+public class FeeTaxTransaction implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Setter
-    @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<User> users = new HashSet<>();
+    private double amount;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false) // foreign key column in fees
+    private User user;
+
+    @Setter
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
 }
