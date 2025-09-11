@@ -39,4 +39,9 @@ public class FeeTaxTransaction implements Serializable {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+    public FeeTaxTransaction(User user, double amount) {
+        this.user = user;
+        this.amount = amount;
+    }
+
 }

@@ -1,13 +1,18 @@
 package clf.integra.backend.job;
 
+import clf.integra.backend.service.FeeTaxService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class FeeTaxJob {
 
-    @Scheduled(fixedRate = 500)
+    private final FeeTaxService feeTaxService;
+
+    @Scheduled(cron = "0 0 0 * * *", zone = "Europe/Bucharest")
     public void run() {
-        //execute get tax and write taxes to the db
+        feeTaxService.feeAndTaxUsers();
     }
 }
