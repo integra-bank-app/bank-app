@@ -28,8 +28,12 @@ public class FeeTaxService {
     public void feeAndTaxUsers() {
         userRepository.findAll().forEach(user -> {
             double deductedValue = deductFeeAndTax(user);
-            taxRepository.save(new FeeTaxTransaction(user, deductedValue));
-
+            taxRepository.save(
+                    FeeTaxTransaction.builder()
+                            .user(user)
+                            .amount(deductedValue)
+                            .build()
+            );
         });
     }
 

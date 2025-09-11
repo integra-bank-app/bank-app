@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,6 +22,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Builder
 @Entity
 public class FeeTaxTransaction implements Serializable {
 
@@ -38,10 +40,5 @@ public class FeeTaxTransaction implements Serializable {
     @Setter
     @CreationTimestamp
     private LocalDateTime createdAt;
-
-    public FeeTaxTransaction(User user, double amount) {
-        this.user = user;
-        this.amount = amount;
-    }
 
 }
