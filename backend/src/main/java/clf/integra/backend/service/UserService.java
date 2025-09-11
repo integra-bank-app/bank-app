@@ -4,6 +4,8 @@ import clf.integra.backend.dto.UserDTO;
 import clf.integra.backend.exceptions.BalanceUpdateFailedException;
 import clf.integra.backend.exceptions.NotFoundException;
 import clf.integra.backend.model.User;
+import clf.integra.backend.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,17 +16,19 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private final IUserRepository userRepository;
+    private final UserRepository userRepository;
 
+    @Transactional
     public UUID addUserWithName(String firstName, String middleName, String lastName) {
         UUID uuid = generateUUID();
         User newUser = new User(uuid, firstName, middleName, lastName, 0, null);
-        userRepository.addUser(newUser);
+        userRepository.save(newUser);
         return uuid;
     }
 
+    @Transactional
     public double addBalance(UUID uuid, double amount) {
-        if (!userRepository.userExists(uuid)) {
+        if (!userRepository.existsById(uuid)) {
             throw new NotFoundException("User not found");
         }
 
@@ -34,36 +38,30 @@ public class UserService {
             throw new BalanceUpdateFailedException("An unknown error has occurred intentionally");
         }
 
-        User user = userRepository.getUserById(uuid);
+        User user = userRepository.findById(uuid).orElseThrow(() -> new NotFoundException("User not found"));
         user.setBalance(user.getBalance() + amount);
+        userRepository.save(user);
 
         return user.getBalance();
     }
 
     public Double getUserBalanceById(UUID id) {
-        return userRepository.getUserBalanceById(id);
+        return userRepository.findBalanceById(id);
     }
 
     public List<UserDTO> getAllUsersByBranch(UUID branchId) {
-        return userRepository.getAllUsers().stream()
-                .filter(user -> branchId.equals(user.getBranch().getId()))
-                .map(user -> {
-                    if (user.getMiddleName() == null || user.getMiddleName().isBlank()) {
-                        return new UserDTO(user.getFirstName(), "", user.getLastName());
-                    }
-                    return new UserDTO(user.getFirstName(), user.getMiddleName(), user.getLastName());
-                })
+        return userRepository.findByBranchId(branchId).stream()
+                .map(user -> new UserDTO(user.getFirstName(), user.getMiddleName(), user.getLastName()))
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public double collectTaxesAndFeesFromBranch(UUID branchId) {
         if (branchId == null) {
             throw new IllegalArgumentException("Branch ID can not be null!");
         }
 
-        List<User> usersBranch = userRepository.getAllUsers().stream()
-                .filter(user -> branchId.equals(user.getBranch().getId()))
-                .toList();
+        List<User> usersBranch = userRepository.findByBranchId(branchId);
 
         if (usersBranch.isEmpty()) {
             throw new IllegalArgumentException("The branch does not have any customer!");
@@ -79,6 +77,8 @@ public class UserService {
                 revenue += fee;
             }
         }
+
+        userRepository.saveAll(usersBranch);
         return revenue;
     }
 
