@@ -32,6 +32,6 @@ public class Branch implements Serializable {
 
     @Setter
     @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<User> users = new HashSet<>();
+    private Set<User> users;
 
 }

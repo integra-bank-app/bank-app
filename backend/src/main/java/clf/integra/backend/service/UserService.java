@@ -4,8 +4,11 @@ import clf.integra.backend.dto.UserDTO;
 import clf.integra.backend.exceptions.BalanceUpdateFailedException;
 import clf.integra.backend.exceptions.InsufficientFundsException;
 import clf.integra.backend.exceptions.NotFoundException;
-import clf.integra.backend.exceptions.UserNotFoundException;
+import clf.integra.backend.model.Account;
+
+import clf.integra.backend.model.Branch;
 import clf.integra.backend.model.User;
+import clf.integra.backend.repository.BranchRepository;
 import clf.integra.backend.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -19,19 +22,30 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final BranchRepository branchRepository;
 
     @Transactional
     public UUID addUserWithName(String firstName, String middleName, String lastName) {
-        UUID uuid = generateUUID();
+        // default branch, this will be changed
+        Branch branch = branchRepository.findById(UUID.fromString("58c4a77e-9add-4f47-a0d2-1b981367cd3d"))
+                .orElseThrow(() -> new NotFoundException("Branch not found"));
+
         User newUser = User.builder()
-                .id(uuid)
                 .firstName(firstName)
                 .middleName(middleName)
                 .lastName(lastName)
-                .balance(0)
+                .branch(branch)
                 .build();
+
+        Account account = Account.builder()
+                .balance(0.0)
+                .user(newUser)
+                .build();
+
+        newUser.getAccounts().add(account);
         userRepository.save(newUser);
-        return uuid;
+
+        return newUser.getId();
     }
 
     @Transactional
@@ -47,25 +61,27 @@ public class UserService {
         }
 
         User user = userRepository.findById(uuid).orElseThrow(() -> new NotFoundException("User not found"));
-        user.setBalance(user.getBalance() + amount);
+        user.getAccounts().getFirst().setBalance(user.getAccounts().getFirst().getBalance() + amount);
         userRepository.save(user);
 
-        return user.getBalance();
+        return user.getAccounts().getFirst().getBalance();
     }
 
-    public Double getUserBalanceById(UUID id) {
-
+    public Double getUserTotalBalanceById(UUID id) {
         if (id == null) {
             throw new IllegalArgumentException("User ID can not be null!");
         }
 
-        Double balance = userRepository.getBalanceById(id);
+        List<Account> accounts = userRepository.getReferenceById(id).getAccounts();
+        Double totalBalance = accounts.stream()
+                .mapToDouble(Account::getBalance)
+                .sum();
 
-        if (balance == null) {
-            throw new NotFoundException(String.format("User with the id %s not found", id));
+        if (totalBalance == 0) {
+            throw new NotFoundException("User not found or has no accounts");
         }
 
-        return balance;
+        return totalBalance;
     }
 
     public List<UserDTO> getAllUsersByBranch(UUID branchId) {
@@ -88,11 +104,11 @@ public class UserService {
 
         double revenue = 0;
         for (User user : usersBranch) {
-            double userBalance = user.getBalance();
+            double userBalance = user.getAccounts().getFirst().getBalance();
             double fee = calculateFee(userBalance);
 
             if (fee > 0) {
-                user.setBalance(userBalance - fee);
+                user.getAccounts().getFirst().setBalance(userBalance - fee);
                 revenue += fee;
             }
         }
@@ -108,24 +124,44 @@ public class UserService {
     public double calculateFee(double balance) {
         return balance < 100 ? balance * 0.1 : 10;
     }
-    public double transferMoney(UUID fromUserId, UUID toUserId, double amount) throws UserNotFoundException, InsufficientFundsException {
-        User fromUser = userRepository.getUserById(fromUserId);
-        User toUser = userRepository.getUserById(toUserId);
+    public double transferMoney(UUID fromUserId, UUID toUserId, double amount) throws NotFoundException, InsufficientFundsException {
+        User fromUser = userRepository.getReferenceById(fromUserId);
+        User toUser = userRepository.getReferenceById(toUserId);
 
         if (fromUser == null || toUser == null) {
-            throw new UserNotFoundException("One or both users not found");
+            throw new NotFoundException("One or both users not found");
         }
 
-        if (fromUser.getBalance() < amount) {
+        if (fromUser.getAccounts().getFirst().getBalance() < amount) {
             throw new InsufficientFundsException("Insufficient funds");
         }
 
-        fromUser.setBalance(fromUser.getBalance() - amount);
-        toUser.setBalance(toUser.getBalance() + amount);
+        fromUser.getAccounts().getFirst().setBalance(fromUser.getAccounts().getFirst().getBalance() - amount);
+        toUser.getAccounts().getFirst().setBalance(toUser.getAccounts().getFirst().getBalance() + amount);
 
-        userRepository.updateUser(fromUser);
-        userRepository.updateUser(toUser);
+        userRepository.save(fromUser);
+        userRepository.save(toUser);
 
-        return fromUser.getBalance();
+        return fromUser.getAccounts().getFirst().getBalance();
+    }
+
+    public List<UUID> getUserAccounts(UUID id) {
+        if (!userRepository.existsById(id)) {
+            throw new NotFoundException("User not found");
+        }
+        List<Account> accounts = userRepository.getReferenceById(id).getAccounts();
+        return accounts.stream().map(Account::getId).collect(Collectors.toList());
+    }
+
+    public Double getUserAccountBalance(UUID id, UUID accountId) {
+        if (!userRepository.existsById(id)) {
+            throw new NotFoundException("User not found");
+        }
+        User user = userRepository.getReferenceById(id);
+        return user.getAccounts().stream()
+                .filter(account -> account.getId().equals(accountId))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Account not found"))
+                .getBalance();
     }
 }
