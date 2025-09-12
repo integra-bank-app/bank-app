@@ -21,7 +21,7 @@ public class UserService {
     @Transactional
     public UUID addUserWithName(String firstName, String middleName, String lastName) {
         UUID uuid = generateUUID();
-        User newUser = new User(uuid, firstName, middleName, lastName, 0, null,null);
+        User newUser = new User(uuid, firstName, middleName, lastName, 0, null,null, null);
         userRepository.save(newUser);
         return uuid;
     }
@@ -100,4 +100,5 @@ public class UserService {
     public double calculateFee(double balance) {
         return balance < 100 ? balance * 0.1 : 10;
     }
+
 }

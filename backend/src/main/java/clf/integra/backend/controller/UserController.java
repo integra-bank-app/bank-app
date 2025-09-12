@@ -1,8 +1,9 @@
 package clf.integra.backend.controller;
 
 import clf.integra.backend.dto.BalanceDTO;
-import clf.integra.backend.dto.DepositDTO;
+import clf.integra.backend.dto.DepositsDTO;
 import clf.integra.backend.dto.UserDTO;
+import clf.integra.backend.service.DepositsService;
 import clf.integra.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final DepositsService depositsService;
 
     @PostMapping("/users")
     public UUID addUser(@RequestBody UserDTO user) {
@@ -62,9 +64,9 @@ public class UserController {
     }
 
     @GetMapping("users/{id}/deposit")
-    public ResponseEntity<List<DepositDTO>> getUserDeposits (@PathVariable UUID id) {
-        List<DepositDTO> deposits = userService.getUserDeposits(id);
-        if (deposits == null) {
+    public ResponseEntity<List<DepositsDTO>> getUserDeposits (@PathVariable UUID id) {
+        List<DepositsDTO> deposits = depositsService.getUserDeposits(id);
+        if (deposits.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
         return ResponseEntity.ok(deposits);
