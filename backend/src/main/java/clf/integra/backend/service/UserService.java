@@ -75,7 +75,7 @@ public class UserService {
                 .mapToDouble(Account::getBalance)
                 .sum();
 
-        if (totalBalance == 0) {
+        if (totalBalance == null) {
             throw new NotFoundException("User not found or has no accounts");
         }
 
