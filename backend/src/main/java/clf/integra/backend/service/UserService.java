@@ -23,13 +23,9 @@ import java.util.stream.Collectors;
 public class UserService {
     private final UserRepository userRepository;
     private final BranchRepository branchRepository;
-
     @Transactional
-    public UUID addUserWithName(String firstName, String middleName, String lastName) {
-        // default branch, this will be changed
-        Branch branch = branchRepository.findById(UUID.fromString("58c4a77e-9add-4f47-a0d2-1b981367cd3d"))
-                .orElseThrow(() -> new NotFoundException("Branch not found"));
-
+    public UUID addUserWithName(String firstName, String middleName, String lastName, UUID branchId) {
+        Branch branch = branchRepository.findById(branchId).get();
         User newUser = User.builder()
                 .firstName(firstName)
                 .middleName(middleName)
@@ -44,7 +40,6 @@ public class UserService {
 
         newUser.getAccounts().add(account);
         userRepository.save(newUser);
-
         return newUser.getId();
     }
 

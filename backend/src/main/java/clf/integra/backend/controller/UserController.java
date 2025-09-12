@@ -1,7 +1,7 @@
 package clf.integra.backend.controller;
 
 import clf.integra.backend.dto.BalanceDTO;
-import clf.integra.backend.dto.UserDTO;
+import clf.integra.backend.dto.UserWithBranchDTO;
 import clf.integra.backend.exceptions.NotFoundException;
 import clf.integra.backend.exceptions.InsufficientFundsException;
 import clf.integra.backend.service.UserService;
@@ -20,8 +20,8 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/users")
-    public UUID addUser(@RequestBody UserDTO user) {
-        return userService.addUserWithName(user.firstName(), user.middleName(), user.lastName());
+    public UUID addUser(@RequestBody UserWithBranchDTO user) {
+        return userService.addUserWithName(user.firstName(), user.middleName(), user.lastName(), user.branchId());
     }
 
     @PostMapping("/users/{userId}/balance")
