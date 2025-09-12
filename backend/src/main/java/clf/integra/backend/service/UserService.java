@@ -26,6 +26,9 @@ public class UserService {
     @Transactional
     public UUID addUserWithName(String firstName, String middleName, String lastName, UUID branchId) {
         Branch branch = branchRepository.findById(branchId).get();
+        if(branch == null) {
+            throw new NotFoundException("Branch not found");
+        }
         User newUser = User.builder()
                 .firstName(firstName)
                 .middleName(middleName)
