@@ -32,12 +32,11 @@ public class InvestmentService {
     public Investment getInvestmentByUserId(UUID userId, UUID investmentId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
-        for (Investment investment : user.getInvestments()) {
-            if (investmentId.equals(investment.getId())) {
-                return investment;
-            }
-        }
-        return null;
+        return user.getInvestments().stream()
+                .filter(investment -> investmentId.equals(investment.getId()))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Investment not found with id: " + investmentId + " for user: " + userId));
     }
 
     @Transactional
@@ -55,10 +54,14 @@ public class InvestmentService {
             double random = rand.nextDouble();
             double changeAmount = 2 * risk / 100.0 * balance;
 
-            if (random < probability)
-                balance -= changeAmount;
-            else
+            if (random < probability) {
+                if (balance - changeAmount < 0) // in case the change would bring a negative balance
+                    balance = 0.0;
+                else
+                    balance -= changeAmount;
+            } else {
                 balance += changeAmount;
+            }
 
             investment.setBalance(balance);
         }
