@@ -4,11 +4,9 @@ import clf.integra.backend.dto.UserDTO;
 import clf.integra.backend.exceptions.BalanceUpdateFailedException;
 import clf.integra.backend.exceptions.InsufficientFundsException;
 import clf.integra.backend.exceptions.NotFoundException;
+import clf.integra.backend.exceptions.UserNotFoundException;
 import clf.integra.backend.model.Account;
-
-import clf.integra.backend.model.Branch;
 import clf.integra.backend.model.User;
-import clf.integra.backend.repository.BranchRepository;
 import clf.integra.backend.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -44,6 +42,7 @@ public class UserService {
 
         newUser.getAccounts().add(account);
         userRepository.save(newUser);
+
         return newUser.getId();
     }
 
@@ -141,6 +140,8 @@ public class UserService {
         userRepository.save(fromUser);
         userRepository.save(toUser);
 
+        userRepository.save(fromUser);
+        userRepository.save(toUser);
         return fromUser.getAccounts().getFirst().getBalance();
     }
 
