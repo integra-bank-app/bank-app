@@ -7,7 +7,6 @@ import clf.integra.backend.service.DepositsService;
 import clf.integra.backend.dto.UserWithBranchDTO;
 import clf.integra.backend.exceptions.NotFoundException;
 import clf.integra.backend.exceptions.InsufficientFundsException;
-import clf.integra.backend.exceptions.UserNotFoundException;
 import clf.integra.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -70,7 +69,7 @@ public class UserController {
     }
 
     @GetMapping("users/{id}/deposits")
-    public ResponseEntity<List<DepositsDTO>> getUserDeposits (@PathVariable UUID id) {
+    public ResponseEntity<List<DepositsDTO>> getUserDeposits(@PathVariable UUID id) {
         List<DepositsDTO> deposits = depositsService.getUserDeposits(id);
         if (deposits.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
