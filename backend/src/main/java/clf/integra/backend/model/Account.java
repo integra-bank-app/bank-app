@@ -1,15 +1,17 @@
 package clf.integra.backend.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.UUID;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Builder
 @Entity
 @Table(name = "accounts")
@@ -21,7 +23,7 @@ public class Account {
 
     @Setter
     @Column(nullable = false)
-    private double balance;
+    private Double balance;
 
     @Setter
     @ManyToOne
