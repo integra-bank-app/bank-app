@@ -62,5 +62,5 @@ public class User implements Serializable {
     private List<FeeTaxTransaction> fees = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Deposits> deposits= new ArrayList<>();
+    private List<Deposits> deposits = new ArrayList<>();
 }
