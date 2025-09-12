@@ -4,6 +4,8 @@ import clf.integra.backend.dto.BalanceDTO;
 import clf.integra.backend.dto.DepositsDTO;
 import clf.integra.backend.dto.UserDTO;
 import clf.integra.backend.service.DepositsService;
+import clf.integra.backend.exceptions.InsufficientFundsException;
+import clf.integra.backend.exceptions.UserNotFoundException;
 import clf.integra.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,7 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.UUID;
@@ -61,6 +63,12 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(balance);
+    }
+
+    @PostMapping("/users/transfer")
+    public ResponseEntity<Double> transferMoney(@RequestParam UUID fromUserId, @RequestParam UUID toUserId, @RequestParam double amount) throws InsufficientFundsException, UserNotFoundException {
+        double newBalance = userService.transferMoney(fromUserId, toUserId, amount);
+        return ResponseEntity.ok(newBalance);
     }
 
     @GetMapping("users/{id}/deposit")

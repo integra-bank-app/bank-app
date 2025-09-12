@@ -2,21 +2,19 @@ package clf.integra.backend.model;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-
-import java.util.*;
+import lombok.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+import jakarta.persistence.CascadeType;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 @Entity
+@Builder
 @Table(name = "users")
 public class User implements Serializable {
 
@@ -43,7 +41,10 @@ public class User implements Serializable {
     @ManyToOne
     @JoinColumn(name = "branch_id", nullable = false) // foreign key in users table
     private Branch branch;
-    private UUID branchId;
+
+    @Setter
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FeeTaxTransaction> fees = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Deposits> deposits= new ArrayList<>();
