@@ -5,7 +5,6 @@ import clf.integra.backend.exceptions.BalanceUpdateFailedException;
 import clf.integra.backend.exceptions.InsufficientFundsException;
 import clf.integra.backend.exceptions.NotFoundException;
 import clf.integra.backend.model.Account;
-
 import clf.integra.backend.model.Branch;
 import clf.integra.backend.model.User;
 import clf.integra.backend.repository.BranchRepository;
