@@ -2,9 +2,8 @@ package clf.integra.backend.controller;
 
 import clf.integra.backend.dto.BalanceDTO;
 import clf.integra.backend.dto.UserDTO;
+import clf.integra.backend.exceptions.NotFoundException;
 import clf.integra.backend.exceptions.InsufficientFundsException;
-import clf.integra.backend.exceptions.UserNotFoundException;
-import clf.integra.backend.exceptions.BalanceUpdateFailedException;
 import clf.integra.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -37,31 +36,27 @@ public class UserController {
 
     }
 
-    /**
-     * Endpoint to get users by branchId
-     *
-     */
-    @GetMapping("branches/{branchId}/users")
-    public ResponseEntity<List<UserDTO>> getUsersByBranch(@PathVariable UUID branchId) {
-        List<UserDTO> users = userService.getAllUsersByBranch(branchId);
-        if (users.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-        return ResponseEntity.ok(users);
-    }
-
     @GetMapping("/users/{id}/balance")
-    public ResponseEntity<Double> getUserBalanceById(@PathVariable UUID id) {
-        Double balance = userService.getUserBalanceById(id);
-        if (balance == null) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Double> getUserTotalBalanceById(@PathVariable UUID id) throws NotFoundException {
+        Double balance = userService.getUserTotalBalanceById(id);
         return ResponseEntity.ok(balance);
     }
 
     @PostMapping("/users/transfer")
-    public ResponseEntity<Double> transferMoney(@RequestParam UUID fromUserId, @RequestParam UUID toUserId, @RequestParam double amount) throws InsufficientFundsException, UserNotFoundException {
+    public ResponseEntity<Double> transferMoney(@RequestParam UUID fromUserId, @RequestParam UUID toUserId, @RequestParam double amount) throws InsufficientFundsException, NotFoundException {
         double newBalance = userService.transferMoney(fromUserId, toUserId, amount);
         return ResponseEntity.ok(newBalance);
+    }
+
+    @GetMapping("/users/{id}/accounts")
+    public ResponseEntity<List<UUID>> getUserAccounts(@PathVariable UUID id) throws NotFoundException {
+        List<UUID> accounts = userService.getUserAccounts(id);
+        return ResponseEntity.ok(accounts);
+    }
+
+    @GetMapping("/users/{id}/accounts/{accountId}")
+    public ResponseEntity<Double> getUserAccountBalance(@PathVariable UUID id, @PathVariable UUID accountId) throws NotFoundException {
+        Double balance = userService.getUserAccountBalance(id, accountId);
+        return ResponseEntity.ok(balance);
     }
 }
