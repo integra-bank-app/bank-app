@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 public class UserService {
     private final UserRepository userRepository;
     private final BranchRepository branchRepository;
+
     @Transactional
     public UUID addUserWithName(String firstName, String middleName, String lastName, UUID branchId) {
         Branch branch = branchRepository.findById(branchId).get();
