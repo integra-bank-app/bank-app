@@ -71,7 +71,7 @@ public class UserController {
         return ResponseEntity.ok(newBalance);
     }
 
-    @GetMapping("users/{id}/deposit")
+    @GetMapping("users/{id}/deposits")
     public ResponseEntity<List<DepositsDTO>> getUserDeposits (@PathVariable UUID id) {
         List<DepositsDTO> deposits = depositsService.getUserDeposits(id);
         if (deposits.isEmpty()) {
