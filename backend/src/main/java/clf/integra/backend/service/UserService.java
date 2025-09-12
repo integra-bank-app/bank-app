@@ -123,8 +123,8 @@ public class UserService {
         fromUser.setBalance(fromUser.getBalance() - amount);
         toUser.setBalance(toUser.getBalance() + amount);
 
-        userRepository.updateUser(fromUser);
-        userRepository.updateUser(toUser);
+        userRepository.save(fromUser);
+        userRepository.save(toUser);
 
         return fromUser.getBalance();
     }
