@@ -48,8 +48,9 @@ public class User implements Serializable {
     private String lastName;
 
     @Setter
-    @Column(nullable = false)
-    private double balance;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<Account> accounts = new ArrayList<>();
 
     @Setter
     @ManyToOne

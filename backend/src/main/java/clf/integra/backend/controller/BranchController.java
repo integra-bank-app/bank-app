@@ -1,12 +1,15 @@
 package clf.integra.backend.controller;
 
+import clf.integra.backend.dto.UserDTO;
 import clf.integra.backend.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -37,5 +40,17 @@ public class BranchController {
         } catch(IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
+    }
+    /**
+     * Endpoint to get users by branchId
+     *
+     */
+    @GetMapping("branches/{branchId}/users")
+    public ResponseEntity<List<UserDTO>> getUsersByBranch(@PathVariable UUID branchId) {
+        List<UserDTO> users = userService.getAllUsersByBranch(branchId);
+        if (users.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity.ok(users);
     }
 }
