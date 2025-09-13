@@ -38,9 +38,9 @@ public class FeeTaxService {
     }
 
     public double deductFeeAndTax(User user) {
-        double balance = user.getBalance();
+        double balance = user.getAccounts().getFirst().getBalance();
         double tax = calculateFee(balance);
-        user.setBalance(balance - tax);
+        user.getAccounts().getFirst().setBalance(balance - tax);
         userRepository.save(user);
         return tax;
     }

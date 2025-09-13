@@ -1,5 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="BackendApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+    <option name="SCHEDULED_DEBUGGER" value="true" />
     <module name="backend.main" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="clf.integra.backend.BackendApplication" />
     <method v="2">
