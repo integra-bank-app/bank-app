@@ -35,4 +35,12 @@ public class TransactionService {
         return transactionRepository.findByUserIdOrderByTimestampDesc(userId);
     }
 
+    public Transaction getTransactionById(UUID transactionId) {
+        return transactionRepository.findById(transactionId)
+                .orElseThrow(() -> new IllegalArgumentException("Transaction not found with id: " + transactionId));
+    }
+
+    public List<Transaction> getAllTransactions() {
+        return transactionRepository.findAll();
+    }
 }
