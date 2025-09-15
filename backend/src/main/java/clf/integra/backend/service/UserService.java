@@ -130,9 +130,10 @@ public class UserService {
                         .description("Fee of " + fee + " collected")
                         .timestamp(LocalDateTime.now())
                         .build();
+
+                transactionRepository.save(feeTransaction);
             }
         }
-
         userRepository.saveAll(usersBranch);
         return revenue;
     }
