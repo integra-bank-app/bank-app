@@ -23,8 +23,8 @@ public class InvestmentsController {
     }
 
     @GetMapping("users/{userId}/investments/{investmentsId}")
-    public ResponseEntity<Investment> getInvestmentByUserId(@PathVariable("userId") UUID userId, @PathVariable("investmentsId") UUID investmentsId) {
-        Investment investment = investmentService.getInvestmentByUserId(userId, investmentsId);
-        return ResponseEntity.ok(investment);
+    public ResponseEntity<InvestmentDTO> getInvestmentByUserId(@PathVariable("userId") UUID userId, @PathVariable("investmentsId") UUID investmentsId) {
+        InvestmentDTO investmentDTO = investmentService.getInvestmentByUserId(userId, investmentsId);
+        return ResponseEntity.ok(investmentDTO);
     }
 }
