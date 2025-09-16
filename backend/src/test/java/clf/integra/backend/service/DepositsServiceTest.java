@@ -7,9 +7,10 @@ import clf.integra.backend.model.User;
 import clf.integra.backend.repository.DepositsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,6 +20,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
+@ExtendWith(MockitoExtension.class)
 public class DepositsServiceTest {
 
     @InjectMocks
@@ -29,7 +31,6 @@ public class DepositsServiceTest {
 
     @BeforeEach
     public void init() {
-        MockitoAnnotations.openMocks(this);
     }
 
     @Test
