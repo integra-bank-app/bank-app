@@ -12,6 +12,8 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     List<User> findByBranchId(UUID branchId);
 
     Double getBalanceById(UUID id);
+
+    User getUserById(UUID fromUserId);
 }
 
 

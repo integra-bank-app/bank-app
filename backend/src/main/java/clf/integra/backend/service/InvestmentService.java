@@ -26,6 +26,7 @@ public class InvestmentService {
 
         Investment investment = Investment.builder().risk(risk).balance(balance).user(user).build();
         investmentsRepository.save(investment);
+
         return investment.getId();
     }
 

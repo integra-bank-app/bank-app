@@ -6,6 +6,7 @@ import clf.integra.backend.exceptions.InsufficientFundsException;
 import clf.integra.backend.exceptions.NotFoundException;
 import clf.integra.backend.model.Account;
 import clf.integra.backend.model.Branch;
+import clf.integra.backend.model.TransactionType;
 import clf.integra.backend.model.User;
 import clf.integra.backend.repository.BranchRepository;
 import clf.integra.backend.repository.UserRepository;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 public class UserService {
     private final UserRepository userRepository;
     private final BranchRepository branchRepository;
+    private final TransactionService transactionService;
 
     @Transactional
     public UUID addUserWithName(String firstName, String middleName, String lastName, UUID branchId) {
@@ -61,6 +63,8 @@ public class UserService {
         User user = userRepository.findById(uuid).orElseThrow(() -> new NotFoundException("User not found"));
         user.getAccounts().getFirst().setBalance(user.getAccounts().getFirst().getBalance() + amount);
         userRepository.save(user);
+
+        transactionService.createTransaction(user, amount, TransactionType.TOP_UP, "Top-up of " + amount);
 
         return user.getAccounts().getFirst().getBalance();
     }
@@ -108,9 +112,10 @@ public class UserService {
             if (fee > 0) {
                 user.getAccounts().getFirst().setBalance(userBalance - fee);
                 revenue += fee;
+
+                transactionService.createTransaction(user, -fee, TransactionType.FEE, "Fee of " + fee + " collected");
             }
         }
-
         userRepository.saveAll(usersBranch);
         return revenue;
     }
@@ -122,6 +127,7 @@ public class UserService {
     public double calculateFee(double balance) {
         return balance < 100 ? balance * 0.1 : 10;
     }
+
     public double transferMoney(UUID fromUserId, UUID toUserId, double amount) throws NotFoundException, InsufficientFundsException {
         User fromUser = userRepository.getReferenceById(fromUserId);
         User toUser = userRepository.getReferenceById(toUserId);
@@ -139,6 +145,9 @@ public class UserService {
 
         userRepository.save(fromUser);
         userRepository.save(toUser);
+
+        transactionService.createTransaction(fromUser, -amount, TransactionType.TRANSFER_OUT, "Transfer of " + amount + " to user " + toUserId);
+        transactionService.createTransaction(toUser, amount, TransactionType.TRANSFER_IN, "Transfer of " + amount + " from user " + fromUserId);
 
         return fromUser.getAccounts().getFirst().getBalance();
     }
