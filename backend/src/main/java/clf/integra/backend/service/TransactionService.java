@@ -1,5 +1,7 @@
 package clf.integra.backend.service;
 
+import clf.integra.backend.exceptions.InvalidAmountException;
+import clf.integra.backend.exceptions.InvalidTransactionType;
 import clf.integra.backend.model.Transaction;
 import clf.integra.backend.model.TransactionType;
 import clf.integra.backend.model.User;
@@ -19,7 +21,15 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
 
     @Transactional
-    public Transaction createTransaction(User user, Double amount, TransactionType type, String description) {
+    Transaction createTransaction(User user, Double amount, TransactionType type, String description){
+        if (amount <= 0) {
+            throw new InvalidAmountException("Transaction amount must be positive");
+        }
+
+        if (type instanceof TransactionType) {
+            throw new InvalidTransactionType("Transaction type is invalid");
+        }
+
         Transaction transaction = Transaction.builder()
                 .user(user)
                 .amount(amount)

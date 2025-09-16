@@ -1,12 +1,9 @@
 package clf.integra.backend.service;
 
 import clf.integra.backend.model.Investment;
-import clf.integra.backend.model.Transaction;
 import clf.integra.backend.model.User;
 import clf.integra.backend.repository.InvestmentsRepository;
-import clf.integra.backend.repository.TransactionRepository;
 import clf.integra.backend.repository.UserRepository;
-import clf.integra.backend.model.TransactionType;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -21,7 +18,6 @@ import java.util.UUID;
 public class InvestmentService {
     private final InvestmentsRepository investmentsRepository;
     private final UserRepository userRepository;
-    private final TransactionRepository transactionRepository;
 
     @Transactional
     public UUID createInvestment(int risk, Double balance, UUID userId) {
@@ -30,15 +26,6 @@ public class InvestmentService {
 
         Investment investment = Investment.builder().risk(risk).balance(balance).user(user).build();
         investmentsRepository.save(investment);
-
-        Transaction investmentTransaction = Transaction.builder()
-                .user(user)
-                .amount(-balance)
-                .type(TransactionType.INVESTMENT)
-                .description("Investment created with risk level " + risk)
-                .timestamp(java.time.LocalDateTime.now())
-                .build();
-        transactionRepository.save(investmentTransaction);
 
         return investment.getId();
     }
@@ -78,15 +65,6 @@ public class InvestmentService {
             }
 
             investment.setBalance(balance);
-
-            Transaction investmentUpdateTransaction = Transaction.builder()
-                    .user(investment.getUser())
-                    .amount(0.0)
-                    .type(TransactionType.INVESTMENT_UPDATE)
-                    .description("Investment updated with risk level " + risk)
-                    .timestamp(java.time.LocalDateTime.now())
-                    .build();
-            transactionRepository.save(investmentUpdateTransaction);
         }
         investmentsRepository.saveAll(investments);
     }
