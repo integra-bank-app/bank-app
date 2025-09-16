@@ -1,5 +1,7 @@
 package clf.integra.backend.service;
 
+import clf.integra.backend.dto.InvestmentDTO;
+import clf.integra.backend.mapper.InvestmentMapper;
 import clf.integra.backend.model.Investment;
 import clf.integra.backend.model.User;
 import clf.integra.backend.repository.InvestmentsRepository;
@@ -30,12 +32,13 @@ public class InvestmentService {
         return investment.getId();
     }
 
-    public Investment getInvestmentByUserId(UUID userId, UUID investmentId) {
+    public InvestmentDTO getInvestmentByUserId(UUID userId, UUID investmentId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
         return user.getInvestments().stream()
                 .filter(investment -> investmentId.equals(investment.getId()))
                 .findFirst()
+                .map(InvestmentMapper::toDTO)
                 .orElseThrow(() -> new IllegalArgumentException(
                         "Investment not found with id: " + investmentId + " for user: " + userId));
     }
