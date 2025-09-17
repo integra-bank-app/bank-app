@@ -12,7 +12,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -33,6 +32,7 @@ public class Branch implements Serializable {
     @Setter
     @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference // Parent
+    @Builder.Default
     private Set<User> users = new HashSet<>();
 
 }
