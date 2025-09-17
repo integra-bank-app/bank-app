@@ -130,6 +130,7 @@ class InvestmentServiceTest {
 
     @Test
     void getInvestmentByUserId_investmentNotFound_throwsException() {
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         UUID missingInvestmentId = UUID.randomUUID();
 
         assertThrows(IllegalArgumentException.class,
