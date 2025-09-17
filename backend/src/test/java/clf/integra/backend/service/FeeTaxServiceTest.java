@@ -16,6 +16,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -114,20 +116,18 @@ class FeeTaxServiceTest {
 
     @Test
     void testFeeAndTaxUsers_ShouldProcessAllUsers() {
-        User user1 = new User();
-        Account account1 = new Account();
-        account1.setBalance(50.0);
-        user1.setAccounts(List.of(account1));
+        UUID idUser1 = UUID.randomUUID();
+        UUID idUser2 = UUID.randomUUID();
+        User user1 = createUserWithBalance(idUser1, "John", "A", "Doe", 50.0);
+        User user2 = createUserWithBalance(idUser2, "Jane", "B", "Smith", 200.0);
 
-        User user2 = new User();
-        Account account2 = new Account();
-        account2.setBalance(200.0);
-        user2.setAccounts(List.of(account2));
 
         List<User> users = Arrays.asList(user1, user2);
 
         when(userRepository.findAll()).thenReturn(users);
         when(userRepository.save(any(User.class))).thenReturn(new User());
+        when(userRepository.findById(idUser1)).thenReturn(Optional.of(user1));
+        when(userRepository.findById(idUser2)).thenReturn(Optional.of(user2));
         when(taxRepository.save(any(FeeTaxTransaction.class)))
                 .thenReturn(new FeeTaxTransaction());
 
@@ -137,7 +137,25 @@ class FeeTaxServiceTest {
         verify(userRepository, times(2)).save(any(User.class));
         verify(taxRepository, times(2)).save(any(FeeTaxTransaction.class));
 
-        assertEquals(45.0, account1.getBalance());
-        assertEquals(190.0, account2.getBalance());
+        assertEquals(45.0, userRepository.findById(idUser1).get().getAccounts().getFirst().getBalance());
+        assertEquals(190.0, userRepository.findById(idUser2).get().getAccounts().getFirst().getBalance());
+    }
+
+    private User createUserWithBalance(UUID id, String firstName, String middleName, String lastName, double balance) {
+        User user = User.builder()
+                .id(id)
+                .firstName(firstName)
+                .middleName(middleName)
+                .lastName(lastName)
+                .build();
+
+        Account account = Account.builder()
+                .id(UUID.randomUUID())
+                .balance(balance)
+                .user(user)
+                .build();
+
+        user.getAccounts().add(account);
+        return user;
     }
 }
