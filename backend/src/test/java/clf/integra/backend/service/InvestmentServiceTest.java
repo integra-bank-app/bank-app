@@ -80,14 +80,12 @@ class InvestmentServiceTest {
 
     @Test
     void createInvestment_nullBalance_throwsException() {
-        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         assertThrows(IllegalArgumentException.class,
                 () -> investmentService.createInvestment(5, null, userId));
     }
 
     @Test
     void createInvestment_invalidRisk_throwsException() {
-        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         assertThrows(IllegalArgumentException.class,
                 () -> investmentService.createInvestment(0, 100.0, userId));
         assertThrows(IllegalArgumentException.class,
@@ -96,7 +94,6 @@ class InvestmentServiceTest {
 
     @Test
     void createInvestment_nullUserId_throwsException() {
-        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         assertThrows(IllegalArgumentException.class,
                 () -> investmentService.createInvestment(5, 100.0, null));
     }
