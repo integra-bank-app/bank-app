@@ -26,7 +26,7 @@ public class TransactionService {
             throw new InvalidAmountException("Transaction amount must be positive");
         }
 
-        if (type instanceof TransactionType) {
+        if (type == null) {
             throw new InvalidTransactionType("Transaction type is invalid");
         }
 
