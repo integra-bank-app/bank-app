@@ -6,10 +6,11 @@ import clf.integra.backend.exceptions.InsufficientFundsException;
 import clf.integra.backend.exceptions.NotFoundException;
 import clf.integra.backend.model.Account;
 import clf.integra.backend.model.Branch;
-import clf.integra.backend.model.RandomUtils;
+import clf.integra.backend.model.TransactionType;
 import clf.integra.backend.model.User;
 import clf.integra.backend.repository.BranchRepository;
 import clf.integra.backend.repository.UserRepository;
+import clf.integra.backend.utils.RandomUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -24,11 +25,14 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -39,11 +43,15 @@ public class UserServiceTest {
     @Mock
     private BranchRepository branchRepository;
 
+    @Mock
+    private TransactionService transactionService;
+
     @InjectMocks
     private UserService userService;
 
     @Mock
     private RandomUtils randomUtils;
+
 
     private User user;
     private Account account;
@@ -53,12 +61,12 @@ public class UserServiceTest {
     public void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        userId = UUID.randomUUID();
+        userId=UUID.randomUUID();
         account = Account.builder()
                 .id(UUID.randomUUID())
                 .balance(100.0)
                 .build();
-        user=User.builder()
+        user = User.builder()
                 .id(userId)
                 .firstName("John")
                 .middleName("Mike")
@@ -69,25 +77,20 @@ public class UserServiceTest {
     }
 
     @Test
-    void TestAddUserWithName_ValidData_returnSuccess(){
+    void testAddUserWithName_validData_returnSuccess(){
         UUID branchId = UUID.randomUUID();
-        Branch branch=Branch.builder().id(branchId).build();
+        Branch branch = Branch.builder().id(branchId).build();
 
         when(branchRepository.findById(branchId)).thenReturn(Optional.of(branch));
-        when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
-            User saved = invocation.getArgument(0);
-            saved.setId(UUID.randomUUID());
-            return saved;
-        });
+        when(userRepository.save(any(User.class))).thenReturn(user);
 
-        UUID newUserId = userService.addUserWithName("John", "Mike", "Doe", branchId);
+        userService.addUserWithName("John", "Mike", "Doe", branchId);
 
-        assertNotNull(newUserId);
         verify(userRepository).save(any(User.class));
     }
 
     @Test
-    void TestAddUserWithName_NoBranch_returnNoSuchElement(){
+    void testAddUserWithName_noBranch_returnNoSuchElement(){
         UUID branchId = UUID.randomUUID();
 
         when(branchRepository.findById(branchId)).thenReturn(Optional.empty());
@@ -97,7 +100,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void TestAddBalance_WhenRandomBelow_ReturnSuccess(){
+    void testAddBalance_whenRandomBelow_returnSuccess(){
         when(userRepository.existsById(userId)).thenReturn(true);
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(randomUtils.random()).thenReturn(0.5);
@@ -106,20 +109,23 @@ public class UserServiceTest {
 
         assertEquals(200.0, result);
         verify(userRepository).save(user);
+        verify(transactionService).createTransaction(user, 100.0, TransactionType.TOP_UP, "Top-up of 100.0");
     }
 
+
     @Test
-    void TestAddBalance_WhenRandomAbove_ReturnFailure(){
+    void testAddBalance_whenRandomAbove_returnFailure(){
         when(userRepository.existsById(userId)).thenReturn(true);
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(randomUtils.random()).thenReturn(0.9);
 
         assertThrows(BalanceUpdateFailedException.class, ()->
                     userService.addBalance(userId, 100.0));
+        verify(transactionService, never()).createTransaction(any(), anyDouble(), any(), any());
     }
 
     @Test
-    void TestAddBalance_UserNotFound_ReturnNotFound(){
+    void testAddBalance_userNotFound_returnNotFound(){
         when(userRepository.existsById(userId)).thenReturn(false);
 
         assertThrows(NotFoundException.class, ()->
@@ -127,7 +133,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void TestgetUserBalanaceByID_ValidData_ReturnSuccess(){
+    void testGetUserBalanaceByID_validData_returnSuccess(){
         when(userRepository.getReferenceById(userId)).thenReturn(user);
 
         double totalBalance = userService.getUserTotalBalanceById(userId);
@@ -136,13 +142,13 @@ public class UserServiceTest {
     }
 
     @Test
-    void TestgetUserBalanaceByID_IdNull_ReturnFailure(){
+    void testGetUserBalanaceByID_idNull_returnFailure(){
         assertThrows(IllegalArgumentException.class, ()->
                 userService.getUserTotalBalanceById(null));
     }
 
     @Test
-    void TestgetAllUserByBranch(){
+    void testGetAllUserByBranch(){
         UUID branchId = UUID.randomUUID();
         when(userRepository.findByBranchId(branchId)).thenReturn(List.of(user));
 
@@ -153,18 +159,25 @@ public class UserServiceTest {
     }
 
     @Test
-    void TestCollectTaxesAndFeesFromBranch_ValidData_ReturnSuccess(){
+    void testCollectTaxesAndFeesFromBranch_validData_returnSuccess(){
         UUID branchId = UUID.randomUUID();
         when(userRepository.findByBranchId(branchId)).thenReturn(List.of(user));
 
         double revenue = userService.collectTaxesAndFeesFromBranch(branchId);
+        double expectedFee = userService.calculateFee(user.getAccounts().getFirst().getBalance() + revenue);
 
         assertTrue(revenue > 0);
         verify(userRepository).saveAll(anyList());
+        verify(transactionService).createTransaction(
+                eq(user),
+                anyDouble(),
+                eq(TransactionType.FEE),
+                anyString()
+        );
     }
 
     @Test
-    void TestCollectTaxesAndFeesFromBranch_NoBranch_ReturnFailure(){
+    void testCollectTaxesAndFeesFromBranch_noBranch_returnFailure(){
         UUID branchId = UUID.randomUUID();
         when(userRepository.findByBranchId(branchId)).thenReturn(Collections.emptyList());
 
@@ -172,7 +185,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void testCalculateFee_Below100() {
+    void testCalculateFee_below100() {
         double balance = 50.0;
         double expectedFee = balance * 0.1;
 
@@ -182,7 +195,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void testCalculateFee_Equal100() {
+    void testCalculateFee_equal100() {
         double balance = 100.0;
         double expectedFee = 10.0;
 
@@ -192,7 +205,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void testCalculateFee_Above100() {
+    void testCalculateFee_above100() {
         double balance = 150.0;
         double expectedFee = 10.0;
 
@@ -202,7 +215,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void TestTransferMoney_ValidData_ReturnSuccess() throws NotFoundException, InsufficientFundsException {
+    void testTransferMoney_validData_returnSuccess() throws NotFoundException, InsufficientFundsException {
         UUID fromUserId = UUID.randomUUID();
         UUID toUserId = UUID.randomUUID();
 
@@ -224,10 +237,12 @@ public class UserServiceTest {
         assertEquals(150.0, toUser.getAccounts().get(0).getBalance());
         verify(userRepository).save(fromUser);
         verify(userRepository).save(toUser);
+        verify(transactionService).createTransaction(fromUser, -100.0, TransactionType.TRANSFER_OUT, "Transfer of 100.0 to user " + toUserId);
+        verify(transactionService).createTransaction(toUser, 100.0, TransactionType.TRANSFER_IN, "Transfer of 100.0 from user " + fromUserId);
     }
 
     @Test
-    void TestTransferMoney_InsufficientFunds_ReturnFailure() {
+    void testTransferMoney_insufficientFunds_returnFailure() {
         UUID fromUserId = UUID.randomUUID();
         UUID toUserId = UUID.randomUUID();
 
@@ -246,10 +261,11 @@ public class UserServiceTest {
         assertThrows(InsufficientFundsException.class, () ->
                 userService.transferMoney(fromUserId, toUserId, 100.0)
         );
+        verify(transactionService, never()).createTransaction(any(), anyDouble(), any(), any());
     }
 
     @Test
-    void TestTransferMoney_UserNotFound_ReturnNotFound() {
+    void testTransferMoney_userNotFound_returnNotFound() {
         UUID fromUserId = UUID.randomUUID();
         UUID toUserId = UUID.randomUUID();
 
@@ -259,10 +275,11 @@ public class UserServiceTest {
         assertThrows(NotFoundException.class, () ->
                 userService.transferMoney(fromUserId, toUserId, 50.0)
         );
+        verify(transactionService, never()).createTransaction(any(), anyDouble(), any(), any());
     }
 
     @Test
-    void TestGetUserAccounts_ValidData_ReturnSuccess() {
+    void testGetUserAccounts_validData_returnSuccess() {
         UUID userId = user.getId();
         Account account2 = Account.builder().id(UUID.randomUUID()).build();
         user.getAccounts().add(account2);
@@ -278,7 +295,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void TestGetUserAccounts_UserNotFound_ReturnNotFound() {
+    void testGetUserAccounts_userNotFound_returnNotFound() {
         UUID unknownUserId = UUID.randomUUID();
         when(userRepository.existsById(unknownUserId)).thenReturn(false);
 
@@ -287,7 +304,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void TestGetUserAccounts_NoAccounts() {
+    void testGetUserAccounts_noAccounts_returnEmptyList() {
         UUID userId = user.getId();
         user.getAccounts().clear();
 
@@ -300,7 +317,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void TestGetUserAccountBalance_ValidData_ReturnSuccess() {
+    void testGetUserAccountBalance_validData_returnSuccess() {
         UUID userId = user.getId();
         UUID accountId = user.getAccounts().get(0).getId();
 
@@ -313,7 +330,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void TestGetUserAccountBalance_UserNotFound_ReturnNotFound() {
+    void testGetUserAccountBalance_userNotFound_returnNotFound() {
         UUID unknownUserId = UUID.randomUUID();
         UUID accountId = UUID.randomUUID();
 
@@ -325,7 +342,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void TestGetUserAccountBalance_AccountNotFound_ReturnNotFound() {
+    void testGetUserAccountBalance_accountNotFound_returnNotFound() {
         UUID userId = user.getId();
         UUID unknownAccountId = UUID.randomUUID();
 

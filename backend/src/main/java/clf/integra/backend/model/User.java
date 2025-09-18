@@ -36,7 +36,6 @@ public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Setter
     private UUID id;
 
     @Setter
