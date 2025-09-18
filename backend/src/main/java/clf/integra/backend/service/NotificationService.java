@@ -11,6 +11,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -23,9 +24,8 @@ public class NotificationService {
     private final NotificationHandler notificationHandler;
 
     @Transactional
-    public void sendNotificationToUser(NotificationType notificationType, String message, UUID userId) {
+    public void sendNotificationToUser(NotificationType notificationType, String message, UUID userId) throws IOException {
         User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
-
         Notification notification = Notification.builder()
                 .user(user)
                 .type(notificationType)
@@ -34,15 +34,7 @@ public class NotificationService {
         user.getNotifications().add(notification);
         userRepository.save(user);
         notificationRepository.save(notification);
-
-        try
-        {
         notificationHandler.sendNotification(notification);
-        }
-        catch (Exception e)
-            {
-            e.printStackTrace();
-            }
     }
 
 }
