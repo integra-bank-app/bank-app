@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class NotificationMapper {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    public static NotificationDTO toDto(Notification notification) {
+    public static NotificationDTO toDTO(Notification notification) {
         if (notification == null) return null;
         return NotificationDTO.builder()
                 .type(notification.getType())
@@ -16,12 +16,8 @@ public class NotificationMapper {
                 .build();
     }
 
-    public static String toJson(Notification notification) {
+    public static String toJson(Notification notification) throws JsonProcessingException {
         if (notification == null) return null;
-        try {
-            return objectMapper.writeValueAsString(NotificationMapper.toDto(notification));
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        return objectMapper.writeValueAsString(NotificationMapper.toDTO(notification));
     }
 }
