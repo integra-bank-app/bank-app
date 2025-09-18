@@ -2,8 +2,6 @@ package clf.integra.backend.controller;
 
 
 import clf.integra.backend.dto.InvestmentDTO;
-
-import clf.integra.backend.model.Investment;
 import clf.integra.backend.service.InvestmentService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
