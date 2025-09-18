@@ -1,23 +1,27 @@
 package clf.integra.backend.mapper;
 
+import clf.integra.backend.dto.NotificationDTO;
 import clf.integra.backend.model.Notification;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
-import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 
-public class NotificationMapper{
+public class NotificationMapper {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    public static String toJson(Notification notification){
-        System.out.println(notification);
-        SimpleFilterProvider filter = new SimpleFilterProvider()
-                .addFilter("notificationFilter", SimpleBeanPropertyFilter.filterOutAllExcept("id","user"));
-        try {
-            return objectMapper.writer(filter).writeValueAsString(notification);
-        }
-        catch (Exception e) {
-            return "Could not generate notification, exception: " + e.getMessage();
-        }
+    public static NotificationDTO toDto(Notification notification) {
+        if (notification == null) return null;
+        return NotificationDTO.builder()
+                .type(notification.getType())
+                .message(notification.getMessage())
+                .build();
     }
 
+    public static String toJson(Notification notification) {
+        if (notification == null) return null;
+        try {
+            return objectMapper.writeValueAsString(NotificationMapper.toDto(notification));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
