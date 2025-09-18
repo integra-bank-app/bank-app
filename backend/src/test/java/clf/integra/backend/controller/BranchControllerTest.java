@@ -48,7 +48,7 @@ public class BranchControllerTest {
     }
 
     @Test
-    public void testCollectTaxesAndFeesFromBranch_Success_ReturnOkWithRevenue() throws Exception {
+    public void testCollectTaxesAndFeesFromBranch_success_returnOkWithRevenue() throws Exception {
         when(userService.collectTaxesAndFeesFromBranch(eq(branchId))).thenReturn(1000.0);
         mockMvc.perform(post("/branches/{branchId}/collect-taxes-and-fees", branchId)
                         .accept(MediaType.APPLICATION_JSON))
@@ -57,7 +57,7 @@ public class BranchControllerTest {
     }
 
     @Test
-    public void testCollectTaxesAndFeesFromBranch_ZeroRevenue_ReturnExpectationFailed() throws Exception {
+    public void testCollectTaxesAndFeesFromBranch_zeroRevenue_returnExpectationFailed() throws Exception {
         when(userService.collectTaxesAndFeesFromBranch(eq(branchId))).thenReturn(0.0);
         mockMvc.perform(post("/branches/{branchId}/collect-taxes-and-fees", branchId)
                         .accept(MediaType.APPLICATION_JSON))
@@ -66,7 +66,7 @@ public class BranchControllerTest {
     }
 
     @Test
-    public void testCollectTaxesAndFeesFromBranch_NotFound_ReturnNotFound() throws Exception {
+    public void testCollectTaxesAndFeesFromBranch_notFound_returnNotFound() throws Exception {
         doThrow(new IllegalArgumentException("Branch not found"))
                 .when(userService).collectTaxesAndFeesFromBranch(eq(branchId));
         mockMvc.perform(post("/branches/{branchId}/collect-taxes-and-fees", branchId))
@@ -75,7 +75,7 @@ public class BranchControllerTest {
     }
 
     @Test
-    public void testGetUserByBranch_Success_ReturnOkWithListUsers() throws Exception {
+    public void testGetUserByBranch_success_returnOkWithListUsers() throws Exception {
         when(userService.getAllUsersByBranch(eq(branchId))).thenReturn(this.users);
         this.mockMvc.perform(get("/branches/{branchId}/users", branchId)
                         .accept(MediaType.APPLICATION_JSON))
@@ -85,7 +85,7 @@ public class BranchControllerTest {
     }
 
     @Test
-    public void testGetUserByBranch_Empty_ReturnNotFound() throws Exception {
+    public void testGetUserByBranch_empty_returnNotFound() throws Exception {
         when(userService.getAllUsersByBranch(eq(branchId))).thenReturn(this.usersEmpty);
         this.mockMvc.perform(get("/branches/{branchId}/users", branchId)
                         .accept(MediaType.APPLICATION_JSON))
@@ -93,7 +93,7 @@ public class BranchControllerTest {
     }
 
     @Test
-    public void testGetUserByBranch_NotFound_ReturnNotFound() throws Exception {
+    public void testGetUserByBranch_notFound_returnNotFound() throws Exception {
         when(userService.getAllUsersByBranch(eq(branchId))).thenReturn(this.usersEmpty);
         this.mockMvc.perform(get("/branches/{branchId}/users", branchId)
                         .accept(MediaType.APPLICATION_JSON))
