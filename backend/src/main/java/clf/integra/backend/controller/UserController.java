@@ -2,7 +2,6 @@ package clf.integra.backend.controller;
 
 import clf.integra.backend.dto.BalanceDTO;
 import clf.integra.backend.dto.DepositsDTO;
-import clf.integra.backend.dto.UserDTO;
 import clf.integra.backend.service.DepositsService;
 import clf.integra.backend.dto.UserWithBranchDTO;
 import clf.integra.backend.exceptions.NotFoundException;
