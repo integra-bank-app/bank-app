@@ -42,7 +42,7 @@ public class UserControllerTest {
     @MockitoBean
     DepositsService depositsService;
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     void testAddUser_validData_returnsSuccess() throws Exception {
@@ -245,7 +245,8 @@ public class UserControllerTest {
                 .andReturn();
 
         String responseBody = result.getResponse().getContentAsString();
-        List<DepositsDTO> deposits = objectMapper.readValue(responseBody, new TypeReference<List<DepositsDTO>>() {});
+        List<DepositsDTO> deposits = objectMapper.readValue(responseBody, new TypeReference<>() {
+        });
 
         assert deposits.size() == 2;
         assert (deposits.get(0)).equals(deposit1);
