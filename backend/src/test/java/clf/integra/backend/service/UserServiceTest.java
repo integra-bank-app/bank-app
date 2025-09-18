@@ -6,6 +6,7 @@ import clf.integra.backend.exceptions.InsufficientFundsException;
 import clf.integra.backend.exceptions.NotFoundException;
 import clf.integra.backend.model.Account;
 import clf.integra.backend.model.Branch;
+import clf.integra.backend.model.RandomUtils;
 import clf.integra.backend.model.User;
 import clf.integra.backend.repository.BranchRepository;
 import clf.integra.backend.repository.UserRepository;
@@ -13,8 +14,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
@@ -25,6 +24,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -41,6 +41,9 @@ public class UserServiceTest {
 
     @InjectMocks
     private UserService userService;
+
+    @Mock
+    private RandomUtils randomUtils;
 
     private User user;
     private Account account;
@@ -77,6 +80,9 @@ public class UserServiceTest {
             return saved;
         });
 
+        UUID newUserId = userService.addUserWithName("John", "Mike", "Doe", branchId);
+
+        assertNotNull(newUserId);
         verify(userRepository).save(any(User.class));
     }
 
@@ -94,28 +100,22 @@ public class UserServiceTest {
     void TestAddBalance_WhenRandomBelow_ReturnSuccess(){
         when(userRepository.existsById(userId)).thenReturn(true);
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(randomUtils.random()).thenReturn(0.5);
 
-        try(MockedStatic<Math> mathMock = Mockito.mockStatic(Math.class)) {
-            mathMock.when(Math::random).thenReturn(0.5);
+        double result = userService.addBalance(userId, 100.0);
 
-            double result = userService.addBalance(userId, 100.0);
-
-            assertEquals(200.0, result);
-            verify(userRepository).save(user);
-        }
+        assertEquals(200.0, result);
+        verify(userRepository).save(user);
     }
 
     @Test
     void TestAddBalance_WhenRandomAbove_ReturnFailure(){
         when(userRepository.existsById(userId)).thenReturn(true);
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(randomUtils.random()).thenReturn(0.9);
 
-        try(MockedStatic<Math> mathMock = Mockito.mockStatic(Math.class)) {
-            mathMock.when(Math::random).thenReturn(0.9);
-
-            assertThrows(BalanceUpdateFailedException.class, ()->
+        assertThrows(BalanceUpdateFailedException.class, ()->
                     userService.addBalance(userId, 100.0));
-        }
     }
 
     @Test

@@ -6,6 +6,7 @@ import clf.integra.backend.exceptions.InsufficientFundsException;
 import clf.integra.backend.exceptions.NotFoundException;
 import clf.integra.backend.model.Account;
 import clf.integra.backend.model.Branch;
+import clf.integra.backend.model.RandomUtils;
 import clf.integra.backend.model.TransactionType;
 import clf.integra.backend.model.User;
 import clf.integra.backend.repository.BranchRepository;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 public class UserService {
     private final UserRepository userRepository;
     private final BranchRepository branchRepository;
+    private final RandomUtils randomUtils;
     private final TransactionService transactionService;
 
     @Transactional
@@ -55,8 +57,7 @@ public class UserService {
         }
 
         //Simulate a random chance of 20% (in the issue is 10%, but I had bad luck) for the operation to fail
-        double randomValue = Math.random();
-        if (randomValue >= 0.8) {
+        if (randomUtils.random() >= 0.8) {
             throw new BalanceUpdateFailedException("An unknown error has occurred intentionally");
         }
 
