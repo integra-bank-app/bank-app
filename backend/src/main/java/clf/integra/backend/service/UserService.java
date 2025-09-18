@@ -120,11 +120,7 @@ public class UserService {
         return revenue;
     }
 
-    public UUID generateUUID() {
-        return UUID.randomUUID();
-    }
-
-    public double calculateFee(double balance) {
+    public double calculateFee(Double balance) {
         return balance < 100 ? balance * 0.1 : 10;
     }
 
