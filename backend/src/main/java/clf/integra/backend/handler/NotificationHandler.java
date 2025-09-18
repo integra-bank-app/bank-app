@@ -3,8 +3,8 @@ package clf.integra.backend.handler;
 import clf.integra.backend.mapper.NotificationMapper;
 import clf.integra.backend.model.Notification;
 import clf.integra.backend.repository.UserRepository;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -12,7 +12,6 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -24,8 +23,7 @@ public class NotificationHandler extends TextWebSocketHandler {
     private final UserRepository userRepository;
 
     @Override
-    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-
+    public void afterConnectionEstablished(@NonNull WebSocketSession session) throws Exception {
         String uuid = getUUIDFromQuery(session);
         if (uuid == null) {
             session.close(CloseStatus.NOT_ACCEPTABLE);
@@ -40,22 +38,24 @@ public class NotificationHandler extends TextWebSocketHandler {
             return;
         }
 
-        if (userRepository.findById(userUuid).isEmpty())
-        {
+        if (userRepository.findById(userUuid).isEmpty()) {
             session.close(CloseStatus.BAD_DATA);
             return;
         }
 
         sessions.put(uuid, session);
-        System.out.println("Connected to notifications " + uuid);
+//        System.out.println("Connected to notifications " + uuid);
     }
 
     @Override
-    public void afterConnectionClosed(WebSocketSession session, CloseStatus status){
+    public void afterConnectionClosed(@NonNull WebSocketSession session, @NonNull CloseStatus status) {
         sessions.values().remove(session);
     }
 
     private String getUUIDFromQuery(WebSocketSession session) {
+        if (session.getUri() == null) {
+            return null;
+        }
         String query = session.getUri().getQuery();
         if (query != null && query.startsWith("uuid=")) {
             return query.substring(5);

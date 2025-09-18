@@ -1,6 +1,5 @@
 package clf.integra.backend.model;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,7 +20,6 @@ import java.util.UUID;
 @Builder
 @Entity
 @Data
-@JsonFilter("notificationFilter")
 public class Notification implements Serializable {
 
     @Id

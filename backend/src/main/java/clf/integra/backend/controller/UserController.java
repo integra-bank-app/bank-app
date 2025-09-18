@@ -2,7 +2,6 @@ package clf.integra.backend.controller;
 
 import clf.integra.backend.dto.BalanceDTO;
 import clf.integra.backend.dto.DepositsDTO;
-import clf.integra.backend.dto.UserDTO;
 import clf.integra.backend.service.DepositsService;
 import clf.integra.backend.dto.UserWithBranchDTO;
 import clf.integra.backend.exceptions.NotFoundException;
@@ -26,7 +25,6 @@ import java.util.UUID;
 public class UserController {
     private final UserService userService;
     private final DepositsService depositsService;
-    private final NotificationService notificationService;
 
     @PostMapping("/users")
     public UUID addUser(@RequestBody UserWithBranchDTO user) {
@@ -36,13 +34,10 @@ public class UserController {
     @PostMapping("/users/{userId}/balance")
     public ResponseEntity<Double> addUserBalance(@PathVariable("userId") UUID userId, @RequestBody BalanceDTO balance) {
         double value = balance.value();
-        System.out.println(value);
         if (value < 0) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
         double finalBalance = userService.addBalance(userId, value);
-        notificationService.sendNotificationToUser(NotificationType.SUCCESS,"You have received " + value + "$",userId);
         return new ResponseEntity<>(finalBalance, HttpStatus.OK);
     }
 
@@ -78,4 +73,5 @@ public class UserController {
         }
         return ResponseEntity.ok(deposits);
     }
+
 }
