@@ -14,7 +14,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -53,18 +52,15 @@ class FeeTaxServiceTest {
     void setUp() throws Exception {
         testAccount = new Account();
         testAccount.setBalance(150.0);
+        userId = UUID.randomUUID();
 
         testUser = User.builder()
+                .id(userId)
                 .firstName("John")
                 .middleName("Mike")
                 .lastName("Doe")
                 .accounts(List.of(testAccount))
                 .build();
-
-        Field idField = User.class.getDeclaredField("id");
-        idField.setAccessible(true);
-        userId = UUID.randomUUID();
-        idField.set(testUser, userId);
 
         testUser.setAccounts(List.of(testAccount));
 
