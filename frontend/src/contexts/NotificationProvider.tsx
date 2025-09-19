@@ -39,9 +39,8 @@ export function NotificationProvider({
 
 	useEffect(() => {
 		if (!uuid) return;
-
 		const socket = new WebSocket(
-			`ws://localhost:8080/ws/notifications?uuid=${uuid}`
+			`${import.meta.env.VITE_BACKEND_SOCKET_URL}/ws/notifications?uuid=${uuid}`
 		);
 
 		socket.onopen = () => {
