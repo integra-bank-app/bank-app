@@ -15,5 +15,4 @@ public record UserTransactionDTO(
         String description,
         UUID fromUserId,
         UUID toUserId
-) {
-}
+) {}

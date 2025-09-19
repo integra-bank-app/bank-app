@@ -24,5 +24,4 @@ public class UserTransactionhistoryControlller {
         }
         return ResponseEntity.ok(transations);
     }
-
 }

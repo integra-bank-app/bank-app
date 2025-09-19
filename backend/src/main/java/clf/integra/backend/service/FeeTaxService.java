@@ -66,5 +66,4 @@ public class FeeTaxService {
                         .build()
                 ).collect(Collectors.toList());
     }
-
 }
