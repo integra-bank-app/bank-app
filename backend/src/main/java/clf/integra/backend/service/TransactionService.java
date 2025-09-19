@@ -1,5 +1,6 @@
 package clf.integra.backend.service;
 
+import clf.integra.backend.dto.UserTransactionDTO;
 import clf.integra.backend.exceptions.InvalidAmountException;
 import clf.integra.backend.exceptions.InvalidTransactionType;
 import clf.integra.backend.model.Transaction;
@@ -52,5 +53,20 @@ public class TransactionService {
 
     public List<Transaction> getAllTransactions() {
         return transactionRepository.findAll();
+    }
+
+    public List<UserTransactionDTO> getUserTransaction(UUID userId) {
+        return transactionRepository.findByUserIdOrderByTimestampDesc(userId)
+                .stream()
+                .map(transaction -> UserTransactionDTO.builder()
+                        .transactionId(transaction.getId())
+                        .transactionType(transaction.getType())
+                        .amount(transaction.getAmount())
+                        .timestamp(transaction.getTimestamp())
+                        .description(transaction.getDescription())
+                        .fromUserId(transaction.getType() == TransactionType.TRANSFER_OUT ? transaction.getUser().getId() : null)
+                        .toUserId(transaction.getType() == TransactionType.TRANSFER_IN ? transaction.getUser().getId() : null)
+                        .build()
+                ).toList();
     }
 }
