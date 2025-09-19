@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-public class UserTransactionhistoryControlller {
+public class UserTransactionHistoryControlller {
     private final UserTransactionHistoryService userTransactionHistoryService;
 
     @GetMapping("/users/{userId}/transactions")

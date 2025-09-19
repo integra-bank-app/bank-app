@@ -1,6 +1,7 @@
 package clf.integra.backend.service;
 
 import clf.integra.backend.dto.FeeTaxTransactionDTO;
+import clf.integra.backend.dto.UserTransactionDTO;
 import clf.integra.backend.model.Account;
 import clf.integra.backend.model.FeeTaxTransaction;
 import clf.integra.backend.model.User;
@@ -13,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -22,6 +24,8 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -43,13 +47,25 @@ class FeeTaxServiceTest {
     private User testUser;
     private Account testAccount;
     private FeeTaxTransaction testTransaction;
+    private UUID userId;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
         testAccount = new Account();
         testAccount.setBalance(150.0);
 
-        testUser = new User();
+        testUser = User.builder()
+                .firstName("John")
+                .middleName("Mike")
+                .lastName("Doe")
+                .accounts(List.of(testAccount))
+                .build();
+
+        Field idField = User.class.getDeclaredField("id");
+        idField.setAccessible(true);
+        userId = UUID.randomUUID();
+        idField.set(testUser, userId);
+
         testUser.setAccounts(List.of(testAccount));
 
         testTransaction = FeeTaxTransaction.builder()
@@ -157,5 +173,39 @@ class FeeTaxServiceTest {
 
         user.getAccounts().add(account);
         return user;
+    }
+
+    @Test
+    void testGetUserFeeTaxesTransaction_existingTransaction_returnTransactionList(){
+        FeeTaxTransaction f1 = FeeTaxTransaction.builder()
+                .id(UUID.randomUUID())
+                .user(testUser)
+                .amount(10.0)
+                .createdAt(LocalDateTime.now())
+                .build();
+        FeeTaxTransaction fOther = FeeTaxTransaction.builder()
+                .id(UUID.randomUUID())
+                .user(User.builder().id(UUID.randomUUID()).build())
+                .amount(5.0)
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        when(taxRepository.findAll()).thenReturn(List.of(f1, fOther));
+
+        List<UserTransactionDTO> result = feeTaxService.getUserFeeTaxesTransaction(userId);
+
+        assertEquals(1, result.size());
+        assertEquals(f1.getId(), result.get(0).transactionId());
+        assertEquals(userId, result.get(0).fromUserId());
+        assertNull(result.get(0).toUserId());
+    }
+
+    @Test
+    void testGetUserFeeTaxesTransaction_noTransactions_returnEmptyList(){
+        when(taxRepository.findAll()).thenReturn(List.of());
+
+        List<UserTransactionDTO> result = feeTaxService.getUserFeeTaxesTransaction(userId);
+
+        assertTrue(result.isEmpty());
     }
 }
