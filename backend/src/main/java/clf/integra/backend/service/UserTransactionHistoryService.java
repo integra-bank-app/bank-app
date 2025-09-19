@@ -15,8 +15,8 @@ public class UserTransactionHistoryService {
     private final FeeTaxService feeTaxService;
 
     public List<UserTransactionDTO> getTransactionHistory(UUID userId) {
-        List<UserTransactionDTO> regularTransaction= transactionService.getUserTransaction(userId);
-        List<UserTransactionDTO> feeTransaction= feeTaxService.getUserFeeTaxesTransaction(userId);
+        List<UserTransactionDTO> regularTransaction = transactionService.getUserTransaction(userId);
+        List<UserTransactionDTO> feeTransaction = feeTaxService.getUserFeeTaxesTransaction(userId);
 
         return Stream.concat(regularTransaction.stream(),feeTransaction.stream())
                 .sorted((t1,t2) -> t2.timestamp().compareTo(t1.timestamp()))

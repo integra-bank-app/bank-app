@@ -3,6 +3,7 @@ package clf.integra.backend.service;
 import clf.integra.backend.dto.FeeTaxTransactionDTO;
 import clf.integra.backend.dto.UserTransactionDTO;
 import clf.integra.backend.mapper.FeeTaxTransactionMapper;
+import clf.integra.backend.mapper.UserTransactionHistoryMapper;
 import clf.integra.backend.model.FeeTaxTransaction;
 import clf.integra.backend.model.TransactionType;
 import clf.integra.backend.model.User;
@@ -57,13 +58,7 @@ public class FeeTaxService {
     public List<UserTransactionDTO> getUserFeeTaxesTransaction(UUID userId) {
         return taxRepository.findAll().stream()
                 .filter(f -> f.getUser().getId().equals(userId))
-                .map(f -> UserTransactionDTO.builder()
-                        .transactionId(f.getId()).transactionType(TransactionType.FEE)
-                        .amount(f.getAmount()).timestamp(f.getCreatedAt())
-                        .description("Fee/Tax deducted")
-                        .fromUserId(userId)
-                        .toUserId(null)
-                        .build()
-                ).collect(Collectors.toList());
+                .map(f -> UserTransactionHistoryMapper.fromFeeTaxTransaction(f,userId))
+                .collect(Collectors.toList());
     }
 }
