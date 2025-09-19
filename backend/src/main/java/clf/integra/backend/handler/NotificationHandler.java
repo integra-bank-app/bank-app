@@ -44,7 +44,6 @@ public class NotificationHandler extends TextWebSocketHandler {
         }
 
         sessions.put(uuid, session);
-//        System.out.println("Connected to notifications " + uuid);
     }
 
     @Override
