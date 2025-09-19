@@ -36,7 +36,7 @@ class NotificationServiceTest {
     private NotificationHandler notificationHandler;
 
     @InjectMocks
-    private NotificationService notificationService; // the class with sendNotificationToUser
+    private NotificationService notificationService;
 
     private User testUser;
     private UUID userId;
