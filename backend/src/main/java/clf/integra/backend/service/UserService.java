@@ -10,6 +10,7 @@ import clf.integra.backend.model.TransactionType;
 import clf.integra.backend.model.User;
 import clf.integra.backend.repository.BranchRepository;
 import clf.integra.backend.repository.UserRepository;
+import clf.integra.backend.utils.RandomUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 public class UserService {
     private final UserRepository userRepository;
     private final BranchRepository branchRepository;
+    private final RandomUtils randomUtils;
     private final TransactionService transactionService;
 
     @Transactional
@@ -55,8 +57,7 @@ public class UserService {
         }
 
         //Simulate a random chance of 20% (in the issue is 10%, but I had bad luck) for the operation to fail
-        double randomValue = Math.random();
-        if (randomValue >= 0.8) {
+        if (randomUtils.random() >= 0.8) {
             throw new BalanceUpdateFailedException("An unknown error has occurred intentionally");
         }
 
@@ -120,11 +121,7 @@ public class UserService {
         return revenue;
     }
 
-    public UUID generateUUID() {
-        return UUID.randomUUID();
-    }
-
-    public double calculateFee(double balance) {
+    public double calculateFee(Double balance) {
         return balance < 100 ? balance * 0.1 : 10;
     }
 
