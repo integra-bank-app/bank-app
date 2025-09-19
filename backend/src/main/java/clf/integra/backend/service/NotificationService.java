@@ -33,7 +33,6 @@ public class NotificationService {
                 .build();
         user.getNotifications().add(notification);
         userRepository.save(user);
-        notificationRepository.save(notification);
         notificationHandler.sendNotification(notification);
     }
 
