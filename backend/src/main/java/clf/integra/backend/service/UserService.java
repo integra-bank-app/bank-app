@@ -6,6 +6,7 @@ import clf.integra.backend.exceptions.InsufficientFundsException;
 import clf.integra.backend.exceptions.NotFoundException;
 import clf.integra.backend.model.Account;
 import clf.integra.backend.model.Branch;
+import clf.integra.backend.model.NotificationType;
 import clf.integra.backend.model.TransactionType;
 import clf.integra.backend.model.User;
 import clf.integra.backend.repository.BranchRepository;
@@ -15,6 +16,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -26,11 +28,12 @@ public class UserService {
     private final BranchRepository branchRepository;
     private final RandomUtils randomUtils;
     private final TransactionService transactionService;
+    private final NotificationService notificationService;
 
     @Transactional
     public UUID addUserWithName(String firstName, String middleName, String lastName, UUID branchId) {
         Branch branch = branchRepository.findById(branchId).get();
-        if(branch == null) {
+        if (branch == null) {
             throw new NotFoundException("Branch not found");
         }
         User newUser = User.builder()
@@ -51,7 +54,7 @@ public class UserService {
     }
 
     @Transactional
-    public double addBalance(UUID uuid, double amount) {
+    public double addBalance(UUID uuid, double amount) throws IOException {
         if (!userRepository.existsById(uuid)) {
             throw new NotFoundException("User not found");
         }
@@ -66,6 +69,7 @@ public class UserService {
         userRepository.save(user);
 
         transactionService.createTransaction(user, amount, TransactionType.TOP_UP, "Top-up of " + amount);
+        notificationService.sendNotificationToUser(NotificationType.SUCCESS, "You have received " + amount + "$", uuid);
 
         return user.getAccounts().getFirst().getBalance();
     }

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,15 +33,13 @@ public class UserController {
     }
 
     @PostMapping("/users/{userId}/balance")
-    public ResponseEntity<Double> addUserBalance(@PathVariable("userId") UUID userId, @RequestBody BalanceDTO balance) {
+    public ResponseEntity<Double> addUserBalance(@PathVariable("userId") UUID userId, @RequestBody BalanceDTO balance) throws IOException {
         double value = balance.value();
         if (value < 0) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
         double finalBalance = userService.addBalance(userId, value);
         return new ResponseEntity<>(finalBalance, HttpStatus.OK);
-
     }
 
     @GetMapping("/users/{id}/balance")
@@ -75,4 +74,5 @@ public class UserController {
         }
         return ResponseEntity.ok(deposits);
     }
+
 }
