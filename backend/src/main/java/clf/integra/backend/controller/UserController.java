@@ -11,10 +11,12 @@ import clf.integra.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -23,15 +25,18 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api")
 public class UserController {
     private final UserService userService;
     private final DepositsService depositsService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/users")
     public UUID addUser(@RequestBody UserWithBranchDTO user) {
         return userService.addUserWithName(user.firstName(), user.middleName(), user.lastName(), user.branchId());
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER') and @userPermissionService.canAccessUserData(#userId, authentication)")
     @PostMapping("/users/{userId}/balance")
     public ResponseEntity<Double> addUserBalance(@PathVariable("userId") UUID userId, @RequestBody BalanceDTO balance) {
         double value = balance.value();
@@ -44,30 +49,35 @@ public class UserController {
 
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER') and @userPermissionService.canAccessUserData(#id, authentication)")
     @GetMapping("/users/{id}/balance")
     public ResponseEntity<Double> getUserTotalBalanceById(@PathVariable UUID id) throws NotFoundException {
         Double balance = userService.getUserTotalBalanceById(id);
         return ResponseEntity.ok(balance);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER') and @userPermissionService.canAccessUserData(#fromUserId, authentication)")
     @PostMapping("/users/transfer")
     public ResponseEntity<Double> transferMoney(@RequestParam UUID fromUserId, @RequestParam UUID toUserId, @RequestParam double amount) throws InsufficientFundsException, NotFoundException {
         double newBalance = userService.transferMoney(fromUserId, toUserId, amount);
         return ResponseEntity.ok(newBalance);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER') and @userPermissionService.canAccessUserData(#id, authentication)")
     @GetMapping("/users/{id}/accounts")
     public ResponseEntity<List<UUID>> getUserAccounts(@PathVariable UUID id) throws NotFoundException {
         List<UUID> accounts = userService.getUserAccounts(id);
         return ResponseEntity.ok(accounts);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or (hasRole('USER') and @userPermissionService.canAccessUserData(#id, authentication))")
     @GetMapping("/users/{id}/accounts/{accountId}")
     public ResponseEntity<Double> getUserAccountBalance(@PathVariable UUID id, @PathVariable UUID accountId) throws NotFoundException {
         Double balance = userService.getUserAccountBalance(id, accountId);
         return ResponseEntity.ok(balance);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or (hasRole('USER') and @userPermissionService.canAccessUserData(#id, authentication))")
     @GetMapping("users/{id}/deposits")
     public ResponseEntity<List<DepositsDTO>> getUserDeposits(@PathVariable UUID id) {
         List<DepositsDTO> deposits = depositsService.getUserDeposits(id);
