@@ -10,6 +10,7 @@ import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +27,7 @@ import static org.springframework.data.web.config.EnableSpringDataWebSupport.Pag
 @AllArgsConstructor
 @CrossOrigin("*")
 @EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO)
+@PreAuthorize("hasRole('ADMIN')")
 public class BranchController {
     private final UserService userService;
 

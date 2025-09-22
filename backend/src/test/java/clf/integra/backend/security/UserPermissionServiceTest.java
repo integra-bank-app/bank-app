@@ -1,0 +1,155 @@
+package clf.integra.backend.security;
+
+import clf.integra.backend.security.model.AuthUser;
+import clf.integra.backend.security.service.UserPermissionService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
+class UserPermissionServiceTest {
+
+    @Mock
+    private Authentication authentication;
+
+    @InjectMocks
+    private UserPermissionService userPermissionService;
+
+    private UUID testUserId;
+    private AuthUser testUser;
+    private AuthUser adminUser;
+
+    @BeforeEach
+    void setUp() {
+        testUserId = UUID.randomUUID();
+
+        testUser = AuthUser.builder()
+                .id(UUID.randomUUID())
+                .username("testuser")
+                .userId(testUserId)
+                .role(AuthUser.Role.USER)
+                .build();
+
+        adminUser = AuthUser.builder()
+                .id(UUID.randomUUID())
+                .username("admin")
+                .userId(UUID.randomUUID())
+                .role(AuthUser.Role.ADMIN)
+                .build();
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void canAccessUserData_WithAdminRole_ShouldReturnTrue() {
+        Collection<GrantedAuthority> adminAuthorities = Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        when(authentication.getAuthorities()).thenReturn((Collection) adminAuthorities);
+
+        boolean result = userPermissionService.canAccessUserData(testUserId, authentication);
+
+        assertTrue(result);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void canAccessUserData_WithSameUserId_ShouldReturnTrue() {
+        Collection<GrantedAuthority> userAuthorities = Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
+        when(authentication.getAuthorities()).thenReturn((Collection) userAuthorities);
+        when(authentication.getPrincipal()).thenReturn(testUser);
+
+        boolean result = userPermissionService.canAccessUserData(testUserId, authentication);
+
+        assertTrue(result);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void canAccessUserData_WithDifferentUserId_ShouldReturnFalse() {
+        UUID differentUserId = UUID.randomUUID();
+        Collection<GrantedAuthority> userAuthorities = Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
+        when(authentication.getAuthorities()).thenReturn((Collection) userAuthorities);
+        when(authentication.getPrincipal()).thenReturn(testUser);
+
+        boolean result = userPermissionService.canAccessUserData(differentUserId, authentication);
+
+        assertFalse(result);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void canAccessUserData_WithUserRoleButNoAccess_ShouldReturnFalse() {
+        UUID otherUserId = UUID.randomUUID();
+
+        Collection<GrantedAuthority> userAuthorities = Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
+        when(authentication.getAuthorities()).thenReturn((Collection) userAuthorities);
+        when(authentication.getPrincipal()).thenReturn(testUser);
+
+        boolean result = userPermissionService.canAccessUserData(otherUserId, authentication);
+
+        assertFalse(result);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void canAccessUserData_WithAdminAndDifferentUserId_ShouldReturnTrue() {
+        UUID otherUserId = UUID.randomUUID();
+        Collection<GrantedAuthority> adminAuthorities = Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        when(authentication.getAuthorities()).thenReturn((Collection) adminAuthorities);
+
+        boolean result = userPermissionService.canAccessUserData(otherUserId, authentication);
+
+        assertTrue(result);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void canAccessUserData_WithMultipleRoles_ShouldReturnTrue() {
+        Collection<GrantedAuthority> multipleAuthorities = Arrays.asList(
+                new SimpleGrantedAuthority("ROLE_USER"),
+                new SimpleGrantedAuthority("ROLE_ADMIN")
+        );
+        when(authentication.getAuthorities()).thenReturn((Collection) multipleAuthorities);
+
+        boolean result = userPermissionService.canAccessUserData(testUserId, authentication);
+
+        assertTrue(result);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void canAccessUserData_WithNoRolesAndDifferentUserId_ShouldReturnFalse() {
+        UUID differentUserId = UUID.randomUUID(); // Un ID diferit de cel din testUser
+        Collection<GrantedAuthority> noAuthorities = Arrays.asList();
+        when(authentication.getAuthorities()).thenReturn((Collection) noAuthorities);
+        when(authentication.getPrincipal()).thenReturn(testUser);
+
+        boolean result = userPermissionService.canAccessUserData(differentUserId, authentication);
+
+        assertFalse(result);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void canAccessUserData_WithNoAdminRoleButSameUserId_ShouldReturnTrue() {
+        Collection<GrantedAuthority> noAdminAuthorities = Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
+        when(authentication.getAuthorities()).thenReturn((Collection) noAdminAuthorities);
+        when(authentication.getPrincipal()).thenReturn(testUser);
+
+        boolean result = userPermissionService.canAccessUserData(testUserId, authentication);
+
+        assertTrue(result);
+    }
+}
