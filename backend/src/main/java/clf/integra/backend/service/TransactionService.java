@@ -1,7 +1,9 @@
 package clf.integra.backend.service;
 
+import clf.integra.backend.dto.UserTransactionDTO;
 import clf.integra.backend.exceptions.InvalidAmountException;
 import clf.integra.backend.exceptions.InvalidTransactionType;
+import clf.integra.backend.mapper.UserTransactionHistoryMapper;
 import clf.integra.backend.model.Transaction;
 import clf.integra.backend.model.TransactionType;
 import clf.integra.backend.model.User;
@@ -26,7 +28,7 @@ public class TransactionService {
             throw new InvalidAmountException("Transaction amount must be positive");
         }
 
-        if (type instanceof TransactionType) {
+        if (type == null) {
             throw new InvalidTransactionType("Transaction type is invalid");
         }
 
@@ -52,5 +54,12 @@ public class TransactionService {
 
     public List<Transaction> getAllTransactions() {
         return transactionRepository.findAll();
+    }
+
+    public List<UserTransactionDTO> getUserTransaction(UUID userId) {
+        return transactionRepository.findByUserIdOrderByTimestampDesc(userId)
+                .stream()
+                .map(UserTransactionHistoryMapper::fromTransfers)
+                .toList();
     }
 }

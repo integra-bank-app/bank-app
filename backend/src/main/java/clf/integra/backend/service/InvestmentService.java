@@ -23,6 +23,12 @@ public class InvestmentService {
 
     @Transactional
     public UUID createInvestment(int risk, Double balance, UUID userId) {
+        if (balance == null)
+            throw new IllegalArgumentException("Balance object is set to null");
+
+        if (risk < 1 || risk > 10)
+            throw new IllegalArgumentException("Invalid risk, it has to be between 1 and 10");
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
 

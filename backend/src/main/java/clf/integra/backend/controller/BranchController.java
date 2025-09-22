@@ -2,6 +2,7 @@ package clf.integra.backend.controller;
 
 import clf.integra.backend.dto.UserDTO;
 import clf.integra.backend.service.UserService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,20 +15,11 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
+@AllArgsConstructor
 @PreAuthorize("hasRole('ADMIN')")
 public class BranchController {
     private final UserService userService;
 
-    public BranchController(UserService userService) {
-        this.userService = userService;
-    }
-
-    /**
-     * Endpoint to collect taxes and fees from a branch
-     * If the branchId is null or the branch has no customers, returns 404 NOT FOUND
-     * If the revenue collected is 0, returns 417 EXPECTATION FAILED
-     * Otherwise, returns 200 OK with the revenue amount
-     */
     @PostMapping("branches/{branchId}/collect-taxes-and-fees")
     public ResponseEntity<Double> collectTaxesAndFeesFromBranch(@PathVariable UUID branchId) {
         try {
@@ -39,14 +31,11 @@ public class BranchController {
 
             return ResponseEntity.ok(revenue);
 
-        } catch(IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
-    /**
-     * Endpoint to get users by branchId
-     *
-     */
+
     @GetMapping("branches/{branchId}/users")
     public ResponseEntity<List<UserDTO>> getUsersByBranch(@PathVariable UUID branchId) {
         List<UserDTO> users = userService.getAllUsersByBranch(branchId);
