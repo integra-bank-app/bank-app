@@ -3,7 +3,7 @@ import { StartComponent } from "./components/StartComponent";
 
 import "primeflex/primeflex.css"; // flex
 import "primeicons/primeicons.css"; //icons
-import "primereact/resources/themes/md-dark-deeppurple/theme.css";
+import "primereact/resources/themes/bootstrap4-dark-purple/theme.css";
 import "./App.css";
 import { NotificationProvider } from "./contexts/NotificationProvider";
 
