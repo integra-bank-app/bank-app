@@ -55,18 +55,26 @@ public class User implements Serializable {
     private List<Account> accounts = new ArrayList<>();
 
     @Setter
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<Notification> notifications = new ArrayList<>();
+
+    @Setter
     @ManyToOne
     @JoinColumn(name = "branch_id", nullable = false) // foreign key in users table
     private Branch branch;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private Set<Investment> investments = new HashSet<>();
 
     @Setter
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<FeeTaxTransaction> fees = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<Deposits> deposits = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)

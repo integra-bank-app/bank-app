@@ -1,5 +1,7 @@
 package clf.integra.backend.service;
 
+import clf.integra.backend.dto.InvestmentDTO;
+import clf.integra.backend.mapper.InvestmentMapper;
 import clf.integra.backend.model.Investment;
 import clf.integra.backend.model.User;
 import clf.integra.backend.repository.InvestmentsRepository;
@@ -21,6 +23,12 @@ public class InvestmentService {
 
     @Transactional
     public UUID createInvestment(int risk, Double balance, UUID userId) {
+        if (balance == null)
+            throw new IllegalArgumentException("Balance object is set to null");
+
+        if (risk < 1 || risk > 10)
+            throw new IllegalArgumentException("Invalid risk, it has to be between 1 and 10");
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
 
@@ -30,12 +38,13 @@ public class InvestmentService {
         return investment.getId();
     }
 
-    public Investment getInvestmentByUserId(UUID userId, UUID investmentId) {
+    public InvestmentDTO getInvestmentByUserId(UUID userId, UUID investmentId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
         return user.getInvestments().stream()
                 .filter(investment -> investmentId.equals(investment.getId()))
                 .findFirst()
+                .map(InvestmentMapper::toDTO)
                 .orElseThrow(() -> new IllegalArgumentException(
                         "Investment not found with id: " + investmentId + " for user: " + userId));
     }

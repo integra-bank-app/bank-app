@@ -1,23 +1,22 @@
-import { useState } from 'react'
-import {StartComponent} from "./components/StartComponent";
-import {PrimeReactProvider} from "primereact/api";
+import { PrimeReactProvider } from "primereact/api";
+import { StartComponent } from "./components/StartComponent";
 
-import 'primereact/resources/themes/md-dark-deeppurple/theme.css';
-import 'primeicons/primeicons.css'; //icons
-import 'primeflex/primeflex.css'; // flex
-import './App.css'
-
+import "primeflex/primeflex.css"; // flex
+import "primeicons/primeicons.css"; //icons
+import "primereact/resources/themes/bootstrap4-dark-purple/theme.css";
+import "./App.css";
+import { NotificationProvider } from "./contexts/NotificationProvider";
 
 function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-        <PrimeReactProvider>
-            <StartComponent></StartComponent>
-        </PrimeReactProvider>
-    </>
-  )
+	return (
+		<>
+			<PrimeReactProvider>
+				<NotificationProvider>
+					<StartComponent />
+				</NotificationProvider>
+			</PrimeReactProvider>
+		</>
+	);
 }
 
-export default App
+export default App;
