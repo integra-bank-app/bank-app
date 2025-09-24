@@ -39,13 +39,11 @@ VALUES ('9b73550d-b71e-4ddf-8467-972d357ec7f2', 3, 1000.0, '11111111-1111-1111-1
 INSERT INTO transactions (id, amount, timestamp, user_id, type, description)
 VALUES ('ff2c031c-d1b7-409b-ab6a-a63a16ccdd3b', 500.0, NOW(), '11111111-1111-1111-1111-111111111111', 'TOP_UP',
         'Initial deposit for Alice'),
-       ('d92dd9c1-36cc-420c-ab30-6996d2e67d3f', 50.0, NOW(), '11111111-1111-1111-1111-111111111111', 'FEE',
+       ('d92dd9c1-36cc-420c-ab30-6996d2e67d3f', -50.0, NOW(), '11111111-1111-1111-1111-111111111111', 'FEE',
         'Service fee for Alice'),
        ('43cdfd95-db4e-4746-a198-e583b8345717', 1200.0, NOW(), '22222222-2222-2222-2222-222222222222', 'TOP_UP',
         'Initial deposit for Bob'),
-       ('4e461060-074f-4f5b-82ec-cd3a33de71bd', 100.0, NOW(), '22222222-2222-2222-2222-222222222222', 'FEE',
+       ('4e461060-074f-4f5b-82ec-cd3a33de71bd', -100.0, NOW(), '22222222-2222-2222-2222-222222222222', 'FEE',
         'Tax deducted for Bob'),
        ('5c95e7a8-73c9-4bbe-84e7-67983fa6e853', 3000.0, NOW(), '33333333-3333-3333-3333-333333333333', 'TOP_UP',
         'Initial deposit for Charlie');
-
-
