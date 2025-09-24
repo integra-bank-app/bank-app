@@ -1,5 +1,6 @@
 import { PrimeReactProvider } from "primereact/api";
 import { StartComponent } from "./components/StartComponent";
+import { JSX, useState } from "react";
 
 import "primeflex/primeflex.css"; // flex
 import "primeicons/primeicons.css"; // icons
@@ -15,6 +16,9 @@ import Footer from "./components/Footer";
 import Login from "./pages/Login";
 
 function App() {
+	const [currentPage, setCurrentPage] = useState<PageKey>("start");
+	const [uuid, setUuid] = useState("");
+
 	return (
 		<PrimeReactProvider>
 			<UserProvider>
