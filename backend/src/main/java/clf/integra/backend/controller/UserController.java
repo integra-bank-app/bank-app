@@ -2,6 +2,7 @@ package clf.integra.backend.controller;
 
 import clf.integra.backend.dto.BalanceDTO;
 import clf.integra.backend.dto.DepositsDTO;
+import clf.integra.backend.exceptions.InvalidAmountException;
 import clf.integra.backend.service.DepositsService;
 import clf.integra.backend.dto.UserWithBranchDTO;
 import clf.integra.backend.exceptions.NotFoundException;
@@ -58,7 +59,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER') and @userPermissionService.canAccessUserData(#fromUserId, authentication)")
     @PostMapping("/users/transfer")
-    public ResponseEntity<Double> transferMoney(@RequestParam UUID fromUserId, @RequestParam UUID toUserId, @RequestParam double amount) throws InsufficientFundsException, NotFoundException {
+    public ResponseEntity<Double> transferMoney(@RequestParam UUID fromUserId, @RequestParam UUID toUserId, @RequestParam double amount) throws InsufficientFundsException, NotFoundException , InvalidAmountException {
         double newBalance = userService.transferMoney(fromUserId, toUserId, amount);
         return ResponseEntity.ok(newBalance);
     }

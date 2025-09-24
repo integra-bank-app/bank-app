@@ -23,9 +23,13 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
 
     @Transactional
-    Transaction createTransaction(User user, Double amount, TransactionType type, String description){
-        if (amount <= 0) {
-            throw new InvalidAmountException("Transaction amount must be positive");
+    Transaction createTransaction(User user, Double amount, TransactionType type, String description) throws InvalidAmountException, InvalidTransactionType {
+        if (amount == null || amount == 0) {
+            throw new InvalidAmountException("Transaction amount cannot be null or zero");
+        }
+
+        if (amount <= 0 && (type != TransactionType.FEE && type != TransactionType.TRANSFER_OUT)) {
+            throw new InvalidAmountException("Transaction amount must be positive for TOP_UP and TRANSFER_IN types");
         }
 
         if (type == null) {

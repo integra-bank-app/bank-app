@@ -3,6 +3,7 @@ package clf.integra.backend.service;
 import clf.integra.backend.dto.UserDTO;
 import clf.integra.backend.exceptions.BalanceUpdateFailedException;
 import clf.integra.backend.exceptions.InsufficientFundsException;
+import clf.integra.backend.exceptions.InvalidAmountException;
 import clf.integra.backend.exceptions.NotFoundException;
 import clf.integra.backend.model.Account;
 import clf.integra.backend.model.Branch;
@@ -131,6 +132,10 @@ public class UserService {
 
         double revenue = 0;
         for (User user : usersBranch) {
+            if (user.getAccounts().isEmpty()) {
+                continue;
+            }
+
             double userBalance = user.getAccounts().getFirst().getBalance();
             double fee = calculateFee(userBalance);
 
@@ -149,7 +154,8 @@ public class UserService {
         return balance < 100 ? balance * 0.1 : 10;
     }
 
-    public double transferMoney(UUID fromUserId, UUID toUserId, double amount) throws NotFoundException, InsufficientFundsException {
+    @Transactional
+    public double transferMoney(UUID fromUserId, UUID toUserId, double amount) throws NotFoundException, InsufficientFundsException, InvalidAmountException {
         User fromUser = userRepository.getReferenceById(fromUserId);
         User toUser = userRepository.getReferenceById(toUserId);
 
@@ -161,14 +167,18 @@ public class UserService {
             throw new InsufficientFundsException("Insufficient funds");
         }
 
+        if (amount <= 0) {
+            throw new InvalidAmountException("Transaction amount must be positive");
+        }
+
         fromUser.getAccounts().getFirst().setBalance(fromUser.getAccounts().getFirst().getBalance() - amount);
         toUser.getAccounts().getFirst().setBalance(toUser.getAccounts().getFirst().getBalance() + amount);
 
         userRepository.save(fromUser);
         userRepository.save(toUser);
 
-        transactionService.createTransaction(fromUser, -amount, TransactionType.TRANSFER_OUT, "Transfer of " + amount + " to user " + toUserId);
-        transactionService.createTransaction(toUser, amount, TransactionType.TRANSFER_IN, "Transfer of " + amount + " from user " + fromUserId);
+        transactionService.createTransaction(fromUser, -amount, TransactionType.TRANSFER_OUT, "Transfer of " + amount + " to user " + getFullName(toUser));
+        transactionService.createTransaction(toUser, amount, TransactionType.TRANSFER_IN, "Transfer of " + amount + " from user " + getFullName(fromUser));
 
         return fromUser.getAccounts().getFirst().getBalance();
     }
@@ -191,5 +201,9 @@ public class UserService {
                 .findFirst()
                 .orElseThrow(() -> new NotFoundException("Account not found"))
                 .getBalance();
+    }
+
+    private String getFullName(User user) {
+        return user.getFirstName() + " " + (user.getMiddleName() != null ? user.getMiddleName() + " " : "") + user.getLastName();
     }
 }
