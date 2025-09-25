@@ -2,25 +2,32 @@ import { useState } from "react";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
+import { UserControllerApiFp, Configuration, UserWithBranchDTO } from "../api";
+import axios from "axios";
 
 type AddUserDialogProps = {
 	visible: boolean;
 	onHide: () => void;
 	onUserAdded: () => void;
+	branchId: string;
 };
 
-function AddUserDialog({ visible, onHide, onUserAdded }: AddUserDialogProps) {
+export default function AddUserToBranchDialog({
+	visible,
+	onHide,
+	onUserAdded,
+	branchId,
+}: AddUserDialogProps) {
 	const [firstName, setFirstName] = useState("");
 	const [lastName, setLastName] = useState("");
 	const [middleName, setMiddleName] = useState("");
 	const [errors, setErrors] = useState<{
 		firstName?: string;
 		lastName?: string;
-		middleName?: string;
 	}>({});
+	const [loading, setLoading] = useState(false);
 
 	const validate = () => {
-		//Maybe later use zod
 		const newErrors: typeof errors = {};
 		if (!firstName.trim()) newErrors.firstName = "First name is required";
 		if (!lastName.trim()) newErrors.lastName = "Last name is required";
@@ -28,18 +35,37 @@ function AddUserDialog({ visible, onHide, onUserAdded }: AddUserDialogProps) {
 		return Object.keys(newErrors).length === 0;
 	};
 
-	const handleAddUser = () => {
+	const handleAddUser = async () => {
 		if (!validate()) return;
 
-		console.log("Saving:", { firstName, lastName, middleName });
+		setLoading(true);
 
-		// reset
-		setFirstName("");
-		setLastName("");
-		setMiddleName("");
-		setErrors({});
-		onHide();
-		onUserAdded();
+		try {
+			const apiFp = UserControllerApiFp(new Configuration());
+			const dto: UserWithBranchDTO = {
+				firstName,
+				middleName,
+				lastName,
+				branchId,
+			};
+
+			const request = await apiFp.addUser(dto);
+			const response = await request(axios);
+
+			console.log(response.data);
+
+			setFirstName("");
+			setLastName("");
+			setMiddleName("");
+			setErrors({});
+			onHide();
+			onUserAdded();
+		} catch (err: any) {
+			console.error("Error adding user:", err);
+			alert(err.message || "Failed to add user");
+		} finally {
+			setLoading(false);
+		}
 	};
 
 	return (
@@ -66,6 +92,7 @@ function AddUserDialog({ visible, onHide, onUserAdded }: AddUserDialogProps) {
 						<small className="p-error">{errors.firstName}</small>
 					)}
 				</div>
+
 				<div>
 					<label htmlFor="middleName" className="block mb-1">
 						Middle Name
@@ -78,6 +105,7 @@ function AddUserDialog({ visible, onHide, onUserAdded }: AddUserDialogProps) {
 						className="w-full"
 					/>
 				</div>
+
 				<div>
 					<label htmlFor="lastName" className="block mb-1">
 						Last Name
@@ -94,10 +122,13 @@ function AddUserDialog({ visible, onHide, onUserAdded }: AddUserDialogProps) {
 					)}
 				</div>
 
-				<Button label="Add User" icon="pi pi-check" onClick={handleAddUser} />
+				<Button
+					label={loading ? "Adding..." : "Add User"}
+					icon="pi pi-check"
+					onClick={handleAddUser}
+					disabled={loading}
+				/>
 			</div>
 		</Dialog>
 	);
 }
-
-export default AddUserDialog;

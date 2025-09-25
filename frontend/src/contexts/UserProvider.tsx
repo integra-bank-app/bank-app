@@ -11,7 +11,7 @@ export const UserContext = createContext<UserContextType | null>(null);
 export function UserProvider({ children }: { children: ReactNode }) {
 	const [user, setUserState] = useState<TUser>({
 		uuid: "11111111-1111-1111-1111-111111111111", // dummy UUID
-		branchId: "branch-001",
+		branchId: "e246e2e6-d734-46a0-83e2-e6ee9b725977",
 		role: "ADMIN" as TUserRole,
 		firstName: "Alice",
 		lastName: "Smith",
