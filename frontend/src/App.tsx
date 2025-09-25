@@ -15,20 +15,19 @@ function App() {
 	return (
 		<>
 			<PrimeReactProvider>
-                <div className="p-m-4 p-p-4 surface-card border-round">
-
-                <UserProvider>
-					<NotificationProvider>
-						<BrowserRouter>
-							<Routes>
-								<Route path="/" element={<StartComponent />} />
-								<Route path="/admin" element={<AdminPageComponent />} />
-								<Route path="/users" element={<UserListPage />} />
-							</Routes>
-						</BrowserRouter>
-					</NotificationProvider>
-				</UserProvider>
-                </div>
+				<div className="p-m-4 p-p-4 surface-card border-round">
+					<UserProvider>
+						<NotificationProvider>
+							<BrowserRouter>
+								<Routes>
+									<Route path="/" element={<StartComponent />} />
+									<Route path="/admin" element={<AdminPageComponent />} />
+									<Route path="/users" element={<UserListPage />} />
+								</Routes>
+							</BrowserRouter>
+						</NotificationProvider>
+					</UserProvider>
+				</div>
 			</PrimeReactProvider>
 		</>
 	);
