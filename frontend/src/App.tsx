@@ -15,8 +15,9 @@ function App() {
 	return (
 		<>
 			<PrimeReactProvider>
-				<UserProvider>
-                    <Header/>
+                <div className="p-m-4 p-p-4 surface-card border-round">
+
+                <UserProvider>
 					<NotificationProvider>
 						<BrowserRouter>
 							<Routes>
@@ -26,8 +27,8 @@ function App() {
 							</Routes>
 						</BrowserRouter>
 					</NotificationProvider>
-                    <Footer/>
 				</UserProvider>
+                </div>
 			</PrimeReactProvider>
 		</>
 	);
