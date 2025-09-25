@@ -5,8 +5,11 @@ import "primeflex/primeflex.css"; // flex
 import "primeicons/primeicons.css"; //icons
 import "primereact/resources/themes/bootstrap4-dark-purple/theme.css";
 import "./App.css";
-import {NotificationProvider} from "./contexts/NotificationProvider";
-import AdminPageComponent from "./components/AdminPage";
+import { NotificationProvider } from "./contexts/NotificationProvider";
+import AdminPageComponent from "./pages/AdminPage";
+import { Routes, Route, Router, BrowserRouter } from "react-router-dom";
+import UserListPage from "./pages/UserListPage";
+import { UserProvider } from "./contexts/UserProvider";
 
 function App() {
 	return (

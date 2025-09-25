@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "primereact/button";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../lib/hooks";
-import AddUserToBranchDialog from "./AddUserToBranchDialog";
+import AddUserToBranchDialog from "../components/AddUserToBranchDialog";
 
 function AdminPage() {
 	const { user } = useUserContext();
