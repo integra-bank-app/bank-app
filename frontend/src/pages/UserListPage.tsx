@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { useUserContext } from "../lib/hooks";
-import { BranchControllerApiFp, Configuration, UserDTO } from "../api";
+import { BranchControllerApi, UserDTO } from "../api";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import axios from "axios";
 import { Card } from "primereact/card";
 
 export default function UserListPage() {
@@ -17,9 +16,8 @@ export default function UserListPage() {
 
 		const fetchUsers = async () => {
 			try {
-				const apiFp = BranchControllerApiFp(new Configuration());
-				const request = await apiFp.getUsersByBranch(user.branchId);
-				const response = await request(axios);
+				const apiFp = new BranchControllerApi();
+				const response = await apiFp.getUsersByBranch(user.branchId);
 				setUsers(response.data);
 			} catch (err: any) {
 				console.error(err);

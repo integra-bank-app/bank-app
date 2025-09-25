@@ -2,8 +2,7 @@ import { useState } from "react";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-import { UserControllerApiFp, Configuration, UserWithBranchDTO } from "../api";
-import axios from "axios";
+import { UserWithBranchDTO, UserControllerApi } from "../api";
 
 type AddUserDialogProps = {
 	visible: boolean;
@@ -41,7 +40,7 @@ export default function AddUserToBranchDialog({
 		setLoading(true);
 
 		try {
-			const apiFp = UserControllerApiFp(new Configuration());
+			const apiFp = new UserControllerApi();
 			const dto: UserWithBranchDTO = {
 				firstName,
 				middleName,
@@ -49,8 +48,7 @@ export default function AddUserToBranchDialog({
 				branchId,
 			};
 
-			const request = await apiFp.addUser(dto);
-			const response = await request(axios);
+			const response = await apiFp.addUser(dto);
 
 			console.log(response.data);
 
