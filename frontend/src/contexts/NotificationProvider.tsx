@@ -61,6 +61,12 @@ export function NotificationProvider({
 					summary: "Notification",
 					detail: data.message,
 				});
+				console.log("Received notification:", data);
+			}
+			if(data.type == "SUCCESS"){
+				console.log("Refetching data due to SUCCESS notification");
+				const refetchEvent = new Event("refetchData");
+				window.dispatchEvent(refetchEvent);
 			}
 		};
 
