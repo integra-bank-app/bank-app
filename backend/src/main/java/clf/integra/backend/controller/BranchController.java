@@ -20,8 +20,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Arrays;
 import java.io.IOException;
-import java.util.Arrays;
-import java.io.IOException;
 import java.util.UUID;
 
 import static org.springframework.data.web.config.EnableSpringDataWebSupport.PageSerializationMode.VIA_DTO;
