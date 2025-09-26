@@ -6,14 +6,14 @@ import "primeicons/primeicons.css"; //icons
 import "primereact/resources/themes/bootstrap4-dark-purple/theme.css";
 import "./App.css";
 import { NotificationProvider } from "./contexts/NotificationProvider";
-import { UserMainPage } from "./pages/UserMainPage";
+import UserMainPage from "./pages/UserMainPage";
 import  DepositsPage  from "./pages/DepositsPage/DepositsPage";
 
 import AdminPageComponent from "./pages/AdminPage";
 import { Routes, Route, Router, BrowserRouter } from "react-router-dom";
 import UserListPage from "./pages/UserListPage";
 import { UserProvider } from "./contexts/UserProvider";
-
+import { Link } from "react-router-dom";
 function App() {
 
 	return (
@@ -28,6 +28,7 @@ function App() {
 									<Route path="/admin" element={<AdminPageComponent />} />
 									<Route path="/users" element={<UserListPage />} />
                                     <Route path="/deposits" element={<DepositsPage />} />
+									<Route path="/main" element={<UserMainPage />} />
 								</Routes>
 							</BrowserRouter>
 						</NotificationProvider>
