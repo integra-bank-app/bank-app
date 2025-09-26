@@ -33,9 +33,9 @@ export default function UserListPage() {
 	if (error) return <p>Error: {error}</p>;
 
 	const fullNameTemplate = (rowData: UserDTO) => {
-		return `${rowData.firstName ?? ""} ${rowData.middleName ?? ""} ${
-			rowData.lastName ?? ""
-		}`.trim();
+		return `${rowData.firstName ?? ""} ${
+			rowData.middleName ? `${rowData.middleName} ` : ""
+		}${rowData.lastName ?? ""}`.trim();
 	};
 
 	const footer = `In total there are ${users ? users.length : 0} users.`;
