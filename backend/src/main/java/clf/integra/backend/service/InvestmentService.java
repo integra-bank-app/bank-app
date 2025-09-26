@@ -8,7 +8,6 @@ import clf.integra.backend.repository.InvestmentsRepository;
 import clf.integra.backend.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -50,7 +49,6 @@ public class InvestmentService {
     }
 
     @Transactional
-    @Scheduled(cron = "0 0 0 * * *") // every day at midnight
     public void updateBalanceByRisk() {
         List<Investment> investments = investmentsRepository.findAll();
         for (Investment investment : investments) {
