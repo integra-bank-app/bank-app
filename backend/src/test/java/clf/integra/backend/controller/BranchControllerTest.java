@@ -5,6 +5,9 @@ import clf.integra.backend.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
@@ -75,29 +79,32 @@ public class BranchControllerTest {
     }
 
     @Test
-    public void testGetUserByBranch_success_returnOkWithListUsers() throws Exception {
-        when(userService.getAllUsersByBranch(eq(branchId))).thenReturn(this.users);
+    public void testGetUserByBranch_success_returnOkWithPageUsers() throws Exception {
+        Page<UserDTO> usersPage = new PageImpl<>(this.users);
+        when(userService.getAllUsersByBranchAndPage(eq(branchId), any(Pageable.class)))
+                .thenReturn(usersPage);
+
         this.mockMvc.perform(get("/branches/{branchId}/users", branchId)
+                        .param("page", "0")
+                        .param("size", "10")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].firstName").value("A"))
-                .andExpect(jsonPath("$[1].lastName").value("F"));
+                .andExpect(jsonPath("$.content[0].firstName").value("A"))
+                .andExpect(jsonPath("$.content[1].lastName").value("F"));
     }
 
     @Test
     public void testGetUserByBranch_empty_returnNotFound() throws Exception {
-        when(userService.getAllUsersByBranch(eq(branchId))).thenReturn(this.usersEmpty);
+        Page<UserDTO> emptyPage = Page.empty();
+        when(userService.getAllUsersByBranchAndPage(eq(branchId), any(Pageable.class)))
+                .thenReturn(emptyPage);
+
         this.mockMvc.perform(get("/branches/{branchId}/users", branchId)
+                        .param("page", "0")
+                        .param("size", "10")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
 
-    @Test
-    public void testGetUserByBranch_notFound_returnNotFound() throws Exception {
-        when(userService.getAllUsersByBranch(eq(branchId))).thenReturn(this.usersEmpty);
-        this.mockMvc.perform(get("/branches/{branchId}/users", branchId)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
-    }
 }
 
