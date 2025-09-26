@@ -10,10 +10,10 @@ import UserMainPage from "./pages/UserMainPage";
 import  DepositsPage  from "./pages/DepositsPage/DepositsPage";
 
 import AdminPageComponent from "./pages/AdminPage";
-import { Routes, Route, Router, BrowserRouter } from "react-router-dom";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
 import UserListPage from "./pages/UserListPage";
 import { UserProvider } from "./contexts/UserProvider";
-import { Link } from "react-router-dom";
+
 function App() {
 
 	return (
