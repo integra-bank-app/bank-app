@@ -1,14 +1,11 @@
-import { use } from "react";
 import { Carousel } from "primereact/carousel";
-import { NotificationContext } from "../contexts/NotificationProvider";
 import { useUserBalances} from "../hooks/useUserBalances";
 import { TotalBalanceSlide } from "../components/TotalBalanceSlide";
 import { AccountSlide } from "../components/AccountSlide";
+import { useUserContext } from "../lib/hooks";
 
-export function UserMainPage() {
-    const context = use(NotificationContext);
-    if (!context) throw new Error("NotificationContext is null");
-    const userId = context.uuid;
+export default function UserMainPage() {
+    const userId = useUserContext().user.uuid;
     
     const {accounts, balances, totalBalance} = useUserBalances(userId);
 
@@ -23,14 +20,17 @@ export function UserMainPage() {
     };
 
     return (
-        <div className="flex justify-center items-center">
-        <Carousel 
-            value={carouselItems} 
-            numVisible={1} 
-            numScroll={1} 
-            itemTemplate={itemTemplate}
-            className="custom-carousel"
-        />
+        <div className="flex flex-col items-center space-y-4 mt-4">
+            <h2 className="text-2xl md:text-3xl font-semibold text-gray-900">
+                My Accounts
+            </h2>
+            <Carousel 
+                value={carouselItems} 
+                numVisible={1} 
+                numScroll={1} 
+                itemTemplate={itemTemplate}
+                className="custom-carousel"
+            />
         </div>
     );
 }

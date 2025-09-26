@@ -6,7 +6,7 @@ import "primeicons/primeicons.css"; // icons
 import "primereact/resources/themes/bootstrap4-dark-purple/theme.css";
 import "./App.css";
 import { NotificationProvider } from "./contexts/NotificationProvider";
-import { UserMainPage } from "./pages/UserMainPage";
+import UserMainPage from "./pages/UserMainPage";
 import  DepositsPage  from "./pages/DepositsPage/DepositsPage";
 
 import AdminPageComponent from "./pages/AdminPage";
@@ -17,6 +17,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Login from "./pages/Login";
 
+import { Link } from "react-router-dom";
 function App() {
 
 	return (
@@ -45,6 +46,7 @@ function App() {
 										}
 									/>
                                     <Route path="/deposits" element={<DepositsPage />} />
+									<Route path="/main" element={<UserMainPage />} />
 								</Routes>
 							</main>
 
