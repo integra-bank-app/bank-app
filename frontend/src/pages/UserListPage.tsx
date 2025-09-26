@@ -4,6 +4,7 @@ import { BranchControllerApi, UserDTO, PagedModelUserDTO } from "../api";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Card } from "primereact/card";
+import { Paginator } from "primereact/paginator";
 import {Title} from "../components/TitleComponent";
 import { Paginator } from "primereact/paginator";
 

@@ -19,7 +19,6 @@ import Login from "./pages/Login";
 
 import { Link } from "react-router-dom";
 function App() {
-
 	return (
 		<PrimeReactProvider>
 			<UserProvider>
@@ -47,6 +46,14 @@ function App() {
 									/>
                                     <Route path="/deposits" element={<DepositsPage />} />
 									<Route path="/home" element={<UserMainPage />} />
+									<Route
+										path="*"
+										element={
+											<div className="flex align-items-center justify-content-center">
+												404 Not Found
+											</div>
+										}
+									/>
 								</Routes>
 							</main>
 
