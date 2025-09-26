@@ -6,6 +6,7 @@ import "primeicons/primeicons.css"; //icons
 import "primereact/resources/themes/bootstrap4-dark-purple/theme.css";
 import "./App.css";
 import { NotificationProvider } from "./contexts/NotificationProvider";
+import { UserMainPage } from "./pages/UserMainPage";
 import  DepositsPage  from "./pages/DepositsPage/DepositsPage";
 
 import AdminPageComponent from "./pages/AdminPage";
