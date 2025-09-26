@@ -63,6 +63,7 @@ class NotificationServiceTest {
 
         notificationService.sendNotificationToUser(NotificationType.INFO, "Hello Mockito!", userId);
 
+        verify(notificationRepository, times(1)).save(any(Notification.class));
         verify(userRepository, times(1)).save(testUser);
         verify(notificationHandler, times(1)).sendNotification(any(Notification.class));
     }
