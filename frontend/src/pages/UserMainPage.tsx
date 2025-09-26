@@ -29,7 +29,7 @@ export default function UserMainPage() {
                 numVisible={1} 
                 numScroll={1} 
                 itemTemplate={itemTemplate}
-                className="custom-carousel"
+                className="custom-carousel md:w-1/2 rounded-lg shadow-lg"
             />
         </div>
     );
