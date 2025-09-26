@@ -1,10 +1,9 @@
 import { Toast } from "primereact/toast";
 import { createContext, useEffect, useRef, useState } from "react";
 import { TNotification } from "../lib/types";
+import { useUserContext } from "../lib/hooks";
 
 type NotificationContextType = {
-	uuid: string | null;
-	setUuid: (newUuid: string) => void;
 	isConnected: boolean;
 };
 
@@ -22,7 +21,7 @@ export function NotificationProvider({
 	children,
 }: NotificationProviderProps) {
 	const toast = useRef<Toast>(null);
-	const [uuid, setUuid] = useState<string | null>(initialUuid ?? null);
+	const { user } = useUserContext();
 	const [isConnected, setIsConnected] = useState(false);
 
 	const severityMap: Record<
@@ -38,9 +37,11 @@ export function NotificationProvider({
 	};
 
 	useEffect(() => {
-		if (!uuid) return;
+		if (!user.uuid) return;
 		const socket = new WebSocket(
-			`${import.meta.env.VITE_BACKEND_SOCKET_URL}/ws/notifications?uuid=${uuid}`
+			`${import.meta.env.VITE_BACKEND_SOCKET_URL}/ws/notifications?uuid=${
+				user.uuid
+			}`
 		);
 
 		socket.onopen = () => {
@@ -67,10 +68,10 @@ export function NotificationProvider({
 		socket.onclose = () => setIsConnected(false);
 
 		return () => socket.close();
-	}, [uuid]);
+	}, [user.uuid]);
 
 	return (
-		<NotificationContext.Provider value={{ uuid, setUuid, isConnected }}>
+		<NotificationContext.Provider value={{ isConnected }}>
 			<Toast ref={toast} />
 			{children}
 		</NotificationContext.Provider>

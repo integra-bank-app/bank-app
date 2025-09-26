@@ -1,10 +1,10 @@
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
-import { JSX, useState } from "react";
-import { useNotificationContext } from "../lib/hooks";
+import { JSX, use, useState } from "react";
+import { useNotificationContext, useUserContext } from "../lib/hooks";
 
 export function StartComponent(): JSX.Element {
-	const { setUuid } = useNotificationContext();
+	const { user, setUser } = useUserContext();
 	const [text, setText] = useState("");
 
 	return (
@@ -15,7 +15,10 @@ export function StartComponent(): JSX.Element {
 				value={text}
 				onChange={(e) => setText(e.target.value)}
 			/>
-			<Button icon="pi pi-search" onClick={() => setUuid(text)}>
+			<Button
+				icon="pi pi-search"
+				onClick={() => setUser({ ...user, uuid: text })}
+			>
 				Confirm
 			</Button>
 		</div>

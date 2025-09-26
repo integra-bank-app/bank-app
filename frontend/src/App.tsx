@@ -1,44 +1,36 @@
-import {PrimeReactProvider} from "primereact/api";
-import {StartComponent} from "./components/StartComponent";
-import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
+import { PrimeReactProvider } from "primereact/api";
+import { StartComponent } from "./components/StartComponent";
 
 import "primeflex/primeflex.css"; // flex
 import "primeicons/primeicons.css"; //icons
 import "primereact/resources/themes/bootstrap4-dark-purple/theme.css";
 import "./App.css";
-import {NotificationProvider} from "./contexts/NotificationProvider";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import Login from "./pages/Login";
+import { NotificationProvider } from "./contexts/NotificationProvider";
+import AdminPageComponent from "./pages/AdminPage";
+import { Routes, Route, Router, BrowserRouter } from "react-router-dom";
+import UserListPage from "./pages/UserListPage";
+import { UserProvider } from "./contexts/UserProvider";
 
 function App() {
-    return (
-        <Router>
-            <div className="flex flex-col min-h-screen">
-                <Header/>
-
-                <main className="flex-grow p-4">
-                    <Routes>
-                        {/* Login page route */}
-                        <Route path="/login" element={<Login/>}/>
-
-                        <Route
-                            path="/"
-                            element={
-                                <PrimeReactProvider>
-                                    <NotificationProvider>
-                                        <StartComponent/>
-                                    </NotificationProvider>
-                                </PrimeReactProvider>
-                            }
-                        />
-                    </Routes>
-                </main>
-
-                <Footer/>
-            </div>
-        </Router>
-    );
+	return (
+		<>
+			<PrimeReactProvider>
+				<div className="p-m-4 p-p-4 surface-card border-round">
+					<UserProvider>
+						<NotificationProvider>
+							<BrowserRouter>
+								<Routes>
+									<Route path="/" element={<StartComponent />} />
+									<Route path="/admin" element={<AdminPageComponent />} />
+									<Route path="/users" element={<UserListPage />} />
+								</Routes>
+							</BrowserRouter>
+						</NotificationProvider>
+					</UserProvider>
+				</div>
+			</PrimeReactProvider>
+		</>
+	);
 }
 
 export default App;
