@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,7 +24,7 @@ public class BranchController {
     private final UserService userService;
 
     @PostMapping("branches/{branchId}/collect-taxes-and-fees")
-    public ResponseEntity<Double> collectTaxesAndFeesFromBranch(@PathVariable UUID branchId) {
+    public ResponseEntity<Double> collectTaxesAndFeesFromBranch(@PathVariable UUID branchId) throws IOException {
         try {
             double revenue = userService.
                     collectTaxesAndFeesFromBranch(branchId);
