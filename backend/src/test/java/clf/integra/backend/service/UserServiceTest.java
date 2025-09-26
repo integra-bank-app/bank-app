@@ -178,7 +178,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void testCollectTaxesAndFeesFromBranch_validData_returnSuccess() {
+    void testCollectTaxesAndFeesFromBranch_validData_returnSuccess() throws IOException {
         UUID branchId = UUID.randomUUID();
         when(userRepository.findByBranchId(branchId)).thenReturn(List.of(user));
 
@@ -196,7 +196,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void testCollectTaxesAndFeesFromBranch_noBranch_returnFailure() {
+    void testCollectTaxesAndFeesFromBranch_noBranch_returnFailure() throws IOException {
         UUID branchId = UUID.randomUUID();
         when(userRepository.findByBranchId(branchId)).thenReturn(Collections.emptyList());
 
@@ -234,7 +234,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void testTransferMoney_validData_returnSuccess() throws NotFoundException, InsufficientFundsException {
+    void testTransferMoney_validData_returnSuccess() throws NotFoundException, InsufficientFundsException, IOException {
         UUID fromUserId = UUID.randomUUID();
         UUID toUserId = UUID.randomUUID();
 

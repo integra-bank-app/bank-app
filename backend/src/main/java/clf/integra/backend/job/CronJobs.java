@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+
 @Component
 @RequiredArgsConstructor
 public class CronJobs {
@@ -14,7 +16,7 @@ public class CronJobs {
     private final InvestmentService investmentService;
 
     @Scheduled(cron = "0 0 0 * * *", zone = "Europe/Bucharest")
-    public void runFeeTaxJob() {
+    public void runFeeTaxJob() throws IOException {
         feeTaxService.feeAndTaxUsers();
     }
 
