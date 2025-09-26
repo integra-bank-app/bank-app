@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { useUserContext } from "../lib/hooks";
-import { BranchControllerApi, UserDTO } from "../api";
+import { BranchControllerApi, UserDTO, PagedModelUserDTO } from "../api";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Card } from "primereact/card";
+import { Paginator } from "primereact/paginator";
 import {Title} from "../components/TitleComponent";
 
 export default function UserListPage() {
@@ -11,24 +12,45 @@ export default function UserListPage() {
 	const [users, setUsers] = useState<UserDTO[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+	const [page, setPage] = useState(0);
+	const [rows, setRows] = useState(10);
+	const [totalRecords, setTotalRecords] = useState(0);
 
 	useEffect(() => {
 		if (!user?.branchId) return;
 
+		let isMounted = true;
+
 		const fetchUsers = async () => {
+			setLoading(true);
 			try {
-				const apiFp = new BranchControllerApi();
-				const response = await apiFp.getUsersByBranch(user.branchId);
-				setUsers(response.data);
+				const api = new BranchControllerApi();
+				const response = await api.getUsersByBranch(user.branchId, page, rows);
+				const paged: PagedModelUserDTO = (response as any).data ?? response;
+
+				if (isMounted) {
+					setUsers(paged.content ?? []);
+					setTotalRecords(paged.page?.totalElements ?? 0);
+					setError(null);
+				}
 			} catch (err: any) {
-				console.error(err);
-				setError(err.message || "Failed to fetch users");
+				if (isMounted) {
+					console.error(err);
+					setError(err.message || "Failed to fetch users");
+				}
 			} finally {
-				setLoading(false);
+				if (isMounted) {
+					setLoading(false);
+				}
 			}
 		};
+
 		fetchUsers();
-	}, [user?.branchId]);
+
+		return () => {
+			isMounted = false;
+		};
+	}, [user?.branchId, page, rows]);
 
 	if (loading) return <p>Loading users...</p>;
 	if (error) return <p>Error: {error}</p>;
@@ -38,8 +60,6 @@ export default function UserListPage() {
 			rowData.middleName ? `${rowData.middleName} ` : ""
 		}${rowData.lastName ?? ""}`.trim();
 	};
-
-	const footer = `In total there are ${users ? users.length : 0} users.`;
 
 	return (
 		<div className="flex flex-column align-items-center p-4 gap-4">
@@ -59,17 +79,29 @@ export default function UserListPage() {
 			<Card>
 				<DataTable
 					value={users}
+					totalRecords={totalRecords}
+					loading={loading}
 					tableStyle={{
 						minWidth: "40rem",
 						maxWidth: "800px",
 					}}
-					footer={footer}
 				>
-					<Column field="firstName" header="First Name"></Column>
-					<Column field="middleName" header="Middle Name"></Column>
-					<Column field="lastName" header="Last Name"></Column>
-					<Column header="Full Name" body={fullNameTemplate}></Column>
+					<Column field="firstName" header="First Name" />
+					<Column field="middleName" header="Middle Name" />
+					<Column field="lastName" header="Last Name" />
+					<Column header="Full Name" body={fullNameTemplate} />
 				</DataTable>
+				<Paginator
+					first={page * rows}
+					rows={rows}
+					totalRecords={totalRecords}
+					rowsPerPageOptions={[5, 10, 20, 50, 100, 1000, 10000, 100000]}
+					onPageChange={(e) => {
+						setPage(e.page);
+						setRows(e.rows);
+					}}
+					template="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown CurrentPageReport "
+				/>
 			</Card>
 		</div>
 	);
