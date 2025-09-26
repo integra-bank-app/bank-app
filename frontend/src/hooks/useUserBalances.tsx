@@ -1,40 +1,34 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { UserControllerApiFp, Configuration } from "../api";
-
-const config = new Configuration({ basePath: import.meta.env.VITE_BACKEND_API_URL });
-const api = UserControllerApiFp(config);
+import { UserControllerApi, Configuration } from "../api";
 
 export function useUserBalances( userId: string | null ) {
     const [accounts, setAccounts] = useState<string[]>([]);
     const [balances, setBalances] = useState<Record<string, number>>({});
     const [totalBalance, setTotalBalance] = useState<number | null>(null);
 
-    async function loadData() {
+    async function fetchAccountsAndBalances() {
         if (!userId) 
             return;
-        const getAccountsFn = await api.getUserAccounts(userId);
-        const accountsRes = await getAccountsFn(axios, config.basePath);
-        setAccounts(accountsRes.data);
+        const api = new UserControllerApi();
+        const accounts = await api.getUserAccounts(userId);
+        setAccounts(accounts.data);
 
         const balancesObj: Record<string, number> = {};
-        for (const accId of accountsRes.data) {
-            const getBalanceFn = await api.getUserAccountBalance(userId, accId);
-            const balanceRes = await getBalanceFn(axios, config.basePath);
-            balancesObj[accId] = balanceRes.data;
+        for (const accId of accounts.data) {
+            const balance = await api.getUserAccountBalance(userId, accId);
+            balancesObj[accId] = balance.data;
         }
         setBalances(balancesObj);
 
-        const getTotalBalanceFn = await api.getUserTotalBalanceById(userId);
-        const totalBalanceRes = await getTotalBalanceFn(axios, config.basePath);
-        setTotalBalance(totalBalanceRes.data);
+        const totalBalance = await api.getUserTotalBalanceById(userId);
+        setTotalBalance(totalBalance.data);
     }
 
     useEffect(() => {
-        loadData();
+        fetchAccountsAndBalances();
         
         function handleRefetch() {
-            loadData();
+            fetchAccountsAndBalances();
         }
         window.addEventListener("refetchData", handleRefetch);
         return () => window.removeEventListener("refetchData", handleRefetch);
