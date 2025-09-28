@@ -34,7 +34,7 @@ export function StartComponent({uuid, setUuid, goToPage}:StartComponentProps): J
 			</div>
 
 			<Button
-				icon="pi pi-wallet "
+				icon="pi pi-wallet"
 				onClick={() => {
 					goToPage("deposits");
 				}}
