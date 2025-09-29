@@ -46,7 +46,7 @@ function App() {
 										}
 									/>
                                     <Route path="/deposits" element={<DepositsPage />} />
-									<Route path="/main" element={<UserMainPage />} />
+									<Route path="/home" element={<UserMainPage />} />
 								</Routes>
 							</main>
 
