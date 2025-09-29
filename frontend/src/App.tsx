@@ -28,7 +28,7 @@ function App() {
 									<Route path="/admin" element={<AdminPageComponent />} />
 									<Route path="/users" element={<UserListPage />} />
                                     <Route path="/deposits" element={<DepositsPage />} />
-									<Route path="/main" element={<UserMainPage />} />
+									<Route path="/home" element={<UserMainPage />} />
 								</Routes>
 							</BrowserRouter>
 						</NotificationProvider>
