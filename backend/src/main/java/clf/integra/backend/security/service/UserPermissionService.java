@@ -1,6 +1,6 @@
 package clf.integra.backend.security.service;
 
-import clf.integra.backend.security.model.AuthUser;
+import clf.integra.backend.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ public class UserPermissionService {
             return true;
         }
 
-        AuthUser authUser = (AuthUser) authentication.getPrincipal();
-        return authUser.getUserId().equals(userId);
+        User user = (User) authentication.getPrincipal();
+        return user.getId().equals(userId);
     }
 }

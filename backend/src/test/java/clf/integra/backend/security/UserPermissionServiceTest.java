@@ -1,6 +1,6 @@
 package clf.integra.backend.security;
 
-import clf.integra.backend.security.model.AuthUser;
+import clf.integra.backend.model.User;
 import clf.integra.backend.security.service.UserPermissionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,25 +30,29 @@ class UserPermissionServiceTest {
     private UserPermissionService userPermissionService;
 
     private UUID testUserId;
-    private AuthUser testUser;
-    private AuthUser adminUser;
+    private User testUser;
+    private User adminUser;
 
     @BeforeEach
     void setUp() {
         testUserId = UUID.randomUUID();
 
-        testUser = AuthUser.builder()
-                .id(UUID.randomUUID())
-                .username("testuser")
-                .userId(testUserId)
-                .role(AuthUser.Role.USER)
+        testUser = User.builder()
+                .id(testUserId)
+                .firstName("Test")
+                .lastName("User")
+                .email("testUser@gmail.com")
+                .password("password123")
+                .role(User.Role.USER)
                 .build();
 
-        adminUser = AuthUser.builder()
+        adminUser = User.builder()
                 .id(UUID.randomUUID())
-                .username("admin")
-                .userId(UUID.randomUUID())
-                .role(AuthUser.Role.ADMIN)
+                .firstName("Admin")
+                .lastName("User")
+                .email("adminUser@gmail.com")
+                .password("adminPassword123")
+                .role(User.Role.ADMIN)
                 .build();
     }
 
@@ -70,7 +74,7 @@ class UserPermissionServiceTest {
         when(authentication.getAuthorities()).thenReturn((Collection) userAuthorities);
         when(authentication.getPrincipal()).thenReturn(testUser);
 
-        boolean result = userPermissionService.canAccessUserData(testUserId, authentication);
+        boolean result = userPermissionService.canAccessUserData(testUser.getId(), authentication);
 
         assertTrue(result);
     }
@@ -131,7 +135,7 @@ class UserPermissionServiceTest {
     @Test
     @SuppressWarnings("unchecked")
     void canAccessUserData_WithNoRolesAndDifferentUserId_ShouldReturnFalse() {
-        UUID differentUserId = UUID.randomUUID(); // Un ID diferit de cel din testUser
+        UUID differentUserId = UUID.randomUUID();
         Collection<GrantedAuthority> noAuthorities = Arrays.asList();
         when(authentication.getAuthorities()).thenReturn((Collection) noAuthorities);
         when(authentication.getPrincipal()).thenReturn(testUser);
@@ -148,7 +152,7 @@ class UserPermissionServiceTest {
         when(authentication.getAuthorities()).thenReturn((Collection) noAdminAuthorities);
         when(authentication.getPrincipal()).thenReturn(testUser);
 
-        boolean result = userPermissionService.canAccessUserData(testUserId, authentication);
+        boolean result = userPermissionService.canAccessUserData(testUser.getId(), authentication);
 
         assertTrue(result);
     }

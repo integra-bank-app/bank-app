@@ -1,13 +1,15 @@
 package clf.integra.backend.security.DTO;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class LoginRequest {
+public class LoginRequestDTO {
 
-    @NotBlank(message = "Username or email is required")
-    private String usernameOrEmail;
+    @NotBlank(message = "Email is required")
+    @Email(message = "Invalid email format")
+    private String email;
 
     @NotBlank(message = "Password is required")
     private String password;

@@ -4,9 +4,7 @@ import clf.integra.backend.model.Branch;
 import clf.integra.backend.model.User;
 import clf.integra.backend.repository.BranchRepository;
 import clf.integra.backend.repository.UserRepository;
-import clf.integra.backend.security.DTO.RegisterRequest;
-import clf.integra.backend.security.model.AuthUser;
-import clf.integra.backend.security.repository.AuthUserRepository;
+import clf.integra.backend.security.DTO.RegisterRequestDTO;
 import clf.integra.backend.security.service.RegistrationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,9 +33,6 @@ class RegistrationServiceTest {
     private UserRepository userRepository;
 
     @Mock
-    private AuthUserRepository authUserRepository;
-
-    @Mock
     private BranchRepository branchRepository;
 
     @Mock
@@ -46,20 +41,19 @@ class RegistrationServiceTest {
     @InjectMocks
     private RegistrationService registrationService;
 
-    private RegisterRequest registerRequest;
+    private RegisterRequestDTO registerRequestDTO;
     private Branch mockBranch;
     private User mockUser;
 
     @BeforeEach
     void setUp() {
-        registerRequest = new RegisterRequest();
-        registerRequest.setUsername("testuser");
-        registerRequest.setEmail("test@example.com");
-        registerRequest.setPassword("password123");
-        registerRequest.setFirstName("John");
-        registerRequest.setLastName("Doe");
-        registerRequest.setBranchId(UUID.randomUUID());
-        registerRequest.setRequestedRole(AuthUser.Role.USER);
+        registerRequestDTO = new RegisterRequestDTO();
+        registerRequestDTO.setEmail("test@example.com");
+        registerRequestDTO.setPassword("password123");
+        registerRequestDTO.setFirstName("John");
+        registerRequestDTO.setLastName("Doe");
+        registerRequestDTO.setBranchId(UUID.randomUUID());
+        registerRequestDTO.setRequestedRole(User.Role.USER);
 
         mockBranch = new Branch();
 
@@ -68,97 +62,79 @@ class RegistrationServiceTest {
                 .firstName("John")
                 .lastName("Doe")
                 .branch(mockBranch)
+                .email("test@example.com")
+                .password("password123")
+                .role(User.Role.USER)
                 .build();
     }
 
     @Test
     void registerUser_WithValidData_ShouldCreateUserAndAuthUser() {
-        when(authUserRepository.existsByUsername("testuser")).thenReturn(false);
-        when(authUserRepository.existsByEmail("test@example.com")).thenReturn(false);
-        when(branchRepository.findById(registerRequest.getBranchId())).thenReturn(Optional.of(mockBranch));
-        when(userRepository.save(any(User.class))).thenReturn(mockUser);
+        when(userRepository.existsByEmail("test@example.com")).thenReturn(false);
+        when(branchRepository.findById(registerRequestDTO.getBranchId())).thenReturn(Optional.of(mockBranch));
         when(passwordEncoder.encode("password123")).thenReturn("encoded-password");
-        when(authUserRepository.save(any(AuthUser.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        AuthUser result = registrationService.registerUser(registerRequest);
+        User result = registrationService.registerUser(registerRequestDTO);
 
         assertNotNull(result);
-        assertEquals("testuser", result.getUsername());
         assertEquals("test@example.com", result.getEmail());
         assertEquals("encoded-password", result.getPassword());
-        assertEquals(AuthUser.Role.USER, result.getRole());
-        assertEquals(mockUser.getId(), result.getUserId());
+        assertEquals(User.Role.USER, result.getRole());
 
         verify(userRepository).save(any(User.class));
-        verify(authUserRepository).save(any(AuthUser.class));
     }
 
-    @Test
-    void registerUser_WithExistingUsername_ShouldThrowException() {
-        when(authUserRepository.existsByUsername("testuser")).thenReturn(true);
-
-        RuntimeException exception = assertThrows(RuntimeException.class,
-                () -> registrationService.registerUser(registerRequest));
-
-        assertEquals("Username is already taken!", exception.getMessage());
-        verify(authUserRepository, never()).save(any());
-    }
 
     @Test
     void registerUser_WithExistingEmail_ShouldThrowException() {
-        when(authUserRepository.existsByUsername("testuser")).thenReturn(false);
-        when(authUserRepository.existsByEmail("test@example.com")).thenReturn(true);
+        when(userRepository.existsByEmail("test@example.com")).thenReturn(true);
 
         RuntimeException exception = assertThrows(RuntimeException.class,
-                () -> registrationService.registerUser(registerRequest));
+                () -> registrationService.registerUser(registerRequestDTO));
 
         assertEquals("Email is already in use!", exception.getMessage());
-        verify(authUserRepository, never()).save(any());
+        verify(userRepository, never()).save(any());
     }
 
     @Test
     void registerUser_WithInvalidBranch_ShouldThrowException() {
-        when(authUserRepository.existsByUsername("testuser")).thenReturn(false);
-        when(authUserRepository.existsByEmail("test@example.com")).thenReturn(false);
-        when(branchRepository.findById(registerRequest.getBranchId())).thenReturn(Optional.empty());
+        when(userRepository.existsByEmail("test@example.com")).thenReturn(false);
+        when(branchRepository.findById(registerRequestDTO.getBranchId())).thenReturn(Optional.empty());
 
         RuntimeException exception = assertThrows(RuntimeException.class,
-                () -> registrationService.registerUser(registerRequest));
+                () -> registrationService.registerUser(registerRequestDTO));
 
         assertTrue(exception.getMessage().contains("Branch not found"));
-        verify(authUserRepository, never()).save(any());
+        verify(userRepository, never()).save(any());
     }
 
     @Test
     void registerUser_WithIntegraBankEmail_ShouldAssignAdminRole() {
-        registerRequest.setEmail("admin@integrabank.com");
-        registerRequest.setRequestedRole(AuthUser.Role.ADMIN);
+        registerRequestDTO.setEmail("admin@integrabank.com");
+        registerRequestDTO.setRequestedRole(User.Role.ADMIN);
 
-        when(authUserRepository.existsByUsername("testuser")).thenReturn(false);
-        when(authUserRepository.existsByEmail("admin@integrabank.com")).thenReturn(false);
-        when(branchRepository.findById(registerRequest.getBranchId())).thenReturn(Optional.of(mockBranch));
-        when(userRepository.save(any(User.class))).thenReturn(mockUser);
+        when(userRepository.existsByEmail("admin@integrabank.com")).thenReturn(false);
+        when(branchRepository.findById(registerRequestDTO.getBranchId())).thenReturn(Optional.of(mockBranch));
         when(passwordEncoder.encode("password123")).thenReturn("encoded-password");
-        when(authUserRepository.save(any(AuthUser.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        AuthUser result = registrationService.registerUser(registerRequest);
+        User result = registrationService.registerUser(registerRequestDTO);
 
-        assertEquals(AuthUser.Role.ADMIN, result.getRole());
+        assertEquals(User.Role.ADMIN, result.getRole());
     }
 
     @Test
     void registerUser_WithNonIntegraBankEmailRequestingAdmin_ShouldAssignUserRole() {
-        registerRequest.setRequestedRole(AuthUser.Role.ADMIN);
+        registerRequestDTO.setRequestedRole(User.Role.ADMIN);
 
-        when(authUserRepository.existsByUsername("testuser")).thenReturn(false);
-        when(authUserRepository.existsByEmail("test@example.com")).thenReturn(false);
-        when(branchRepository.findById(registerRequest.getBranchId())).thenReturn(Optional.of(mockBranch));
-        when(userRepository.save(any(User.class))).thenReturn(mockUser);
+        when(userRepository.existsByEmail("test@example.com")).thenReturn(false);
+        when(branchRepository.findById(registerRequestDTO.getBranchId())).thenReturn(Optional.of(mockBranch));
         when(passwordEncoder.encode("password123")).thenReturn("encoded-password");
-        when(authUserRepository.save(any(AuthUser.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        AuthUser result = registrationService.registerUser(registerRequest);
+        User result = registrationService.registerUser(registerRequestDTO);
 
-        assertEquals(AuthUser.Role.USER, result.getRole());
+        assertEquals(User.Role.USER, result.getRole());
     }
 }

@@ -51,13 +51,18 @@ class NotificationServiceTest {
                 .firstName("John")
                 .lastName("Doe")
                 .branch(branch)
+                .email("john.doe@gmail.com")
+                .password("password123")
+                .role(User.Role.USER)
                 .build();
     }
 
     @Test
     void sendNotificationToUser_userExists_savesNotificationAndCallsHandler() throws IOException {
         when(userRepository.findById(userId)).thenReturn(Optional.of(testUser));
+
         notificationService.sendNotificationToUser(NotificationType.INFO, "Hello Mockito!", userId);
+
         verify(userRepository, times(1)).save(testUser);
         verify(notificationHandler, times(1)).sendNotification(any(Notification.class));
     }
