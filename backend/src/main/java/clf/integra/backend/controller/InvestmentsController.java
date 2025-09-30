@@ -12,7 +12,6 @@ import java.util.UUID;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/")
 public class InvestmentsController {
     private InvestmentService investmentService;
 
