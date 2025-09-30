@@ -1,40 +1,34 @@
-import React, { useEffect, useState } from "react";
-import { Button } from "primereact/button";
+import React, {useEffect, useState} from "react";
+import {Button} from "primereact/button";
 import {depositColors} from "../../lib/utils";
 import DepositChart from "./DepositChart";
 import DepositsList from "./DepositsList";
-import { useNotificationContext} from "../../lib/hooks";
-import {DepositsDTO,UserControllerApi, Configuration} from "../../api";
+import {useNotificationContext} from "../../lib/hooks";
+import {DepositsDTO, UserControllerApi} from "../../api";
+import {useNavigate} from "react-router-dom";
 
-type PageKey = "start" | "deposits";
-
-interface DepositsPageProps {
-    goToPage: (page: PageKey) => void;
-}
-
-const DepositsPage: React.FC<DepositsPageProps> = ({ goToPage }) => {
+const DepositsPage: React.FC = () => {
     const [deposits, setDeposits] = useState<DepositsDTO[]>([]);
     const [loading, setLoading] = useState(true);
-    const { uuid } = useNotificationContext()
-    const config = new Configuration({
-        basePath: import.meta.env.VITE_BACKEND_API_URL,
-    });
-    const userApi = new UserControllerApi(config);
-
+    const {uuid} = useNotificationContext()
+    const navigate = useNavigate();
 
     useEffect(() => {
+        console.log(uuid);
+
         if (!uuid) {
             setLoading(false);
             return;
         }
 
         const loadDeposits = async () => {
-            try{
+            try {
+                const userApi = new UserControllerApi();
                 const respons = await userApi.getUserDeposits(uuid);
                 setDeposits(respons.data);
-            }catch (err) {
+            } catch (err) {
                 console.error("Error fetching deposits:", err);
-            }finally {
+            } finally {
                 setLoading(false);
             }
         }
@@ -52,8 +46,8 @@ const DepositsPage: React.FC<DepositsPageProps> = ({ goToPage }) => {
                 <p>No deposits...</p>
             ) : deposits.length > 0 ? (
                 <>
-                    <DepositChart deposits={deposits} total={total} />
-                    <DepositsList deposits={deposits} depositColors={depositColors} />
+                    <DepositChart deposits={deposits} total={total}/>
+                    <DepositsList deposits={deposits} depositColors={depositColors}/>
                 </>
             ) : (
                 <p>No deposits found.</p>
@@ -63,7 +57,7 @@ const DepositsPage: React.FC<DepositsPageProps> = ({ goToPage }) => {
                 <Button
                     className=" p-button-lg p-button-primary"
                     icon="pi pi-angle-left"
-                    onClick={() => goToPage("start")}
+                    onClick={() => navigate("/")}
                 >
                     Back
                 </Button>

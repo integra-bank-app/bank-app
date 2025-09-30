@@ -1,12 +1,12 @@
 import React from "react";
 
 interface DepositsItemProp {
-    id?: string;
+    number: number;
     amount?: number;
     color: string;
 }
 
-const DepositsItem: React.FC<DepositsItemProp> = ({id, amount, color}) => {
+const DepositsItem: React.FC<DepositsItemProp> = ({number, amount, color}) => {
     return (
         <li
             className="flex justify-between items-center p-3 rounded-lg shadow-sm border-2"
@@ -14,7 +14,7 @@ const DepositsItem: React.FC<DepositsItemProp> = ({id, amount, color}) => {
         >
             <div className="flex flex-col">
                 <span className="font-semibold text-lg">
-                    Deposit {id ?? "?"}
+                    Deposit {number}
                 </span>
                 <span className="text-base font-normal">
                     {amount ?? 0} RON

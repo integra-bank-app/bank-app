@@ -1,6 +1,6 @@
 import React from "react";
 import {depositColors} from "../../lib/utils";
- import {DepositsDTO} from "../../api";
+import {DepositsDTO} from "../../api";
 import DepositsItem from "./DepositsItem";
 
 
@@ -9,7 +9,7 @@ interface DepositListProps {
     depositColors: string[];
 }
 
-const DepositsList: React.FC<DepositListProps> = ({ deposits }) => {
+const DepositsList: React.FC<DepositListProps> = ({deposits}) => {
     return (
         <div className="mt-6 w-full max-w-md">
             <h2 className="text-xl font-semibold mb-2">Deposit List</h2>
@@ -17,7 +17,7 @@ const DepositsList: React.FC<DepositListProps> = ({ deposits }) => {
                 {deposits.map((deposit, index) => (
                     <DepositsItem
                         key={deposit.id ?? index}
-                        id={deposit.id}
+                        number={index + 1}
                         amount={deposit.amount}
                         color={depositColors[index % depositColors.length]}
                     />

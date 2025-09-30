@@ -1,20 +1,20 @@
 import { PrimeReactProvider } from "primereact/api";
 import { StartComponent } from "./components/StartComponent";
-import { JSX, useState } from "react";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
 
 import "primeflex/primeflex.css"; // flex
 import "primeicons/primeicons.css"; //icons
 import "primereact/resources/themes/bootstrap4-dark-purple/theme.css";
 import "./App.css";
 import { NotificationProvider } from "./contexts/NotificationProvider";
+import  DepositsPage  from "./pages/DepositsPage/DepositsPage";
+
 import AdminPageComponent from "./pages/AdminPage";
 import { Routes, Route, Router, BrowserRouter } from "react-router-dom";
 import UserListPage from "./pages/UserListPage";
 import { UserProvider } from "./contexts/UserProvider";
 
 function App() {
-	const [currentPage, setCurrentPage] = useState<PageKey>("start");
-	const [uuid, setUuid] = useState("");
 
 	return (
 		<>
@@ -27,6 +27,7 @@ function App() {
 									<Route path="/" element={<StartComponent />} />
 									<Route path="/admin" element={<AdminPageComponent />} />
 									<Route path="/users" element={<UserListPage />} />
+                                    <Route path="/deposits" element={<DepositsPage />} />
 								</Routes>
 							</BrowserRouter>
 						</NotificationProvider>
@@ -34,7 +35,7 @@ function App() {
 				</div>
 			</PrimeReactProvider>
 		</>
-	);
+);
 }
 
 export default App;
