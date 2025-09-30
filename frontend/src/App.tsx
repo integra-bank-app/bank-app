@@ -1,12 +1,14 @@
 import { PrimeReactProvider } from "primereact/api";
 import { StartComponent } from "./components/StartComponent";
-import { JSX, useState } from "react";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
 
 import "primeflex/primeflex.css"; // flex
 import "primeicons/primeicons.css"; // icons
 import "primereact/resources/themes/bootstrap4-dark-purple/theme.css";
 import "./App.css";
 import { NotificationProvider } from "./contexts/NotificationProvider";
+import  DepositsPage  from "./pages/DepositsPage/DepositsPage";
+
 import AdminPageComponent from "./pages/AdminPage";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import UserListPage from "./pages/UserListPage";
@@ -16,8 +18,6 @@ import Footer from "./components/Footer";
 import Login from "./pages/Login";
 
 function App() {
-	const [currentPage, setCurrentPage] = useState<PageKey>("start");
-	const [uuid, setUuid] = useState("");
 
 	return (
 		<PrimeReactProvider>
@@ -44,6 +44,7 @@ function App() {
 											</div>
 										}
 									/>
+                                    <Route path="/deposits" element={<DepositsPage />} />
 								</Routes>
 							</main>
 
