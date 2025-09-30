@@ -27,7 +27,7 @@ class SecurityConfigTest {
     private SecurityConfig securityConfig;
 
     @Test
-    void passwordEncoder_ShouldReturnBCryptPasswordEncoder() {
+    void testPasswordEncoder_returnBCryptPasswordEncoder() {
         PasswordEncoder passwordEncoder = securityConfig.passwordEncoder();
 
         assertNotNull(passwordEncoder);
@@ -35,7 +35,7 @@ class SecurityConfigTest {
     }
 
     @Test
-    void authenticationManager_ShouldReturnManagerFromConfiguration() throws Exception {
+    void testAuthenticationManager_returnManagerFromConfiguration() throws Exception {
         AuthenticationManager mockManager = org.mockito.Mockito.mock(AuthenticationManager.class);
         when(authenticationConfiguration.getAuthenticationManager()).thenReturn(mockManager);
 

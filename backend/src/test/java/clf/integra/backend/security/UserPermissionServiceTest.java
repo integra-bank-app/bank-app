@@ -58,7 +58,7 @@ class UserPermissionServiceTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    void canAccessUserData_WithAdminRole_ShouldReturnTrue() {
+    void testCanAccessUserData_withAdminRole_returnTrue() {
         Collection<GrantedAuthority> adminAuthorities = Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN"));
         when(authentication.getAuthorities()).thenReturn((Collection) adminAuthorities);
 
@@ -69,7 +69,7 @@ class UserPermissionServiceTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    void canAccessUserData_WithSameUserId_ShouldReturnTrue() {
+    void testCanAccessUserData_withSameUserId_returnTrue() {
         Collection<GrantedAuthority> userAuthorities = Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
         when(authentication.getAuthorities()).thenReturn((Collection) userAuthorities);
         when(authentication.getPrincipal()).thenReturn(testUser);
@@ -81,7 +81,7 @@ class UserPermissionServiceTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    void canAccessUserData_WithDifferentUserId_ShouldReturnFalse() {
+    void testCanAccessUserData_withDifferentUserId_returnFalse() {
         UUID differentUserId = UUID.randomUUID();
         Collection<GrantedAuthority> userAuthorities = Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
         when(authentication.getAuthorities()).thenReturn((Collection) userAuthorities);
@@ -94,7 +94,7 @@ class UserPermissionServiceTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    void canAccessUserData_WithUserRoleButNoAccess_ShouldReturnFalse() {
+    void testCanAccessUserData_withUserRoleButNoAccess_returnFalse() {
         UUID otherUserId = UUID.randomUUID();
 
         Collection<GrantedAuthority> userAuthorities = Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
@@ -108,7 +108,7 @@ class UserPermissionServiceTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    void canAccessUserData_WithAdminAndDifferentUserId_ShouldReturnTrue() {
+    void testCanAccessUserData_withAdminAndDifferentUserId_returnTrue() {
         UUID otherUserId = UUID.randomUUID();
         Collection<GrantedAuthority> adminAuthorities = Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN"));
         when(authentication.getAuthorities()).thenReturn((Collection) adminAuthorities);
@@ -120,7 +120,7 @@ class UserPermissionServiceTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    void canAccessUserData_WithMultipleRoles_ShouldReturnTrue() {
+    void testCanAccessUserData_withMultipleRoles_returnTrue() {
         Collection<GrantedAuthority> multipleAuthorities = Arrays.asList(
                 new SimpleGrantedAuthority("ROLE_USER"),
                 new SimpleGrantedAuthority("ROLE_ADMIN")
@@ -134,7 +134,7 @@ class UserPermissionServiceTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    void canAccessUserData_WithNoRolesAndDifferentUserId_ShouldReturnFalse() {
+    void testCanAccessUserData_withNoRolesAndDifferentUserId_returnFalse() {
         UUID differentUserId = UUID.randomUUID();
         Collection<GrantedAuthority> noAuthorities = Arrays.asList();
         when(authentication.getAuthorities()).thenReturn((Collection) noAuthorities);
@@ -147,7 +147,7 @@ class UserPermissionServiceTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    void canAccessUserData_WithNoAdminRoleButSameUserId_ShouldReturnTrue() {
+    void testCanAccessUserData_withNoAdminRoleButSameUserId_returnTrue() {
         Collection<GrantedAuthority> noAdminAuthorities = Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
         when(authentication.getAuthorities()).thenReturn((Collection) noAdminAuthorities);
         when(authentication.getPrincipal()).thenReturn(testUser);

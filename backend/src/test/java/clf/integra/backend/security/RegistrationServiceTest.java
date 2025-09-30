@@ -69,7 +69,7 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void registerUser_WithValidData_ShouldCreateUserAndAuthUser() {
+    void testRegisterUser_withValidData_createUserAndAuthUser() {
         when(userRepository.existsByEmail("test@example.com")).thenReturn(false);
         when(branchRepository.findById(registerRequestDTO.getBranchId())).thenReturn(Optional.of(mockBranch));
         when(passwordEncoder.encode("password123")).thenReturn("encoded-password");
@@ -87,7 +87,7 @@ class RegistrationServiceTest {
 
 
     @Test
-    void registerUser_WithExistingEmail_ShouldThrowException() {
+    void testRegisterUser_withExistingEmail_throwException() {
         when(userRepository.existsByEmail("test@example.com")).thenReturn(true);
 
         RuntimeException exception = assertThrows(RuntimeException.class,
@@ -98,7 +98,7 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void registerUser_WithInvalidBranch_ShouldThrowException() {
+    void testRegisterUser_withInvalidBranch_throwException() {
         when(userRepository.existsByEmail("test@example.com")).thenReturn(false);
         when(branchRepository.findById(registerRequestDTO.getBranchId())).thenReturn(Optional.empty());
 
@@ -110,7 +110,7 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void registerUser_WithIntegraBankEmail_ShouldAssignAdminRole() {
+    void testRegisterUser_withIntegraBankEmail_assignAdminRole() {
         registerRequestDTO.setEmail("admin@integrabank.com");
         registerRequestDTO.setRequestedRole(User.Role.ADMIN);
 
@@ -125,7 +125,7 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void registerUser_WithNonIntegraBankEmailRequestingAdmin_ShouldAssignUserRole() {
+    void testRegisterUser_withNonIntegraBankEmailRequestingAdmin_assignUserRole() {
         registerRequestDTO.setRequestedRole(User.Role.ADMIN);
 
         when(userRepository.existsByEmail("test@example.com")).thenReturn(false);

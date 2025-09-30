@@ -116,7 +116,7 @@ class AuthControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(validLoginRequestDTO)))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string("Error: Invalid username/email or password!"));
+                .andExpect(content().string("Error: Invalid email or password!"));
 
         verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
         verifyNoInteractions(jwtUtils);
@@ -138,7 +138,7 @@ class AuthControllerTest {
     }
 
     @Test
-    void registerUser_WithValidData_ShouldReturnSuccessResponse() throws Exception {
+    void testRegisterUser_withValidData_returnSuccessResponse() throws Exception {
         when(registrationService.registerUser(any(RegisterRequestDTO.class))).thenReturn(mockUser);
 
         mockMvc.perform(post(registerPath)
@@ -155,21 +155,7 @@ class AuthControllerTest {
     }
 
     @Test
-    void registerUser_WithExistingUsername_ShouldReturnBadRequest() throws Exception {
-        when(registrationService.registerUser(any(RegisterRequestDTO.class)))
-                .thenThrow(new RuntimeException("Username is already taken!"));
-
-        mockMvc.perform(post(registerPath)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(validRegisterRequestDTO)))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string("Error: Username is already taken!"));
-
-        verify(registrationService).registerUser(any(RegisterRequestDTO.class));
-    }
-
-    @Test
-    void registerUser_WithAdminRoleRequest_ShouldReturnRoleNote() throws Exception {
+    void testRegisterUser_withAdminRoleRequest_returnRoleNote() throws Exception {
         validRegisterRequestDTO.setRequestedRole(User.Role.ADMIN);
 
         User userWithUserRole = User.builder()
@@ -197,7 +183,7 @@ class AuthControllerTest {
     }
 
     @Test
-    void registerUser_WithIntegraBankEmail_ShouldAssignAdminRole() throws Exception {
+    void testRegisterUser_withIntegraBankEmail_returnAssignAdminRole() throws Exception {
         validRegisterRequestDTO.setEmail("admin@integrabank.com");
         validRegisterRequestDTO.setRequestedRole(User.Role.ADMIN);
 
@@ -226,7 +212,7 @@ class AuthControllerTest {
     }
 
     @Test
-    void registerUser_WithRuntimeException_ShouldReturnBadRequest() throws Exception {
+    void testRegisterUser_withRuntimeException_returnBadRequest() throws Exception {
         when(registrationService.registerUser(any(RegisterRequestDTO.class)))
                 .thenThrow(new RuntimeException("Unexpected error occurred"));
 
@@ -240,7 +226,7 @@ class AuthControllerTest {
     }
 
     @Test
-    void registerUser_WithInvalidEmail_ShouldReturnBadRequest() throws Exception {
+    void testRegisterUser_withInvalidEmail_returnBadRequest() throws Exception {
         when(registrationService.registerUser(any(RegisterRequestDTO.class)))
                 .thenThrow(new RuntimeException("Email is already in use!"));
 
@@ -254,7 +240,7 @@ class AuthControllerTest {
     }
 
     @Test
-    void registerUser_WithInvalidBranch_ShouldReturnBadRequest() throws Exception {
+    void testRegisterUser_withInvalidBranch_returnBadRequest() throws Exception {
         when(registrationService.registerUser(any(RegisterRequestDTO.class)))
                 .thenThrow(new RuntimeException("Branch not found with ID: " + validRegisterRequestDTO.getBranchId()));
 

@@ -47,7 +47,7 @@ public class AuthController {
             User user = (User) authentication.getPrincipal();
             String jwt = jwtUtil.generateToken(user);
 
-            log.info("Login successful for user: {} with role: {}", user.getUsername(), user.getRole());
+            log.info("Login successful for user with email: {} with role: {}", user.getEmail(), user.getRole());
 
             return ResponseEntity.ok(new JwtResponseDTO(
                     jwt,
@@ -57,7 +57,7 @@ public class AuthController {
         } catch (BadCredentialsException e) {
             log.error("Bad credentials for user: {}", loginRequestDTO.getEmail());
             return ResponseEntity.badRequest()
-                    .body("Error: Invalid username/email or password!");
+                    .body("Error: Invalid email or password!");
         } catch (Exception e) {
             log.error("Login error for user: {}", loginRequestDTO.getEmail(), e);
             return ResponseEntity.badRequest()
