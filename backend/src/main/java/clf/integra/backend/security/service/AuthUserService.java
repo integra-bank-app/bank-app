@@ -1,7 +1,7 @@
 package clf.integra.backend.security.service;
 
-import clf.integra.backend.security.model.AuthUser;
-import clf.integra.backend.security.repository.AuthUserRepository;
+import clf.integra.backend.model.User;
+import clf.integra.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,29 +14,24 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class AuthUserService implements UserDetailsService {
 
-    private final AuthUserRepository authUserRepository;
+    private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
-        log.info("Attempting to load user: {}", usernameOrEmail);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        log.info("Attempting to load user by email: {}", email);
 
-        AuthUser authUser = authUserRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
+        User authUser = userRepository.findByEmail(email)
                 .orElseThrow(() -> {
-                    log.error("User not found: {}", usernameOrEmail);
-                    return new UsernameNotFoundException("User not found: " + usernameOrEmail);
+                    log.error("User not found with email : {}", email);
+                    return new UsernameNotFoundException("User not found: " + email);
                 });
 
-        log.info("User found: {}", authUser.getUsername());
+        log.info("User found: {}", authUser.getEmail());
         return authUser;
     }
 
-    public AuthUser findByUsername(String username) {
-        return authUserRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
-    }
-
-    public AuthUser findByEmail(String email) {
-        return authUserRepository.findByEmail(email)
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
     }
 }

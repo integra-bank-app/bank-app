@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -25,7 +24,6 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
 public class UserController {
     private final UserService userService;
     private final DepositsService depositsService;
@@ -33,7 +31,8 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/users")
     public UUID addUser(@RequestBody UserWithBranchDTO user) {
-        return userService.addUserWithName(user.firstName(), user.middleName(), user.lastName(), user.branchId());
+        return userService.addUserWithName(user.firstName(), user.middleName(), user.lastName(), user.branchId(),
+                                           user.email(), user.password(), user.role());
     }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER') and @userPermissionService.canAccessUserData(#userId, authentication)")

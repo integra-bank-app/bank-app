@@ -1,9 +1,10 @@
 package clf.integra.backend.security;
 
-import clf.integra.backend.security.DTO.LoginRequest;
-import clf.integra.backend.security.DTO.RegisterRequest;
+import clf.integra.backend.model.Branch;
+import clf.integra.backend.model.User;
+import clf.integra.backend.security.DTO.LoginRequestDTO;
+import clf.integra.backend.security.DTO.RegisterRequestDTO;
 import clf.integra.backend.security.controller.AuthController;
-import clf.integra.backend.security.model.AuthUser;
 import clf.integra.backend.security.service.RegistrationService;
 import clf.integra.backend.security.utils.JwtUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -51,66 +52,69 @@ class AuthControllerTest {
     private MockMvc mockMvc;
     private ObjectMapper objectMapper;
 
-    private LoginRequest validLoginRequest;
-    private RegisterRequest validRegisterRequest;
-    private AuthUser mockAuthUser;
+    private LoginRequestDTO validLoginRequestDTO;
+    private RegisterRequestDTO validRegisterRequestDTO;
+    private User mockUser;
+
+    private static final String loginPath = "/login";
+    private static final String registerPath = "/register";
 
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(authController).build();
         objectMapper = new ObjectMapper();
 
-        validLoginRequest = new LoginRequest();
-        validLoginRequest.setUsernameOrEmail("testuser");
-        validLoginRequest.setPassword("password123");
+        validLoginRequestDTO = new LoginRequestDTO();
+        validLoginRequestDTO.setEmail("testuser@gmail.com");
+        validLoginRequestDTO.setPassword("password123");
 
-        validRegisterRequest = new RegisterRequest();
-        validRegisterRequest.setUsername("newuser");
-        validRegisterRequest.setEmail("test@example.com");
-        validRegisterRequest.setPassword("password123");
-        validRegisterRequest.setFirstName("John");
-        validRegisterRequest.setLastName("Doe");
-        validRegisterRequest.setBranchId(UUID.randomUUID());
+        validRegisterRequestDTO = new RegisterRequestDTO();
+        validRegisterRequestDTO.setEmail("test@example.com");
+        validRegisterRequestDTO.setPassword("password123");
+        validRegisterRequestDTO.setFirstName("John");
+        validRegisterRequestDTO.setLastName("Doe");
+        validRegisterRequestDTO.setBranchId(UUID.randomUUID());
 
-        mockAuthUser = AuthUser.builder()
+        mockUser = User.builder()
                 .id(UUID.randomUUID())
-                .username("testuser")
+                .firstName("John")
+                .lastName("Doe")
+                .branch(Branch.builder().id(validRegisterRequestDTO.getBranchId()).build())
                 .email("test@example.com")
-                .role(AuthUser.Role.USER)
-                .userId(UUID.randomUUID())
+                .password("password123")
+                .role(User.Role.USER)
                 .build();
     }
 
     @Test
-    void authenticateUser_WithValidCredentials_ShouldReturnJwtResponse() throws Exception {
+    void testAuthenticateUser_withValidCredentials_returnJwtResponse() throws Exception {
         Authentication mockAuthentication = mock(Authentication.class);
-        when(mockAuthentication.getPrincipal()).thenReturn(mockAuthUser);
+        when(mockAuthentication.getPrincipal()).thenReturn(mockUser);
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .thenReturn(mockAuthentication);
-        when(jwtUtils.generateToken(mockAuthUser)).thenReturn("mock-jwt-token");
+        when(jwtUtils.generateToken(mockUser)).thenReturn("mock-jwt-token");
 
-        mockMvc.perform(post("/api/auth/login")
+        mockMvc.perform(post(loginPath)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(validLoginRequest)))
+                        .content(objectMapper.writeValueAsString(validLoginRequestDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.token").value("mock-jwt-token"))
-                .andExpect(jsonPath("$.username").value("testuser"))
                 .andExpect(jsonPath("$.email").value("test@example.com"))
                 .andExpect(jsonPath("$.role").value("USER"))
                 .andExpect(jsonPath("$.type").value("Bearer"));
 
         verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
-        verify(jwtUtils).generateToken(mockAuthUser);
+        verify(jwtUtils).generateToken(mockUser);
     }
 
     @Test
-    void authenticateUser_WithInvalidCredentials_ShouldReturnBadRequest() throws Exception {
+    void testAuthenticateUser_withInvalidCredentials_returnBadRequest() throws Exception {
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .thenThrow(new BadCredentialsException("Invalid credentials"));
 
-        mockMvc.perform(post("/api/auth/login")
+        mockMvc.perform(post(loginPath)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(validLoginRequest)))
+                        .content(objectMapper.writeValueAsString(validLoginRequestDTO)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("Error: Invalid username/email or password!"));
 
@@ -119,13 +123,13 @@ class AuthControllerTest {
     }
 
     @Test
-    void authenticateUser_WithGeneralException_ShouldReturnBadRequest() throws Exception {
+    void testAuthenticateUser_withGeneralException_returnBadRequest() throws Exception {
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .thenThrow(new RuntimeException("Database connection failed"));
 
-        mockMvc.perform(post("/api/auth/login")
+        mockMvc.perform(post(loginPath)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(validLoginRequest)))
+                        .content(objectMapper.writeValueAsString(validLoginRequestDTO)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("Error: Authentication failed - Database connection failed"));
 
@@ -135,130 +139,131 @@ class AuthControllerTest {
 
     @Test
     void registerUser_WithValidData_ShouldReturnSuccessResponse() throws Exception {
-        when(registrationService.registerUser(any(RegisterRequest.class))).thenReturn(mockAuthUser);
+        when(registrationService.registerUser(any(RegisterRequestDTO.class))).thenReturn(mockUser);
 
-        mockMvc.perform(post("/api/auth/register")
+        mockMvc.perform(post(registerPath)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(validRegisterRequest)))
+                        .content(objectMapper.writeValueAsString(validRegisterRequestDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("User registered successfully"))
-                .andExpect(jsonPath("$.userId").value(mockAuthUser.getId().toString()))
-                .andExpect(jsonPath("$.username").value("testuser"))
+                .andExpect(jsonPath("$.userId").value(mockUser.getId().toString()))
                 .andExpect(jsonPath("$.email").value("test@example.com"))
                 .andExpect(jsonPath("$.assignedRole").value("USER"))
                 .andExpect(jsonPath("$.roleNote").doesNotExist());
 
-        verify(registrationService).registerUser(any(RegisterRequest.class));
+        verify(registrationService).registerUser(any(RegisterRequestDTO.class));
     }
 
     @Test
     void registerUser_WithExistingUsername_ShouldReturnBadRequest() throws Exception {
-        when(registrationService.registerUser(any(RegisterRequest.class)))
+        when(registrationService.registerUser(any(RegisterRequestDTO.class)))
                 .thenThrow(new RuntimeException("Username is already taken!"));
 
-        mockMvc.perform(post("/api/auth/register")
+        mockMvc.perform(post(registerPath)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(validRegisterRequest)))
+                        .content(objectMapper.writeValueAsString(validRegisterRequestDTO)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("Error: Username is already taken!"));
 
-        verify(registrationService).registerUser(any(RegisterRequest.class));
+        verify(registrationService).registerUser(any(RegisterRequestDTO.class));
     }
 
     @Test
     void registerUser_WithAdminRoleRequest_ShouldReturnRoleNote() throws Exception {
-        validRegisterRequest.setRequestedRole(AuthUser.Role.ADMIN);
+        validRegisterRequestDTO.setRequestedRole(User.Role.ADMIN);
 
-        AuthUser userWithUserRole = AuthUser.builder()
+        User userWithUserRole = User.builder()
                 .id(UUID.randomUUID())
-                .username("newuser")
                 .email("test@example.com")
-                .role(AuthUser.Role.USER)
-                .userId(UUID.randomUUID())
+                .password("password123")
+                .firstName("John")
+                .lastName("Doe")
+                .role(User.Role.USER)
+                .branch(Branch.builder().id(validRegisterRequestDTO.getBranchId()).build())
                 .build();
 
-        when(registrationService.registerUser(any(RegisterRequest.class))).thenReturn(userWithUserRole);
+        when(registrationService.registerUser(any(RegisterRequestDTO.class))).thenReturn(userWithUserRole);
 
-        mockMvc.perform(post("/api/auth/register")
+        mockMvc.perform(post(registerPath)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(validRegisterRequest)))
+                        .content(objectMapper.writeValueAsString(validRegisterRequestDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("User registered successfully"))
-                .andExpect(jsonPath("$.username").value("newuser"))
                 .andExpect(jsonPath("$.email").value("test@example.com"))
                 .andExpect(jsonPath("$.assignedRole").value("USER"))
                 .andExpect(jsonPath("$.roleNote").value("Admin role was requested but only IntegraBank employees (@integrabank.com) can be admins. USER role assigned instead."));
 
-        verify(registrationService).registerUser(any(RegisterRequest.class));
+        verify(registrationService).registerUser(any(RegisterRequestDTO.class));
     }
 
     @Test
     void registerUser_WithIntegraBankEmail_ShouldAssignAdminRole() throws Exception {
-        validRegisterRequest.setEmail("admin@integrabank.com");
-        validRegisterRequest.setRequestedRole(AuthUser.Role.ADMIN);
+        validRegisterRequestDTO.setEmail("admin@integrabank.com");
+        validRegisterRequestDTO.setRequestedRole(User.Role.ADMIN);
 
-        AuthUser adminUser = AuthUser.builder()
+        User adminUser = User.builder()
                 .id(UUID.randomUUID())
-                .username("newuser")
                 .email("admin@integrabank.com")
-                .role(AuthUser.Role.ADMIN)
-                .userId(UUID.randomUUID())
+                .password("password123")
+                .firstName("Admin")
+                .lastName("User")
+                .role(User.Role.ADMIN)
+                .branch(Branch.builder().id(validRegisterRequestDTO.getBranchId()).build())
                 .build();
 
-        when(registrationService.registerUser(any(RegisterRequest.class))).thenReturn(adminUser);
+        when(registrationService.registerUser(any(RegisterRequestDTO.class))).thenReturn(adminUser);
 
-        mockMvc.perform(post("/api/auth/register")
+        mockMvc.perform(post(registerPath)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(validRegisterRequest)))
+                        .content(objectMapper.writeValueAsString(validRegisterRequestDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("User registered successfully"))
-                .andExpect(jsonPath("$.username").value("newuser"))
                 .andExpect(jsonPath("$.email").value("admin@integrabank.com"))
                 .andExpect(jsonPath("$.assignedRole").value("ADMIN"))
                 .andExpect(jsonPath("$.roleNote").doesNotExist());
 
-        verify(registrationService).registerUser(any(RegisterRequest.class));
+        verify(registrationService).registerUser(any(RegisterRequestDTO.class));
     }
 
     @Test
     void registerUser_WithRuntimeException_ShouldReturnBadRequest() throws Exception {
-        when(registrationService.registerUser(any(RegisterRequest.class)))
+        when(registrationService.registerUser(any(RegisterRequestDTO.class)))
                 .thenThrow(new RuntimeException("Unexpected error occurred"));
 
-        mockMvc.perform(post("/api/auth/register")
+        mockMvc.perform(post(registerPath)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(validRegisterRequest)))
+                        .content(objectMapper.writeValueAsString(validRegisterRequestDTO)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("Error: Unexpected error occurred"));
 
-        verify(registrationService).registerUser(any(RegisterRequest.class));
+        verify(registrationService).registerUser(any(RegisterRequestDTO.class));
     }
 
     @Test
     void registerUser_WithInvalidEmail_ShouldReturnBadRequest() throws Exception {
-        when(registrationService.registerUser(any(RegisterRequest.class)))
+        when(registrationService.registerUser(any(RegisterRequestDTO.class)))
                 .thenThrow(new RuntimeException("Email is already in use!"));
 
-        mockMvc.perform(post("/api/auth/register")
+        mockMvc.perform(post(registerPath)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(validRegisterRequest)))
+                        .content(objectMapper.writeValueAsString(validRegisterRequestDTO)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("Error: Email is already in use!"));
 
-        verify(registrationService).registerUser(any(RegisterRequest.class));
+        verify(registrationService).registerUser(any(RegisterRequestDTO.class));
     }
 
     @Test
     void registerUser_WithInvalidBranch_ShouldReturnBadRequest() throws Exception {
-        when(registrationService.registerUser(any(RegisterRequest.class)))
-                .thenThrow(new RuntimeException("Branch not found with ID: " + validRegisterRequest.getBranchId()));
+        when(registrationService.registerUser(any(RegisterRequestDTO.class)))
+                .thenThrow(new RuntimeException("Branch not found with ID: " + validRegisterRequestDTO.getBranchId()));
 
-        mockMvc.perform(post("/api/auth/register")
+        mockMvc.perform(post(registerPath)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(validRegisterRequest)))
+                        .content(objectMapper.writeValueAsString(validRegisterRequestDTO)))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string("Error: Branch not found with ID: " + validRegisterRequest.getBranchId()));
+                .andExpect(content().string("Error: Branch not found with ID: " + validRegisterRequestDTO.getBranchId()));
 
-        verify(registrationService).registerUser(any(RegisterRequest.class));
+        verify(registrationService).registerUser(any(RegisterRequestDTO.class));
     }
 }

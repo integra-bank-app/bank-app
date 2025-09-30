@@ -61,21 +61,29 @@ public class UserServiceTest {
     private User user;
     private Account account;
     private UUID userId;
+    private Branch branch;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
 
         userId = UUID.randomUUID();
+        branch = Branch.builder().id(UUID.randomUUID()).build();
+
         account = Account.builder()
                 .id(UUID.randomUUID())
                 .balance(100.0)
                 .build();
+
         user = User.builder()
                 .id(userId)
                 .firstName("John")
                 .middleName("Mike")
                 .lastName("Doe")
+                .email("john.doe@gmail.com")
+                .password("password123")
+                .role(User.Role.USER)
+                .branch(branch)
                 .accounts(new ArrayList<>())
                 .build();
         user.getAccounts().add(account);
@@ -89,7 +97,10 @@ public class UserServiceTest {
         when(branchRepository.findById(branchId)).thenReturn(Optional.of(branch));
         when(userRepository.save(any(User.class))).thenReturn(user);
 
-        userService.addUserWithName("John", "Mike", "Doe", branchId);
+        userService.addUserWithName(
+                "John", "Mike", "Doe", branchId,
+                "john.doe@email.com", "parola123", User.Role.USER
+        );
 
         verify(userRepository).save(any(User.class));
     }
@@ -101,8 +112,10 @@ public class UserServiceTest {
         when(branchRepository.findById(branchId)).thenReturn(Optional.empty());
 
         assertThrows(NoSuchElementException.class, () ->
-                userService.addUserWithName("John", "Mike", "Doe", branchId));
-    }
+                userService.addUserWithName(
+                        "John", "Mike", "Doe", branchId,
+                        "john.doe@email.com", "parola123", User.Role.USER
+                ));    }
 
     @Test
     void testAddBalance_whenRandomBelow_returnSuccess() throws IOException {

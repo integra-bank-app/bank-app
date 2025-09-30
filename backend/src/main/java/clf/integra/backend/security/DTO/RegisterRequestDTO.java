@@ -1,6 +1,6 @@
 package clf.integra.backend.security.DTO;
 
-import clf.integra.backend.security.model.AuthUser;
+import clf.integra.backend.model.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -10,14 +10,10 @@ import lombok.Data;
 import java.util.UUID;
 
 @Data
-public class RegisterRequest {
-
-    @NotBlank(message = "Username is required")
-    @Size(min = 3, max = 20, message = "Username must be between 3 and 20 characters")
-    private String username;
+public class RegisterRequestDTO {
 
     @NotBlank(message = "Email is required")
-    @Email(message = "Email should be valid")
+    @Email(message = "Invalid email format")
     private String email;
 
     @NotBlank(message = "Password is required")
@@ -35,5 +31,5 @@ public class RegisterRequest {
     @NotNull(message = "Branch ID is required")
     private UUID branchId;
 
-    private AuthUser.Role requestedRole = AuthUser.Role.USER;
+    private User.Role requestedRole = User.Role.USER;
 }
