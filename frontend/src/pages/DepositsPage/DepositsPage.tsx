@@ -3,20 +3,19 @@ import {Button} from "primereact/button";
 import {depositColors} from "../../lib/utils";
 import DepositChart from "./DepositChart";
 import DepositsList from "./DepositsList";
-import {useNotificationContext} from "../../lib/hooks";
+import {useNotificationContext, useUserContext} from "../../lib/hooks";
 import {DepositsDTO, UserControllerApi} from "../../api";
 import {useNavigate} from "react-router-dom";
+
 
 const DepositsPage: React.FC = () => {
     const [deposits, setDeposits] = useState<DepositsDTO[]>([]);
     const [loading, setLoading] = useState(true);
-    const {uuid} = useNotificationContext()
+    const { user } = useUserContext()
     const navigate = useNavigate();
 
     useEffect(() => {
-        console.log(uuid);
-
-        if (!uuid) {
+        if (!user.uuid) {
             setLoading(false);
             return;
         }
@@ -24,7 +23,7 @@ const DepositsPage: React.FC = () => {
         const loadDeposits = async () => {
             try {
                 const userApi = new UserControllerApi();
-                const respons = await userApi.getUserDeposits(uuid);
+                const respons = await userApi.getUserDeposits(user.uuid);
                 setDeposits(respons.data);
             } catch (err) {
                 console.error("Error fetching deposits:", err);
@@ -34,7 +33,7 @@ const DepositsPage: React.FC = () => {
         }
 
         loadDeposits()
-    }, [uuid]);
+    }, [user.uuid]);
 
     const total = deposits.reduce((sum, d) => sum + (d.amount ?? 0), 0);
 
