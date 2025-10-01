@@ -5,6 +5,7 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Card } from "primereact/card";
 import { Paginator } from "primereact/paginator";
+import { USER_LIST_ROWS_PER_PAGE_OPTIONS } from "../lib/constants";
 import {Title} from "../components/TitleComponent";
 import { Paginator } from "primereact/paginator";
 
@@ -96,7 +97,7 @@ export default function UserListPage() {
 					first={page * rows}
 					rows={rows}
 					totalRecords={totalRecords}
-					rowsPerPageOptions={[5, 10, 20, 50, 100, 1000, 10000, 100000]}
+					rowsPerPageOptions={USER_LIST_ROWS_PER_PAGE_OPTIONS}
 					onPageChange={(e) => {
 						setPage(e.page);
 						setRows(e.rows);
