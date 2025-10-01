@@ -1,12 +1,13 @@
 import {Button} from "primereact/button";
 import {InputText} from "primereact/inputtext";
 import {JSX, useState} from "react";
-import {useNotificationContext} from "../lib/hooks";
+import {useNotificationContext, useUserContext} from "../lib/hooks";
 import {useNavigate} from "react-router-dom";
 
+
 export function StartComponent(): JSX.Element {
-    const {setUuid, uuid} = useNotificationContext();
-    const [text, setText] = useState(uuid ?? "");
+    const {user, setUser} = useUserContext();
+    const [text, setText] = useState(user.uuid ?? "");
     const navigate = useNavigate();
 
     return (
@@ -24,14 +25,15 @@ export function StartComponent(): JSX.Element {
                     icon="pi pi-search"
                     label="Confirm"
                     className="p-button-lg p-button-primary"
-                    onClick={() => setUuid(text)}
+                    onClick={() => {setUser({...user, uuid: text});
+                    }}
                 />
             </div>
 
             <Button
                 icon="pi pi-wallet"
                 onClick={() => {
-                    setUuid(text);
+                    setUser({...user, uuid: text});
                     navigate("/deposits");
                 }}
                 className="p-button-lg p-button-primary"
