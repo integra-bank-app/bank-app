@@ -47,5 +47,3 @@ VALUES ('ff2c031c-d1b7-409b-ab6a-a63a16ccdd3b', 500.0, NOW(), '11111111-1111-111
         'Tax deducted for Bob'),
        ('5c95e7a8-73c9-4bbe-84e7-67983fa6e853', 3000.0, NOW(), '33333333-3333-3333-3333-333333333333', 'TOP_UP',
         'Initial deposit for Charlie');
-
-

@@ -2,8 +2,10 @@ package clf.integra.backend.controller;
 
 import clf.integra.backend.dto.DepositsDTO;
 import clf.integra.backend.dto.UserWithBranchDTO;
+import clf.integra.backend.model.User;
 import clf.integra.backend.exceptions.InsufficientFundsException;
 import clf.integra.backend.exceptions.NotFoundException;
+import clf.integra.backend.security.utils.JwtUtils;
 import clf.integra.backend.service.DepositsService;
 import clf.integra.backend.service.UserService;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -47,20 +49,27 @@ public class UserControllerTest {
     @MockitoBean
     DepositsService depositsService;
 
+    @MockitoBean
+    JwtUtils utils;
+
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     void testAddUser_validData_returnsSuccess() throws Exception {
         UUID newUserId = UUID.randomUUID();
 
-        when(userService.addUserWithName(anyString(), anyString(), anyString(), any(UUID.class)))
+        when(userService.addUserWithName(anyString(), anyString(), anyString(), any(UUID.class),
+                anyString(), anyString(), any(User.Role.class)))
                 .thenReturn(newUserId);
 
         UserWithBranchDTO newUser = new UserWithBranchDTO(
                 "John",
                 "M",
                 "Doe",
-                UUID.fromString("4a5cf1e2-3b6d-4c5e-8f1e-1234567890ab")
+                UUID.fromString("4a5cf1e2-3b6d-4c5e-8f1e-1234567890ab"),
+                "john.doe@gmail.com",
+                "password123",
+                User.Role.USER
         );
 
         String requestJson = objectMapper.writeValueAsString(newUser);
@@ -79,14 +88,18 @@ public class UserControllerTest {
 
     @Test
     void testAddUser_branchDoesNotExist_returnsNotFound() throws Exception {
-        when(userService.addUserWithName(anyString(), anyString(), anyString(), any(UUID.class)))
+        when(userService.addUserWithName(anyString(), anyString(), anyString(), any(UUID.class),
+                anyString(), anyString(), any(User.Role.class)))
                 .thenThrow(new NotFoundException("Branch not found"));
 
         UserWithBranchDTO newUser = new UserWithBranchDTO(
                 "John",
                 "M",
                 "Doe",
-                UUID.fromString("4a5cf1e2-3b6d-4c5e-8f1e-1234567890ab")
+                UUID.fromString("4a5cf1e2-3b6d-4c5e-8f1e-1234567890ab"),
+                "john.doe@gmail.com",
+                "password123",
+                User.Role.USER
         );
 
         String requestJson = objectMapper.writeValueAsString(newUser);

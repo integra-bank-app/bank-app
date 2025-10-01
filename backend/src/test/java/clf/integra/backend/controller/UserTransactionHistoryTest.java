@@ -2,6 +2,7 @@ package clf.integra.backend.controller;
 
 import clf.integra.backend.dto.UserTransactionDTO;
 import clf.integra.backend.model.TransactionType;
+import clf.integra.backend.security.utils.JwtUtils;
 import clf.integra.backend.service.UserTransactionHistoryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,6 +29,9 @@ public class UserTransactionHistoryTest {
 
     @MockitoBean
     private UserTransactionHistoryService userTransactionHistoryService;
+
+    @MockitoBean
+    JwtUtils utils;
 
     private UUID userId;
     private UserTransactionDTO tr1;

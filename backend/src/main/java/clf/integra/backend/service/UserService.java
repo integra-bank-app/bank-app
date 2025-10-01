@@ -31,7 +31,8 @@ public class UserService {
     private final NotificationService notificationService;
 
     @Transactional
-    public UUID addUserWithName(String firstName, String middleName, String lastName, UUID branchId) {
+    public UUID addUserWithName(String firstName, String middleName, String lastName, UUID branchId,
+                                String email, String password, User.Role role) {
         Branch branch = branchRepository.findById(branchId).get();
         if (branch == null) {
             throw new NotFoundException("Branch not found");
@@ -41,6 +42,9 @@ public class UserService {
                 .middleName(middleName)
                 .lastName(lastName)
                 .branch(branch)
+                .email(email)
+                .password(password)
+                .role(role)
                 .build();
 
         Account account = Account.builder()
