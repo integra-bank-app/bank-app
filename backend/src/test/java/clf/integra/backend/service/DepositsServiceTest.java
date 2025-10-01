@@ -95,9 +95,7 @@ public class DepositsServiceTest {
         when(userRepository.findById(id)).thenReturn(Optional.empty());
         DepositImportDTO dto = new DepositImportDTO(1000.0, 3.5, id);
 
-        assertThrows(NotFoundException.class, () -> {
-            depositsService.bulkImport(List.of(dto));
-        });
+        assertThrows(NotFoundException.class, () -> depositsService.bulkImport(List.of(dto)));
 
         verifyNoInteractions(depositsRepository);
     }
