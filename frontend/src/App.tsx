@@ -1,6 +1,5 @@
 import { PrimeReactProvider } from "primereact/api";
 import { StartComponent } from "./components/StartComponent";
-import { Routes, Route, BrowserRouter } from "react-router-dom";
 
 import "primeflex/primeflex.css"; // flex
 import "primeicons/primeicons.css"; //icons
