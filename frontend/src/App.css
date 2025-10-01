@@ -1,0 +1,15 @@
+/* index.css or App.css */
+html,
+body,
+#root {
+	height: 100%;
+	margin: 0;
+	background-color: var(--surface-ground); /* from the theme */
+	color: var(--text-color); /* ensures contrast */
+}
+
+.layout-content {
+	padding: 1.5rem;
+	background-color: var(--surface-card); /* matches demo site content */
+	border-radius: 8px;
+}
