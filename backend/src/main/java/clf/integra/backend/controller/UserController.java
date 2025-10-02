@@ -59,7 +59,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER') and @userPermissionService.canAccessUserData(#fromUserId, authentication)")
     @PostMapping("/users/transfer")
-    public ResponseEntity<Double> transferMoney(@RequestParam UUID fromUserId, @RequestParam UUID toUserId, @RequestParam double amount) throws InsufficientFundsException, NotFoundException , InvalidAmountException {
+    public ResponseEntity<Double> transferMoney(@RequestParam UUID fromUserId, @RequestParam UUID toUserId, @RequestParam double amount) throws InsufficientFundsException, NotFoundException , InvalidAmountException, IOException {
         double newBalance = userService.transferMoney(fromUserId, toUserId, amount);
         return ResponseEntity.ok(newBalance);
     }

@@ -155,7 +155,7 @@ public class UserService {
     }
 
     @Transactional
-    public double transferMoney(UUID fromUserId, UUID toUserId, double amount) throws NotFoundException, InsufficientFundsException, InvalidAmountException {
+    public double transferMoney(UUID fromUserId, UUID toUserId, double amount) throws NotFoundException, InsufficientFundsException, InvalidAmountException, IOException {
         User fromUser = userRepository.getReferenceById(fromUserId);
         User toUser = userRepository.getReferenceById(toUserId);
 
