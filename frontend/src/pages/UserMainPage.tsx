@@ -3,16 +3,18 @@ import { useUserBalances} from "../hooks/useUserBalances";
 import { TotalBalanceSlide } from "../components/TotalBalanceSlide";
 import { AccountSlide } from "../components/AccountSlide";
 import { useUserContext } from "../lib/hooks";
+import { Title } from "../components/TitleComponent";
 
 export default function UserMainPage() {
     const userId = useUserContext().user.uuid;
     
     const {accounts, balances, totalBalance} = useUserBalances(userId);
 
-    const carouselItems = [...accounts, "Total Balance"];
+    const totalBalanceItem = "TotalBalance";
+    const carouselItems = [...accounts, totalBalanceItem];
 
     const itemTemplate = (item: string) => {
-        if (item === "Total Balance") {
+        if (item === totalBalanceItem) {
             return <TotalBalanceSlide totalBalance={totalBalance} />;
         } else {
             return <AccountSlide accountId={item} balance={balances[item] ?? null} />;
@@ -21,9 +23,7 @@ export default function UserMainPage() {
 
     return (
         <div className="flex flex-col items-center space-y-4 mt-4">
-            <h2 className="text-2xl md:text-3xl font-semibold text-gray-900">
-                My Accounts
-            </h2>
+            <Title>My Accounts</Title>
             <Carousel 
                 value={carouselItems} 
                 numVisible={1} 
