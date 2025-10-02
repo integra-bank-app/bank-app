@@ -4,6 +4,7 @@ import { BranchControllerApi, UserDTO, PagedModelUserDTO } from "../api";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Card } from "primereact/card";
+import {Title} from "../components/TitleComponent";
 import { Paginator } from "primereact/paginator";
 
 export default function UserListPage() {
@@ -66,9 +67,7 @@ export default function UserListPage() {
 				className="w-full flex flex-col items-center justify-center text-center mx-auto"
 				style={{ maxWidth: "800px" }}
 			>
-				<h2 className="text-2xl md:text-3xl font-semibold text-gray-900">
-					Users in Branch
-				</h2>
+				<Title>Users in Branch</Title>
 				<p className="text-sm text-gray-500 mt-2">
 					Branch ID:
 					<span className="inline-block ml-2 px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 font-medium">
