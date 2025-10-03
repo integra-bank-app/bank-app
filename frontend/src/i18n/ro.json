@@ -1,0 +1,27 @@
+{
+  "header": {
+    "logout": "Deconectare",
+    "confirmLogout": "Esti sigur ca vrei sa te deconectezi?"
+  },
+  "footer": {
+    "copyright": "© 2025 Proiectul Integra UBB. Toate drepturile rezervate."
+  },
+  "addUserToBranchDialog": {
+    "errorFirstName": "Prenumele este necesar",
+    "errorLastName": "Numele este necesar",
+    "errorAddingUser": "Erroare adaugare Utilizator",
+    "failedToAddUser": "Nereusit in adaugare Utilizator",
+    "addingButton": "Adaugare...",
+    "addUserButton": "Adaugare Utilizator",
+    "addUserHeader": "Adaugare Utilizator",
+    "firstNameLabel": "Prenume",
+    "middleNameLabel": "Al doilea nume",
+    "lastNameLabel": "Nume de familie"
+  },
+  "adminPage": {
+    "hello": "Salut",
+    "addUserLabel": "Adauga Utilizator",
+    "exportUserLabel": "Exporta Utilizator",
+    "settingsLabel": "Setari"
+  }
+}
