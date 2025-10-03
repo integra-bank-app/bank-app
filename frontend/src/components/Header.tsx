@@ -26,13 +26,12 @@ const Header: React.FC = () => {
         i18n.changeLanguage(lang.code);
     };
 
-	const handleLogout = () => {
-		// Handle user tokens here
-		navigate("/login");
-	};
+    const handleLogout = () => {
+        navigate("/login");
+    };
 
-	const showLogout = location.pathname !== "/login";
-	const showUserIcon = location.pathname !== "/login";
+    const showLogout = location.pathname !== "/login";
+    const showUserIcon = location.pathname !== "/login";
 
     return (
         <header className="p-2 relative flex items-center justify-between bg-gray-100 shadow-md">
