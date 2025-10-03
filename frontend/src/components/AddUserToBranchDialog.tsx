@@ -49,7 +49,7 @@ export default function AddUserToBranchDialog({
                 lastName,
                 branchId,
             };
-    
+
             const response = await apiFp.addUser(dto);
 
 
