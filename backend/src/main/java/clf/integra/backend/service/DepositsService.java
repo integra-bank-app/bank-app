@@ -25,6 +25,7 @@ public class DepositsService {
                 .map(deposit -> new DepositsDTO(deposit.getId(),deposit.getInterest_rate(),deposit.getAmount()))
                 .toList();
     }
+
     public void bulkImport(List<DepositImportDTO> depositsDTOs) {
         for (DepositImportDTO depositImportDTO : depositsDTOs) {
             User user = userRepository.findById(depositImportDTO.userId()).orElseThrow(() -> new NotFoundException("User not found"));
