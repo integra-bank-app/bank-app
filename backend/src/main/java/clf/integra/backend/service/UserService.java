@@ -15,6 +15,8 @@ import clf.integra.backend.repository.UserRepository;
 import clf.integra.backend.utils.RandomUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -99,6 +101,20 @@ public class UserService {
         return userRepository.findByBranchId(branchId).stream()
                 .map(user -> new UserDTO(user.getFirstName(), user.getMiddleName(), user.getLastName()))
                 .collect(Collectors.toList());
+    }
+
+    public Page<UserDTO> getAllUsersByBranchAndPage(UUID branchId, Pageable pageable) {
+        if (!branchRepository.existsById(branchId)) {
+            throw new NotFoundException("Branch not found");
+        }
+
+        return userRepository.findByBranchId(branchId, pageable)
+                .map(user -> UserDTO.builder()
+                        .firstName(user.getFirstName())
+                        .middleName(user.getMiddleName())
+                        .lastName(user.getLastName())
+                        .build()
+                );
     }
 
     @Transactional
