@@ -18,6 +18,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Login from "./pages/Login";
 
+import { Link } from "react-router-dom";
 function App() {
 	const [currentPage, setCurrentPage] = useState<PageKey>("start");
 	const [uuid, setUuid] = useState("");

@@ -7,9 +7,6 @@ import { Card } from "primereact/card";
 import { Paginator } from "primereact/paginator";
 import { USER_LIST_ROWS_PER_PAGE_OPTIONS } from "../lib/constants";
 import {Title} from "../components/TitleComponent";
-import { Paginator } from "primereact/paginator";
-import { USER_LIST_ROWS_PER_PAGE_OPTIONS } from "../lib/constants";
-import {Title} from "../components/TitleComponent";
 
 export default function UserListPage() {
 	const { user } = useUserContext();
