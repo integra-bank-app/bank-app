@@ -1,5 +1,6 @@
 import { PrimeReactProvider } from "primereact/api";
 import { StartComponent } from "./components/StartComponent";
+import { JSX, useState } from "react";
 
 import "primeflex/primeflex.css"; // flex
 import "primeicons/primeicons.css"; // icons
@@ -17,7 +18,11 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Login from "./pages/Login";
 
+import { Link } from "react-router-dom";
 function App() {
+	const [currentPage, setCurrentPage] = useState<PageKey>("start");
+	const [uuid, setUuid] = useState("");
+
 	return (
 		<PrimeReactProvider>
 			<UserProvider>

@@ -10,7 +10,7 @@
     "errorFirstName": "Prenumele este necesar",
     "errorLastName": "Numele este necesar",
     "errorAddingUser": "Erroare adaugare Utilizator",
-    "failedToAddUser": "Nereusit in adaugare Utilizator",
+    "failedToAddUser": "Adaugarea utilizatorului nu a functionat",
     "addingButton": "Adaugare...",
     "addUserButton": "Adaugare Utilizator",
     "addUserHeader": "Adaugare Utilizator",
