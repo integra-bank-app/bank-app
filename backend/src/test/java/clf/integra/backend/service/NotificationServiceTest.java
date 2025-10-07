@@ -51,6 +51,9 @@ class NotificationServiceTest {
                 .firstName("John")
                 .lastName("Doe")
                 .branch(branch)
+                .email("john.doe@gmail.com")
+                .password("password123")
+                .role(User.Role.USER)
                 .build();
     }
 

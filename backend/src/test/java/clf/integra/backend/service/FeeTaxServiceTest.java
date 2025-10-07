@@ -14,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -127,7 +128,7 @@ class FeeTaxServiceTest {
     }
 
     @Test
-    void testFeeAndTaxUsers_ShouldProcessAllUsers() {
+    void testFeeAndTaxUsers_ShouldProcessAllUsers() throws IOException {
         UUID idUser1 = UUID.randomUUID();
         UUID idUser2 = UUID.randomUUID();
         User user1 = createUserWithBalance(idUser1, "John", "A", "Doe", 50.0);

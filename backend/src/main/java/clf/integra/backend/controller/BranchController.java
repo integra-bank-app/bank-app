@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,19 +19,21 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Arrays;
+import java.io.IOException;
 import java.util.UUID;
 
 import static org.springframework.data.web.config.EnableSpringDataWebSupport.PageSerializationMode.VIA_DTO;
 
 @RestController
 @AllArgsConstructor
+@PreAuthorize("hasRole('ADMIN')")
 @CrossOrigin("*")
 @EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO)
 public class BranchController {
     private final UserService userService;
 
     @PostMapping("branches/{branchId}/collect-taxes-and-fees")
-    public ResponseEntity<Double> collectTaxesAndFeesFromBranch(@PathVariable UUID branchId) {
+    public ResponseEntity<Double> collectTaxesAndFeesFromBranch(@PathVariable UUID branchId) throws IOException {
         try {
             double revenue = userService.
                     collectTaxesAndFeesFromBranch(branchId);

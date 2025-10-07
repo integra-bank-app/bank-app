@@ -2,6 +2,7 @@ package clf.integra.backend.controller;
 
 import clf.integra.backend.dto.UserDTO;
 import clf.integra.backend.service.UserService;
+import clf.integra.backend.security.utils.JwtUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,6 +38,9 @@ public class BranchControllerTest {
 
     @MockitoBean
     private UserService userService;
+
+    @MockitoBean
+    JwtUtils utils;
 
     private UUID branchId;
     private List<UserDTO> users;
