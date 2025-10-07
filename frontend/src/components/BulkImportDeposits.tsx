@@ -1,10 +1,10 @@
 import React, {useState, ChangeEvent, useRef} from "react";
 import {Button} from "primereact/button";
 import {InputTextarea} from "primereact/inputtextarea";
-import { Toast } from "primereact/toast";
-import {ConfirmDialog, confirmDialog} from "primereact/confirmdialog";
+import {Toast} from "primereact/toast";
+import ConfirmationDialog from "./ConfirmationDialog";
 
-const IMPORT_ENDPOINT = `${import.meta.env.VITE_BACKEND_API_URL}/admin/deposits/import`;
+const IMPORT_ENDPOINT = `${import.meta.env.VITE_BACKEND_API_URL}/deposits/import`;
 
 type BulkImportProps = {
     onClose: () => void;
@@ -26,6 +26,8 @@ const BulkImportDeposits: React.FC<BulkImportProps> = ({onClose}) => {
     const [fileError, setFileError] = useState<string | null>(null);
     const [textError, setTextError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [showConfirm, setShowConfirm] = useState(false);
+    const [pendingPayload, setPendingPayload] = useState<any[] | null>(null);
 
     const toast = useRef<Toast>(null);
 
@@ -85,60 +87,88 @@ const BulkImportDeposits: React.FC<BulkImportProps> = ({onClose}) => {
 
     const onImportClick = async () => {
         if (textAreaValue && textError) {
-            toast.current?.show({severity: "error", summary: "Invalid JSON", detail:textError});
+            toast.current?.show({
+                severity: "error",
+                summary: "Invalid JSON",
+                detail: textError
+            });
             return;
         }
         if (fileError) {
-            toast.current?.show({severity: "error", summary: "Invalid File", detail:textError});
+            toast.current?.show({
+                severity: "error",
+                summary: "Invalid File",
+                detail: textError
+            });
             return;
         }
 
         const payload = buildMergedPayload();
         if (!payload) {
-            toast.current?.show({ severity: "warn", summary: "Nothing to Import", detail: "Please paste JSON or upload a file." });
+            toast.current?.show({
+                severity: "warn",
+                summary: "Nothing to Import",
+                detail: "Please paste JSON or upload a file."
+            });
             return;
         }
 
-        confirmDialog({
-            message: `You are about to import ${payload.length} deposit(s). Proceed?`,
-            header: "Confirm Import",
-            icon: "pi pi-exclamation-triangle",
-            acceptLabel: "Yes",
-            rejectLabel: "No",
-            accept: async () => {
-                setIsSubmitting(true);
-                try {
-                    const resp = await fetch(IMPORT_ENDPOINT, {
-                        method: "POST",
-                        headers: { "Content-Type": "text/plain" },
-                        body: JSON.stringify(payload),
-                    });
+        setPendingPayload(payload);
+        setShowConfirm(true);
+    };
 
-                    if (!resp.ok) {
-                        throw new Error(`Server error: ${resp.status}`);
-                    }
+        const handleAccept = async () => {
+            if (!pendingPayload) return;
+            setShowConfirm(false);
+            setIsSubmitting(true);
+            try {
+                const resp = await fetch(IMPORT_ENDPOINT, {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({depositImports: pendingPayload}),
+                });
 
-                    toast.current?.show({ severity: "success", summary: "Success", detail: "Import successful!" });
-
-                    setTextAreaValue("");
-                    setFileContent(null);
-                    setFileName(null);
-                    setFileError(null);
-                    setTextError(null);
-                    onClose();
-                } catch (err: any) {
-                    toast.current?.show({ severity: "error", summary: "Error", detail: err.message ?? "Unknown error" });
-                } finally {
-                    setIsSubmitting(false);
+                if (!resp.ok) {
+                    throw new Error(`Server error: ${resp.status}`);
                 }
+
+                toast.current?.show({
+                    severity: "success",
+                    summary: "Success",
+                    detail: "Import successful!"
+                });
+
+                setTextAreaValue("");
+                setFileContent(null);
+                setFileName(null);
+                setFileError(null);
+                setTextError(null);
+                onClose();
+            } catch (err: any) {
+                toast.current?.show({
+                    severity: "error",
+                    summary: "Error",
+                    detail: err.message ?? "Unknown error"
+                });
+            } finally {
+                setIsSubmitting(false);
             }
-        });
+        }
+
+    const handleReject = () => {
+        setShowConfirm(false);
     };
 
     return (
         <div className="p-4 border-round border-1 surface-border">
-            <Toast ref={toast} />
-            <ConfirmDialog />
+            <Toast ref={toast}/>
+            <ConfirmationDialog
+                visible={showConfirm}
+                message={`You are about to import ${pendingPayload?.length ?? 0} deposit(s). Proceed?`}
+                onAccept={handleAccept}
+                onReject={handleReject}
+                onHide={() => setShowConfirm(false)}
+            />
             <h2 className="text-2xl font-bold mb-3">Bulk Import Deposits</h2>
 
             <div className="mb-3">
