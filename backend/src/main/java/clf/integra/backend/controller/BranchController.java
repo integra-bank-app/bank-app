@@ -30,7 +30,6 @@ import static org.springframework.data.web.config.EnableSpringDataWebSupport.Pag
 @PreAuthorize("hasRole('ADMIN')")
 @CrossOrigin("*")
 @EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO)
-@PreAuthorize("hasRole('ADMIN')")
 public class BranchController {
     private final UserService userService;
 

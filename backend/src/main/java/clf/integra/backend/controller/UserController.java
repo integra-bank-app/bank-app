@@ -26,7 +26,6 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
 @CrossOrigin("*")
 public class UserController {
     private final UserService userService;
@@ -36,7 +35,7 @@ public class UserController {
     @PostMapping("/users")
     public UUID addUser(@RequestBody UserWithBranchDTO user) {
         return userService.addUserWithName(user.firstName(), user.middleName(), user.lastName(), user.branchId(),
-                                           user.email(), user.password(), user.role());
+                user.email(), user.password(), user.role());
     }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER') and @userPermissionService.canAccessUserData(#userId, authentication)")
@@ -59,7 +58,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER') and @userPermissionService.canAccessUserData(#fromUserId, authentication)")
     @PostMapping("/users/transfer")
-    public ResponseEntity<Double> transferMoney(@RequestParam UUID fromUserId, @RequestParam UUID toUserId, @RequestParam double amount) throws InsufficientFundsException, NotFoundException , InvalidAmountException, IOException {
+    public ResponseEntity<Double> transferMoney(@RequestParam UUID fromUserId, @RequestParam UUID toUserId, @RequestParam double amount) throws InsufficientFundsException, NotFoundException, InvalidAmountException, IOException {
         double newBalance = userService.transferMoney(fromUserId, toUserId, amount);
         return ResponseEntity.ok(newBalance);
     }
