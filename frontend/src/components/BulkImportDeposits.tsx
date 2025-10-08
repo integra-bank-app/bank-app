@@ -3,6 +3,7 @@ import {Button} from "primereact/button";
 import {InputTextarea} from "primereact/inputtextarea";
 import {Toast} from "primereact/toast";
 import ConfirmationDialog from "./ConfirmationDialog";
+import { DepositsDTO, DepositControllerApi} from "../api";
 
 const IMPORT_ENDPOINT = `${import.meta.env.VITE_BACKEND_API_URL}/deposits/import`;
 
@@ -122,15 +123,8 @@ const BulkImportDeposits: React.FC<BulkImportProps> = ({onClose}) => {
             setShowConfirm(false);
             setIsSubmitting(true);
             try {
-                const resp = await fetch(IMPORT_ENDPOINT, {
-                    method: "POST",
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify({depositImports: pendingPayload}),
-                });
-
-                if (!resp.ok) {
-                    throw new Error(`Server error: ${resp.status}`);
-                }
+                const api= new DepositControllerApi();
+                const resp= await api.importDeposits({ depositImports: pendingPayload });
 
                 toast.current?.show({
                     severity: "success",
