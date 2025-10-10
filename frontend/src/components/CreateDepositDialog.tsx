@@ -2,11 +2,13 @@ import { Dialog } from "primereact/dialog";
 import { Stepper } from "primereact/stepper";
 import { StepperPanel } from "primereact/stepperpanel";
 import { useRef, useState } from "react";
-import { useNotificationContext } from "../lib/hooks";
+import { useNotificationContext, useUserContext } from "../lib/hooks";
 import ReviewStep from "./CreateDepositSteps/ReviewStep";
 import ConfigureStep from "./CreateDepositSteps/ConfigureStep";
 import TermsStep from "./CreateDepositSteps/TermsStep";
 import { INTREST_RATE_OPTIONS } from "../lib/constants";
+import { DepositControllerApi, DepositsDTO } from "../api";
+import { TUser } from "../lib/types";
 
 type CreateDepositDialogProps = {
 	visible: boolean;
@@ -21,7 +23,7 @@ export function CreateDepositDialog({
 		name: `${value}%`,
 		value,
 	}));
-
+	const { user } = useUserContext();
 	const { toastRef } = useNotificationContext();
 	const [depositValue, setDepositValue] = useState<number | null>(null);
 	const [interestRate, setInterestRate] = useState<number | null>(null);
@@ -32,22 +34,46 @@ export function CreateDepositDialog({
 	const [depositInvalid, setDepositInvalid] = useState(false);
 	const [interestInvalid, setInterestInvalid] = useState(false);
 
-	const onCreateDeposit = () => {
-		onHide();
+	const onCreateDeposit = async () => {
+		if (!depositValue || !interestRate) {
+			setDepositInvalid(!depositValue);
+			setInterestInvalid(!interestRate);
+			return;
+		}
+
+		if (!agreesToTerms) {
+			toastRef.current?.show({
+				severity: "warn",
+				summary: "Terms Not Agreed",
+				detail: "You must agree to the terms and conditions to proceed.",
+				life: 3000,
+			});
+			return;
+		}
+
 		toastRef.current?.show({
 			severity: "info",
 			summary: "Creating Deposit",
-			detail: `Creating your deposit of $${depositValue?.toFixed(2)}...`,
-			life: 2000,
+			detail: `Creating your deposit of $${depositValue.toFixed(2)}...`,
+			life: 1500,
 		});
 
-		setTimeout(() => {
+		try {
+			const depositDTO: DepositsDTO = {
+				id: undefined,
+				interest_rate: interestRate,
+				amount: depositValue,
+			};
+
+			const api = new DepositControllerApi();
+			const response = await api.createDeposit(user.uuid, depositDTO);
+
 			toastRef.current?.show({
 				severity: "success",
 				summary: "Deposit Created",
-				detail: `Deposit of $${depositValue?.toFixed(
+				detail: `Deposit of $${depositValue.toFixed(
 					2
-				)} at ${interestRate}% interest created successfully.`,
+				)} at ${interestRate}% created successfully. ID: ${response.data}`,
 				life: 3000,
 			});
 
@@ -57,7 +83,19 @@ export function CreateDepositDialog({
 			setCheckboxEnabled(false);
 			setDepositInvalid(false);
 			setInterestInvalid(false);
-		}, 2000);
+
+			onHide();
+		} catch (error: any) {
+			toastRef.current?.show({
+				severity: "error",
+				summary: "Error Creating Deposit",
+				detail:
+					error?.response?.data?.message ||
+					error?.message ||
+					"An unexpected error occurred.",
+				life: 4000,
+			});
+		}
 	};
 
 	return (
