@@ -5,6 +5,7 @@ import { useUserContext } from "../lib/hooks";
 
 type NotificationContextType = {
 	isConnected: boolean;
+	toastRef: React.RefObject<Toast | null>;
 };
 
 type NotificationProviderProps = {
@@ -38,6 +39,7 @@ export function NotificationProvider({
 
 	useEffect(() => {
 		if (!user.uuid) return;
+
 		const socket = new WebSocket(
 			`${import.meta.env.VITE_BACKEND_SOCKET_URL}/ws/notifications?uuid=${
 				user.uuid
@@ -63,7 +65,7 @@ export function NotificationProvider({
 				});
 				console.log("Received notification:", data);
 			}
-			if(data.type == "SUCCESS"){
+			if (data.type === "SUCCESS") {
 				console.log("Refetching data due to SUCCESS notification");
 				const refetchEvent = new Event("refetchData");
 				window.dispatchEvent(refetchEvent);
@@ -77,7 +79,7 @@ export function NotificationProvider({
 	}, [user.uuid]);
 
 	return (
-		<NotificationContext.Provider value={{ isConnected }}>
+		<NotificationContext.Provider value={{ isConnected, toastRef: toast }}>
 			<Toast ref={toast} />
 			{children}
 		</NotificationContext.Provider>
