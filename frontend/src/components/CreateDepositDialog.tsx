@@ -61,13 +61,7 @@ export function CreateDepositDialog({
 	};
 
 	return (
-		<Dialog
-			header="Create New Deposit"
-			visible={visible}
-			modal
-			onHide={onHide}
-			maximizable
-		>
+		<Dialog header="Create New Deposit" visible={visible} modal onHide={onHide}>
 			<div className="card flex justify-content-center">
 				<Stepper
 					linear={true}

@@ -31,8 +31,16 @@ export default function TermsStep({
 					checked={agreesToTerms}
 					disabled={!checkboxEnabled}
 					onChange={() => setAgreesToTerms(!agreesToTerms)}
+					className={`custom-checkbox ${!checkboxEnabled ? "disabled" : ""}`}
 				/>
-				<label htmlFor="agree" className="ml-2 text-sm text-gray-700">
+				<label
+					htmlFor="agree"
+					className="ml-2 text-sm"
+					style={{
+						opacity: checkboxEnabled ? 1 : 0.5, // Semi-transparent when disabled
+						color: "white", // Keep the text white
+					}}
+				>
 					I have read and agree to the terms and conditions
 				</label>
 			</div>
