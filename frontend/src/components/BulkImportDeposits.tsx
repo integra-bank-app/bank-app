@@ -5,7 +5,6 @@ import {Toast} from "primereact/toast";
 import ConfirmationDialog from "./ConfirmationDialog";
 import { DepositsDTO, DepositControllerApi} from "../api";
 
-const IMPORT_ENDPOINT = `${import.meta.env.VITE_BACKEND_API_URL}/deposits/import`;
 
 type BulkImportProps = {
     onClose: () => void;
