@@ -15,7 +15,7 @@
 		"axios": "^1.12.2",
 		"bootstrap": "^5.3.8",
 		"chart.js": "^4.5.0",
-		"pdfjs-dist": "^3.11.174",
+		"pdfjs-dist": "^5.4.296",
 		"primeflex": "^4.0.0",
 		"primeicons": "^7.0.0",
 		"primereact": "^10.9.7",
