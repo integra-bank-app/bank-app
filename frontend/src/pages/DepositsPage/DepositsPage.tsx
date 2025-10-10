@@ -3,13 +3,15 @@ import { Button } from "primereact/button";
 import { depositColors } from "../../lib/utils";
 import DepositChart from "./DepositChart";
 import DepositsList from "./DepositsList";
+import { DepositsDTO, UserControllerApi } from "../../api";
 import { useNavigate } from "react-router-dom";
 import { useAuthentication } from "../../contexts/AuthenticationProvider";
 import { useTranslation } from "react-i18next";
 
 const DepositsPage: React.FC = () => {
-    const [deposits, setDeposits] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
+	const [showAddDialog, setShowAddDialog] = useState<boolean>(false);
+	const [deposits, setDeposits] = useState<DepositsDTO[]>([]);
+	const [loading, setLoading] = useState(true);
     const { user } = useAuthentication();
     const navigate = useNavigate();
     const { t } = useTranslation();
@@ -47,7 +49,7 @@ const DepositsPage: React.FC = () => {
         loadDeposits();
     }, [user?.id]);
 
-    const total = deposits.reduce((sum, d) => sum + (d.amount ?? 0), 0);
+	const total = deposits.reduce((sum, d) => sum + (d.amount ?? 0), 0);
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen p-6 space-y-6">
@@ -73,7 +75,9 @@ const DepositsPage: React.FC = () => {
                     {t("deposits.back")}
                 </Button>
 
-                <Button className="p-button-lg p-button-primary" disabled>
+                <Button className="p-button-lg p-button-primary"
+                        onClick={() => setShowAddDialog(true)}
+                >
                     {t("deposits.createNew")}
                 </Button>
             </div>
