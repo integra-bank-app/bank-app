@@ -1,3 +1,7 @@
 export const USER_LIST_ROWS_PER_PAGE_OPTIONS = [
 	5, 10, 20, 50, 100, 1000, 10000, 100000,
 ];
+
+export const INTREST_RATE_OPTIONS = [
+	1.2, 1.5, 1.7, 2
+];
