@@ -19,10 +19,21 @@ public class DepositsService {
     private final DepositsRepository depositsRepository;
     private final UserRepository userRepository;
 
+    //TODO ticket for backend endpoint
+    public UUID createDeposits(DepositsDTO depositsDTO, UUID userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found!"));
+        Deposits deposits = Deposits
+                .builder()
+                .user(user)
+                .amount(depositsDTO.amount())
+                .interest_rate(depositsDTO.interest_rate()).build();
+        return depositsRepository.save(deposits).getId();
+    }
+
     public List<DepositsDTO> getUserDeposits(UUID id) {
         return depositsRepository.findByUserId(id)
                 .stream()
-                .map(deposit -> new DepositsDTO(deposit.getId(),deposit.getInterest_rate(),deposit.getAmount()))
+                .map(deposit -> new DepositsDTO(deposit.getId(), deposit.getInterest_rate(), deposit.getAmount()))
                 .toList();
     }
 
