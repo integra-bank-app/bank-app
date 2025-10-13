@@ -23,6 +23,7 @@ export function CreateDepositDialog({
 		name: `${value}%`,
 		value,
 	}));
+
 	const { user } = useUserContext();
 	const { toastRef } = useNotificationContext();
 	const [depositValue, setDepositValue] = useState<number | null>(null);
@@ -99,48 +100,104 @@ export function CreateDepositDialog({
 	};
 
 	return (
-		<Dialog header="Create New Deposit" visible={visible} modal onHide={onHide}>
-			<div className="card flex justify-content-center">
-				<Stepper
-					linear={true}
-					ref={stepperRef}
-					style={{ width: "100%", minWidth: "600px", maxWidth: "720px" }}
-				>
-					<StepperPanel header="Terms and Conditions">
-						<TermsStep
-							agreesToTerms={agreesToTerms}
-							setAgreesToTerms={setAgreesToTerms}
-							checkboxEnabled={checkboxEnabled}
-							setCheckboxEnabled={setCheckboxEnabled}
-							onNext={() => stepperRef.current?.nextCallback()}
-						/>
-					</StepperPanel>
+		<Dialog
+			header="Create New Deposit"
+			visible={visible}
+			modal
+			onHide={onHide}
+			className="w-full max-w-3xl sm:max-w-lg md:max-w-2xl"
+			contentClassName="p-0"
+		>
+			<div className="flex justify-center items-center w-full p-2 sm:p-4">
+				{/* Horizontal on medium+ screens */}
+				<div className="hidden sm:block w-full">
+					<Stepper
+						linear
+						ref={stepperRef}
+						orientation="horizontal"
+						className="w-full"
+					>
+						<StepperPanel header="Terms and Conditions">
+							<TermsStep
+								agreesToTerms={agreesToTerms}
+								setAgreesToTerms={setAgreesToTerms}
+								checkboxEnabled={checkboxEnabled}
+								setCheckboxEnabled={setCheckboxEnabled}
+								onNext={() => stepperRef.current?.nextCallback()}
+							/>
+						</StepperPanel>
 
-					<StepperPanel header="Configure">
-						<ConfigureStep
-							depositValue={depositValue}
-							setDepositValue={setDepositValue}
-							interestRate={interestRate}
-							setInterestRate={setInterestRate}
-							depositInvalid={depositInvalid}
-							setDepositInvalid={setDepositInvalid}
-							interestInvalid={interestInvalid}
-							setInterestInvalid={setInterestInvalid}
-							interestOptions={interestOptions}
-							onNext={() => stepperRef.current?.nextCallback()}
-							onPrev={() => stepperRef.current?.prevCallback()}
-						/>
-					</StepperPanel>
+						<StepperPanel header="Configure">
+							<ConfigureStep
+								depositValue={depositValue}
+								setDepositValue={setDepositValue}
+								interestRate={interestRate}
+								setInterestRate={setInterestRate}
+								depositInvalid={depositInvalid}
+								setDepositInvalid={setDepositInvalid}
+								interestInvalid={interestInvalid}
+								setInterestInvalid={setInterestInvalid}
+								interestOptions={interestOptions}
+								onNext={() => stepperRef.current?.nextCallback()}
+								onPrev={() => stepperRef.current?.prevCallback()}
+							/>
+						</StepperPanel>
 
-					<StepperPanel header="Review and Confirm">
-						<ReviewStep
-							depositValue={depositValue}
-							interestRate={interestRate}
-							onPrev={() => stepperRef.current?.prevCallback()}
-							onCreateDeposit={onCreateDeposit}
-						/>
-					</StepperPanel>
-				</Stepper>
+						<StepperPanel header="Review and Confirm">
+							<ReviewStep
+								depositValue={depositValue}
+								interestRate={interestRate}
+								onPrev={() => stepperRef.current?.prevCallback()}
+								onCreateDeposit={onCreateDeposit}
+							/>
+						</StepperPanel>
+					</Stepper>
+				</div>
+
+				{/* Vertical on mobile screens */}
+				<div className="block sm:hidden w-full">
+					<Stepper
+						linear
+						ref={stepperRef}
+						orientation="vertical"
+						className="w-full"
+					>
+						<StepperPanel header="Terms and Conditions">
+							<TermsStep
+								agreesToTerms={agreesToTerms}
+								setAgreesToTerms={setAgreesToTerms}
+								checkboxEnabled={checkboxEnabled}
+								setCheckboxEnabled={setCheckboxEnabled}
+								onNext={() => stepperRef.current?.nextCallback()}
+							/>
+						</StepperPanel>
+
+						<StepperPanel header="Configure">
+							<ConfigureStep
+								depositValue={depositValue}
+								setDepositValue={setDepositValue}
+								interestRate={interestRate}
+								setInterestRate={setInterestRate}
+								depositInvalid={depositInvalid}
+								setDepositInvalid={setDepositInvalid}
+								interestInvalid={interestInvalid}
+								setInterestInvalid={setInterestInvalid}
+								interestOptions={interestOptions}
+								onNext={() => stepperRef.current?.nextCallback()}
+								onPrev={() => stepperRef.current?.prevCallback()}
+							/>
+						</StepperPanel>
+
+						<StepperPanel header="Review and Confirm">
+							<ReviewStep
+								depositValue={depositValue}
+								interestRate={interestRate}
+								onPrev={() => stepperRef.current?.prevCallback()}
+								onCreateDeposit={onCreateDeposit}
+							/>
+						</StepperPanel>
+					</Stepper>
+				</div>
 			</div>
 		</Dialog>
 	);
