@@ -1,0 +1,27 @@
+{
+  "header": {
+    "logout": "Logout",
+    "confirmLogout": "Are you sure you want to log out?"
+  },
+  "footer": {
+    "copyright": "© 2025 Integra Project UBB. All rights reserved."
+  },
+  "addUserToBranchDialog": {
+    "errorFirstName": "First name is required",
+    "errorLastName": "Last name is required",
+    "errorAddingUser": "Error adding user",
+    "failedToAddUser": "Failed to add user",
+    "addingButton": "Adding...",
+    "addUserButton": "Add User",
+    "addUserHeader": "Add User",
+    "firstNameLabel": "First Name",
+    "middleNameLabel": "Middle Name",
+    "lastNameLabel": "Last Name"
+  },
+  "adminPage": {
+    "hello": "Hello",
+    "addUserLabel": "Add User",
+    "exportUserLabel": "Export User",
+    "settingsLabel": "Settings"
+  }
+}

@@ -1,5 +1,6 @@
 import { PrimeReactProvider } from "primereact/api";
 import { StartComponent } from "./components/StartComponent";
+import { JSX, useState } from "react";
 
 import "primeflex/primeflex.css";
 import "primeicons/primeicons.css";
@@ -19,7 +20,11 @@ import NotFoundPage from "./pages/NotFoundPage";
 import { AuthenticationProvider } from "./contexts/AuthenticationProvider";
 import { ProtectedRoute, PublicRoute } from "./components/ProtectedRoute";
 
+import { Link } from "react-router-dom";
 function App() {
+	const [currentPage, setCurrentPage] = useState<PageKey>("start");
+	const [uuid, setUuid] = useState("");
+
 	return (
 		<PrimeReactProvider>
 			<AuthenticationProvider>
