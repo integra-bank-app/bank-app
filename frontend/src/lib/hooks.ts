@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import { NotificationContext } from "../contexts/NotificationProvider";
-import { UserContext } from "../contexts/UserProvider";
 
 export function useSafeContext<T>(context: React.Context<T | null>): T {
 	const value = useContext(context);
@@ -13,4 +12,3 @@ export function useSafeContext<T>(context: React.Context<T | null>): T {
 }
 
 export const useNotificationContext = () => useSafeContext(NotificationContext);
-export const useUserContext = () => useSafeContext(UserContext);

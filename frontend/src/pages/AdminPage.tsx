@@ -1,17 +1,17 @@
 import { useState } from "react";
 import { Button } from "primereact/button";
 import { useNavigate } from "react-router-dom";
-import { useUserContext } from "../lib/hooks";
+import { useAuthentication } from "../contexts/AuthenticationProvider";
 import AddUserToBranchDialog from "../components/AddUserToBranchDialog";
 
 function AdminPage() {
-	const { user } = useUserContext();
+	const { user } = useAuthentication();
 	const [showAddUser, setShowAddUser] = useState(false);
 	const navigate = useNavigate();
 
 	return (
 		<section className="flex flex-column align-items-center p-4 gap-4">
-			<h1 className="text-5xl font-bold">Hello, {user.firstName}</h1>
+			<h1 className="text-5xl font-bold">Hello, {user?.firstName}</h1>
 
 			<div className="grid w-full" style={{ maxWidth: "600px" }}>
 				<div className="col-12 md:col-4">
@@ -32,7 +32,7 @@ function AdminPage() {
 			<div className="w-full" style={{ maxWidth: "800px" }}></div>
 
 			<AddUserToBranchDialog
-				branchId={user.branchId}
+				branchId={user?.branchId ?? ""}
 				visible={showAddUser}
 				onHide={() => setShowAddUser(false)}
 				onUserAdded={() => navigate("/users")}

@@ -1,14 +1,13 @@
 import { Toast } from "primereact/toast";
 import { createContext, useEffect, useRef, useState } from "react";
 import { TNotification } from "../lib/types";
-import { useUserContext } from "../lib/hooks";
+import { useAuthentication } from "./AuthenticationProvider";
 
 type NotificationContextType = {
 	isConnected: boolean;
 };
 
 type NotificationProviderProps = {
-	initialUuid?: string;
 	children: React.ReactNode;
 };
 
@@ -16,12 +15,9 @@ export const NotificationContext =
 	createContext<NotificationContextType | null>(null);
 NotificationContext.displayName = "NotificationContext";
 
-export function NotificationProvider({
-	initialUuid,
-	children,
-}: NotificationProviderProps) {
+export function NotificationProvider({ children }: NotificationProviderProps) {
 	const toast = useRef<Toast>(null);
-	const { user } = useUserContext();
+	const { user, isAuthenticated } = useAuthentication();
 	const [isConnected, setIsConnected] = useState(false);
 
 	const severityMap: Record<
@@ -37,11 +33,10 @@ export function NotificationProvider({
 	};
 
 	useEffect(() => {
-		if (!user.uuid) return;
+		if (!isAuthenticated || !user?.id) return;
+
 		const socket = new WebSocket(
-			`${import.meta.env.VITE_BACKEND_SOCKET_URL}/ws/notifications?uuid=${
-				user.uuid
-			}`
+			`${import.meta.env.VITE_BACKEND_SOCKET_URL}/api/ws/notifications?uuid=${user.id}`
 		);
 
 		socket.onopen = () => {
@@ -63,7 +58,7 @@ export function NotificationProvider({
 				});
 				console.log("Received notification:", data);
 			}
-			if(data.type == "SUCCESS"){
+			if (data.type === "SUCCESS") {
 				console.log("Refetching data due to SUCCESS notification");
 				const refetchEvent = new Event("refetchData");
 				window.dispatchEvent(refetchEvent);
@@ -74,7 +69,7 @@ export function NotificationProvider({
 		socket.onclose = () => setIsConnected(false);
 
 		return () => socket.close();
-	}, [user.uuid]);
+	}, [isAuthenticated, user?.id]);
 
 	return (
 		<NotificationContext.Provider value={{ isConnected }}>

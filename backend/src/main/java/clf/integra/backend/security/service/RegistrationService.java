@@ -1,6 +1,7 @@
 package clf.integra.backend.security.service;
 
 import clf.integra.backend.security.DTO.RegisterRequestDTO;
+import clf.integra.backend.model.Account;
 import clf.integra.backend.model.Branch;
 import clf.integra.backend.model.User;
 import clf.integra.backend.repository.BranchRepository;
@@ -46,8 +47,18 @@ public class RegistrationService {
                     .branch(branch)
                     .build();
 
+            // CREATE DEFAULT ACCOUNT - This was missing!
+            Account defaultAccount = Account.builder()
+                    .balance(0.0)
+                    .user(user)
+                    .build();
+
+            // Add the account to the user's accounts list
+            user.getAccounts().add(defaultAccount);
+
+            // Save the user (will cascade save the account due to CascadeType.ALL)
             user = userRepository.save(user);
-            log.info("User created with ID: {}", user.getId());
+            log.info("User created with ID: {} and default account", user.getId());
 
             return user;
         } catch (Exception e) {
