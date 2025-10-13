@@ -42,10 +42,15 @@ export default function ConfigureStep({
 	};
 
 	return (
-		<>
-			<div className="flex flex-col p-2 space-y-6 min-h-[600px]">
-				<div className="flex flex-col">
-					<label htmlFor="depositAmount" className="mb-2 font-semibold">
+		<div className="flex flex-col w-full">
+			{/* Form fields */}
+			<div className="flex flex-col gap-6 min-h-[400px] sm:min-h-[480px] p-2 sm:p-4">
+				{/* Deposit Amount */}
+				<div className="flex flex-col w-full">
+					<label
+						htmlFor="depositAmount"
+						className="mb-2 font-semibold text-sm sm:text-base"
+					>
 						Deposit Amount
 					</label>
 					<InputNumber
@@ -54,11 +59,17 @@ export default function ConfigureStep({
 						onValueChange={(e) => setDepositValue(e.value ?? null)}
 						mode="decimal"
 						min={0}
-						className={depositInvalid ? "p-invalid w-full" : "w-full"}
+						placeholder="Enter amount"
+						className={`${depositInvalid ? "p-invalid" : ""} w-full`}
 					/>
 				</div>
-				<div className="flex flex-col">
-					<label htmlFor="interestRate" className="mb-2 font-semibold">
+
+				{/* Interest Rate */}
+				<div className="flex flex-col w-full">
+					<label
+						htmlFor="interestRate"
+						className="mb-2 font-semibold text-sm sm:text-base"
+					>
 						Interest Rate
 					</label>
 					<Dropdown
@@ -68,24 +79,28 @@ export default function ConfigureStep({
 						options={interestOptions}
 						optionLabel="name"
 						placeholder="Select interest rate"
-						className={interestInvalid ? "p-invalid w-full" : "w-full"}
+						className={`${interestInvalid ? "p-invalid" : ""} w-full`}
 					/>
 				</div>
 			</div>
-			<div className="flex pt-4 justify-content-between">
+
+			{/* Action buttons */}
+			<div className="flex flex-col-reverse sm:flex-row justify-between gap-2 sm:gap-4 pt-6 px-2 sm:px-4">
 				<Button
 					label="Return"
 					severity="secondary"
 					icon="pi pi-arrow-left"
 					onClick={onPrev}
+					className="w-full sm:w-auto"
 				/>
 				<Button
 					label="Review"
 					icon="pi pi-arrow-right"
 					iconPos="right"
 					onClick={handleNext}
+					className="w-full sm:w-auto"
 				/>
 			</div>
-		</>
+		</div>
 	);
 }
