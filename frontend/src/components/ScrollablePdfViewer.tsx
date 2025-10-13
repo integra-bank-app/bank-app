@@ -1,14 +1,14 @@
 import { Document, Page, pdfjs } from "react-pdf";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 
 interface ScrollablePdfViewerProps {
 	fileUrl: string;
 	onScrolledToEnd?: () => void;
-	height?: number;
-	width?: number;
-	scale?: number;
+	maxHeight?: number; // instead of fixed height
+	minHeight?: number;
+	className?: string;
 }
 
 pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
@@ -16,12 +16,13 @@ pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.vers
 const ScrollablePdfViewer: React.FC<ScrollablePdfViewerProps> = ({
 	fileUrl,
 	onScrolledToEnd,
-	height = 540,
-	scale = 2.3,
-	width = 560,
+	maxHeight = 540,
+	minHeight = 300,
+	className = "",
 }) => {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const [numPages, setNumPages] = useState<number>(0);
+	const [containerWidth, setContainerWidth] = useState<number>(0);
 
 	const handleScroll = () => {
 		const container = containerRef.current;
@@ -33,37 +34,40 @@ const ScrollablePdfViewer: React.FC<ScrollablePdfViewerProps> = ({
 		}
 	};
 
+	// 🔹 Automatically update page width when the container resizes
+	useEffect(() => {
+		const updateWidth = () => {
+			if (containerRef.current) {
+				setContainerWidth(containerRef.current.offsetWidth);
+			}
+		};
+
+		updateWidth();
+		window.addEventListener("resize", updateWidth);
+		return () => window.removeEventListener("resize", updateWidth);
+	}, []);
+
 	return (
 		<div
 			ref={containerRef}
 			onScroll={handleScroll}
+			className={`overflow-y-auto overflow-x-hidden border border-surface-400/20 rounded-xl bg-surface-800/30 shadow-inner ${className}`}
 			style={{
-				height: `${height}px`,
-				width: `${width}px`,
-				overflowY: "auto",
-				overflowX: "hidden", // ✅ hide horizontal scroll
+				maxHeight: `${maxHeight}px`,
+				minHeight: `${minHeight}px`,
 				boxSizing: "border-box",
 			}}
 		>
 			<Document
 				file={fileUrl}
 				onLoadSuccess={({ numPages }) => setNumPages(numPages)}
-				loading={<p>Loading PDF...</p>}
+				loading={<p className="text-center text-sm py-4">Loading PDF...</p>}
 			>
 				{Array.from({ length: numPages }, (_, index) => (
-					<div
-						key={index}
-						style={{
-							display: "flex",
-							justifyContent: "center",
-							marginBottom: "4px",
-							overflow: "hidden", // ✅ ensure inner overflow hidden too
-						}}
-					>
+					<div key={index} className="flex justify-center my-1">
 						<Page
 							pageNumber={index + 1}
-							scale={scale}
-							width={300} // ✅ fix width so it doesn’t exceed container
+							width={Math.min(containerWidth * 0.95, 600)} // 🔹 responsive max width
 							renderTextLayer
 							renderAnnotationLayer
 						/>
