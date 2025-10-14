@@ -17,6 +17,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -32,6 +33,7 @@ public class UserService {
     private final RandomUtils randomUtils;
     private final TransactionService transactionService;
     private final NotificationService notificationService;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public UUID addUserWithName(String firstName, String middleName, String lastName, UUID branchId,
@@ -46,7 +48,7 @@ public class UserService {
                 .lastName(lastName)
                 .branch(branch)
                 .email(email)
-                .password(password)
+                .password(passwordEncoder.encode(password))
                 .role(role)
                 .build();
 
