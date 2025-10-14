@@ -96,7 +96,29 @@
     "hello": "Salut",
     "addUserLabel": "Adaugă utilizator",
     "exportUserLabel": "Exportă utilizatori",
-    "settingsLabel": "Setări"
+    "settingsLabel": "Setări",
+    "importLabel": "Importa"
+  },
+  "bulkImportDeposits": {
+    "title": "Importare Depozite",
+    "pasteJsonLabel": "Lipește JSON",
+    "uploadFileLabel": "Sau încarcă un fișier JSON",
+    "chooseFile": "Alege fișierul",
+    "noFileChosen": "Niciun fișier selectat",
+    "importButton": "Importă",
+    "cancelButton": "Anulează",
+    "invalidJson": "JSON invalid",
+    "invalidFile": "Fișier invalid",
+    "errorNotArray": "JSON-ul nu este un array",
+    "errorReadingFile": "Citirea fișierului a eșuat",
+    "nothingToImport": "Nimic de importat",
+    "provideJsonOrFile": "Te rog lipește un JSON sau încarcă un fișier.",
+    "successTitle": "Succes",
+    "successMessage": "Import realizat cu succes!",
+    "errorTitle": "Eroare",
+    "unknownError": "Eroare necunoscută",
+    "confirmMessage": "Urmează să imporți {{count}} depozit(e). Continui?",
+    "jsonPlaceholder": "Exemplu: [{\"id\":\"1\",\"amount\":100}, {\"id\":\"2\",\"amount\":200}]"
   },
   "notFound": {
     "accessDenied": "Acces interzis",

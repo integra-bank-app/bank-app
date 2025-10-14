@@ -4,7 +4,7 @@ import {InputTextarea} from "primereact/inputtextarea";
 import {Toast} from "primereact/toast";
 import ConfirmationDialog from "./ConfirmationDialog";
 import { DepositsDTO, DepositControllerApi} from "../api";
-
+import {useTranslation} from "react-i18next";
 
 type BulkImportProps = {
     onClose: () => void;
@@ -28,6 +28,7 @@ const BulkImportDeposits: React.FC<BulkImportProps> = ({onClose}) => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
     const [pendingPayload, setPendingPayload] = useState<any[] | null>(null);
+    const {t} = useTranslation();
 
     const toast = useRef<Toast>(null);
 
@@ -42,7 +43,7 @@ const BulkImportDeposits: React.FC<BulkImportProps> = ({onClose}) => {
         if (!parsed.ok) {
             setTextError(parsed.error);
         } else if (!Array.isArray(parsed.value)) {
-            setTextError("JSON is not an array — a single object will be wrapped into an array on import.");
+            setTextError(t("bulkImportDeposits.errorNotArray"));
         } else {
             setTextError(null);
         }
@@ -69,7 +70,7 @@ const BulkImportDeposits: React.FC<BulkImportProps> = ({onClose}) => {
             }
             setFileContent(Array.isArray(parsed.value) ? parsed.value : [parsed.value]);
         };
-        reader.onerror = () => setFileError("Failed to read file");
+        reader.onerror = () => setFileError(t("bulkImportDeposits.errorReadingFile"));
         reader.readAsText(file);
     };
 
@@ -89,7 +90,7 @@ const BulkImportDeposits: React.FC<BulkImportProps> = ({onClose}) => {
         if (textAreaValue && textError) {
             toast.current?.show({
                 severity: "error",
-                summary: "Invalid JSON",
+                summary: t("bulkImportDeposits.invalidJson"),
                 detail: textError
             });
             return;
@@ -97,7 +98,7 @@ const BulkImportDeposits: React.FC<BulkImportProps> = ({onClose}) => {
         if (fileError) {
             toast.current?.show({
                 severity: "error",
-                summary: "Invalid File",
+                summary: t("bulkImportDeposits.invalidFile"),
                 detail: textError
             });
             return;
@@ -107,8 +108,8 @@ const BulkImportDeposits: React.FC<BulkImportProps> = ({onClose}) => {
         if (!payload) {
             toast.current?.show({
                 severity: "warn",
-                summary: "Nothing to Import",
-                detail: "Please paste JSON or upload a file."
+                summary: t("bulkImportDeposits.nothingToImport"),
+                detail: t("bulkImportDeposits.nothingToImport")
             });
             return;
         }
@@ -127,8 +128,8 @@ const BulkImportDeposits: React.FC<BulkImportProps> = ({onClose}) => {
 
                 toast.current?.show({
                     severity: "success",
-                    summary: "Success",
-                    detail: "Import successful!"
+                    summary: t("bulkImportDeposits.successTitle"),
+                    detail: t("bulkImportDeposits.successMessage")
                 });
 
                 setTextAreaValue("");
@@ -140,8 +141,8 @@ const BulkImportDeposits: React.FC<BulkImportProps> = ({onClose}) => {
             } catch (err: any) {
                 toast.current?.show({
                     severity: "error",
-                    summary: "Error",
-                    detail: err.message ?? "Unknown error"
+                    summary: t("bulkImportDeposits.errorTitle"),
+                    detail: err.message ?? t("bulkImportDeposits.unknownError")
                 });
             } finally {
                 setIsSubmitting(false);
@@ -157,39 +158,41 @@ const BulkImportDeposits: React.FC<BulkImportProps> = ({onClose}) => {
             <Toast ref={toast}/>
             <ConfirmationDialog
                 visible={showConfirm}
-                message={`You are about to import ${pendingPayload?.length ?? 0} deposit(s). Proceed?`}
+                message={t("bulkImportDeposits.confirmMessage", {
+                    count: pendingPayload?.length ?? 0,
+                })}
                 onAccept={handleAccept}
                 onReject={handleReject}
                 onHide={() => setShowConfirm(false)}
             />
-            <h2 className="text-2xl font-bold mb-3">Bulk Import Deposits</h2>
+            <h2 className="text-2xl font-bold mb-3">{t("bulkImportDeposits.title")}</h2>
 
             <div className="mb-3">
-                <label className="block font-medium mb-2">Paste JSON</label>
+                <label className="block font-medium mb-2">{t("bulkImportDeposits.pasteJsonLabel")}</label>
                 <InputTextarea
                     value={textAreaValue}
                     onChange={onTextChange}
                     rows={6}
                     className="w-full"
-                    placeholder='Example: [{"id":"1","amount":100}, {"id":"2","amount":200}]'
+                    placeholder={t("bulkImportDeposits.jsonPlaceholder")}
                 />
                 {textError && <div className="text-sm text-red-500 mt-1">{textError}</div>}
             </div>
 
             <div className="mb-3">
-                <label className="block font-medium mb-2">Or upload JSON file</label>
+                <label className="block font-medium mb-2">{t("bulkImportDeposits.uploadFileLabel")}</label>
                 <div className="flex items-center gap-1">
                     <label
                         htmlFor="file-upload"
                         className="bg-green-500 text-white px-3 py-1 rounded border border-green-700 hover:bg-green-600 transition cursor-pointer"
                     >
-                        Choose File
+                        {t("bulkImportDeposits.chooseFile")}
                     </label>
                     <span
                         className={`px-3 py-1 rounded text-sm ${
                             fileName ? "text-gray-700" : "text-gray-400"
                         }`}
-                    > {fileName || "No file chosen"}
+                    > {fileName || t("bulkImportDeposits.noFileChosen")}
                     </span>
                 </div>
                 <input
@@ -206,14 +209,14 @@ const BulkImportDeposits: React.FC<BulkImportProps> = ({onClose}) => {
 
             <div className="flex gap-3 mt-4">
                 <Button
-                    label="Import"
+                    label={t("bulkImportDeposits.importButton")}
                     icon="pi pi-check"
                     onClick={onImportClick}
                     disabled={isSubmitting}
                     className="p-button-primary"
                 />
                 <Button
-                    label="Cancel"
+                    label={t("bulkImportDeposits.cancelButton")}
                     icon="pi pi-times"
                     onClick={onClose}
                     className="p-button-secondary"

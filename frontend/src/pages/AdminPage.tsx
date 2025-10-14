@@ -35,7 +35,7 @@ function AdminPage() {
                 </div>
                 <div className="col-12 md:col-4">
                     <Button
-                        label="Import"
+                        label={t("adminPage.importLabel")}
                         icon="pi pi-upload"
                         onClick={() => setShowImportPanel(true)}
                         className="w-full p-button-primary"
