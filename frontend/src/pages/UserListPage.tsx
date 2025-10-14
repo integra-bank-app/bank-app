@@ -6,6 +6,7 @@ import { Column } from "primereact/column";
 import { Paginator } from "primereact/paginator";
 import { USER_LIST_ROWS_PER_PAGE_OPTIONS } from "../lib/constants";
 import { Title } from "../components/TitleComponent";
+import { useTranslation } from "react-i18next";
 
 export default function UserListPage() {
 	const { user, isAuthenticated } = useAuthentication();
@@ -15,6 +16,7 @@ export default function UserListPage() {
 	const [page, setPage] = useState(0);
 	const [rows, setRows] = useState(10);
 	const [totalRecords, setTotalRecords] = useState(0);
+	const { t } = useTranslation();
 
 	useEffect(() => {
 		if (!isAuthenticated || !user?.branchId) {
@@ -62,7 +64,7 @@ export default function UserListPage() {
 			} catch (err: any) {
 				if (isMounted) {
 					console.error(err);
-					setError(err.message || "Failed to fetch users");
+					setError(err.message || t("users.errorFetch"));
 				}
 			} finally {
 				if (isMounted) {
@@ -76,13 +78,13 @@ export default function UserListPage() {
 		return () => {
 			isMounted = false;
 		};
-	}, [isAuthenticated, user?.branchId, page, rows]);
+	}, [isAuthenticated, user?.branchId, page, rows, t]);
 
 	if (loading) return (
 		<div className="flex justify-content-center align-items-center" style={{ minHeight: '30vh' }}>
 			<div className="text-center">
 				<i className="pi pi-spinner pi-spin text-4xl text-primary mb-3"></i>
-				<h3 className="text-lg font-semibold mb-2">Loading users...</h3>
+				<h3 className="text-lg font-semibold mb-2">{t("users.loading")}</h3>
 			</div>
 		</div>
 	);
@@ -91,7 +93,7 @@ export default function UserListPage() {
 		<div className="flex justify-content-center align-items-center" style={{ minHeight: '30vh' }}>
 			<div className="text-center">
 				<i className="pi pi-times-circle text-4xl text-danger mb-3"></i>
-				<h3 className="text-lg font-semibold mb-2">Error: {error}</h3>
+				<h3 className="text-lg font-semibold mb-2">{t("users.error")}: {error}</h3>
 			</div>
 		</div>
 	);
@@ -103,23 +105,23 @@ export default function UserListPage() {
 	};
 
 	const indexBodyTemplate = (_: any, { rowIndex }: { rowIndex: number }) => {
-		return <span style={{fontWeight: "bold"}}>{page * rows + rowIndex + 1}</span>;
+		return <span style={{ fontWeight: "bold" }}>{page * rows + rowIndex + 1}</span>;
 	};
 
 	return (
-		<div className="flex flex-col items-center justify-center min-h-screen p-4" style={{background: "#232a32"}}>
+		<div className="flex flex-col items-center justify-center min-h-screen p-4" style={{ background: "#232a32" }}>
 			<div className="w-full flex flex-col items-center justify-center text-center mx-auto mb-8" style={{ maxWidth: "800px" }}>
 				<Title>
-					<span style={{fontSize: "2.5rem", fontWeight: 700}}>Users in Branch</span>
+					<span style={{ fontSize: "2.5rem", fontWeight: 700 }}>{t("users.title")}</span>
 				</Title>
 				<p className="text-sm text-gray-400 mt-2">
-					Branch ID:
+					{t("users.branchId")}:
 					<span className="inline-block ml-2 px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 font-medium">
                         {user?.branchId ?? "—"}
                     </span>
 				</p>
 			</div>
-			<div className="w-full flex flex-col items-center justify-center" style={{maxWidth: 900}}>
+			<div className="w-full flex flex-col items-center justify-center" style={{ maxWidth: 900 }}>
 				<DataTable
 					value={users}
 					totalRecords={totalRecords}
@@ -140,22 +142,22 @@ export default function UserListPage() {
 						bodyClassName="text-center font-bold"
 						headerStyle={{ textAlign: "center", justifyContent: "center", display: "table-cell" }}
 					/>
-					<Column field="firstName" header="First Name"
+					<Column field="firstName" header={t("users.firstName")}
 							style={{ minWidth: 120 }}
 							bodyClassName="text-center"
 							headerStyle={{ textAlign: "center", justifyContent: "center", display: "table-cell" }}
 					/>
-					<Column field="middleName" header="Middle Name"
+					<Column field="middleName" header={t("users.middleName")}
 							style={{ minWidth: 120 }}
 							bodyClassName="text-center"
 							headerStyle={{ textAlign: "center", justifyContent: "center", display: "table-cell" }}
 					/>
-					<Column field="lastName" header="Last Name"
+					<Column field="lastName" header={t("users.lastName")}
 							style={{ minWidth: 120 }}
 							bodyClassName="text-center"
 							headerStyle={{ textAlign: "center", justifyContent: "center", display: "table-cell" }}
 					/>
-					<Column header="Full Name" body={fullNameTemplate}
+					<Column header={t("users.fullName")} body={fullNameTemplate}
 							style={{ minWidth: 160 }}
 							bodyClassName="text-center"
 							headerStyle={{ textAlign: "center", justifyContent: "center", display: "table-cell" }}

@@ -5,6 +5,7 @@ import { useAuthentication } from "../contexts/AuthenticationProvider";
 import { TotalBalanceSlide } from "../components/TotalBalanceSlide";
 import { AccountSlide } from "../components/AccountSlide";
 import { Title } from "../components/TitleComponent";
+import { useTranslation } from "react-i18next";
 
 export default function UserMainPage() {
     const { user, isAuthenticated } = useAuthentication();
@@ -12,6 +13,7 @@ export default function UserMainPage() {
     const [balances, setBalances] = useState<Record<string, number>>({});
     const [totalBalance, setTotalBalance] = useState<number | null>(null);
     const [loading, setLoading] = useState(true);
+    const { t } = useTranslation();
 
     const fetchUserData = useCallback(async () => {
         if (!user?.id) {
@@ -105,7 +107,7 @@ export default function UserMainPage() {
             <div className="flex justify-content-center align-items-center" style={{ minHeight: '60vh' }}>
                 <div className="text-center">
                     <i className="pi pi-spinner pi-spin text-4xl text-primary mb-3"></i>
-                    <h3 className="text-lg font-semibold mb-2">Loading your accounts...</h3>
+                    <h3 className="text-lg font-semibold mb-2">{t("userMain.loading")}</h3>
                 </div>
             </div>
         );
@@ -114,13 +116,13 @@ export default function UserMainPage() {
     if (!accounts || accounts.length === 0) {
         return (
             <div className="flex flex-col items-center space-y-4 mt-4">
-                <Title>My Accounts</Title>
+                <Title>{t("userMain.myAccounts")}</Title>
                 <Card className="text-center p-6 shadow-3">
                     <div className="mb-4">
                         <i className="pi pi-info-circle text-4xl text-blue-500 mb-3"></i>
-                        <h3 className="text-xl font-semibold mb-2">No Accounts Found</h3>
+                        <h3 className="text-xl font-semibold mb-2">{t("userMain.noAccounts")}</h3>
                         <p className="text-gray-600 mb-4">
-                            You don't have any accounts yet. Please contact your bank to set up an account.
+                            {t("userMain.noAccountsDesc")}
                         </p>
                     </div>
                 </Card>
@@ -129,7 +131,7 @@ export default function UserMainPage() {
     }
 
     const totalBalanceItem = "TotalBalance";
-    const carouselItems = [totalBalanceItem, ...accounts]; // Total Balance primul
+    const carouselItems = [totalBalanceItem, ...accounts];
 
     const itemTemplate = (item: string) => {
         if (item === totalBalanceItem) {
@@ -141,7 +143,7 @@ export default function UserMainPage() {
 
     return (
         <div className="flex flex-col items-center space-y-4 mt-4">
-            <Title>My Accounts</Title>
+            <Title>{t("userMain.myAccounts")}</Title>
             <Carousel
                 value={carouselItems}
                 numVisible={1}

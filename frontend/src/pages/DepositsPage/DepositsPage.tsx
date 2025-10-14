@@ -5,12 +5,14 @@ import DepositChart from "./DepositChart";
 import DepositsList from "./DepositsList";
 import { useNavigate } from "react-router-dom";
 import { useAuthentication } from "../../contexts/AuthenticationProvider";
+import { useTranslation } from "react-i18next";
 
 const DepositsPage: React.FC = () => {
     const [deposits, setDeposits] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const { user } = useAuthentication();
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     useEffect(() => {
         if (!user?.id) {
@@ -49,17 +51,17 @@ const DepositsPage: React.FC = () => {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen p-6 space-y-6">
-            <h1 className="text-3xl font-bold mb-4">My Deposits</h1>
+            <h1 className="text-3xl font-bold mb-4">{t("deposits.title")}</h1>
 
             {loading ? (
-                <p>No deposits...</p>
+                <p>{t("deposits.loading")}</p>
             ) : deposits.length > 0 ? (
                 <>
                     <DepositChart deposits={deposits} total={total} />
                     <DepositsList deposits={deposits} depositColors={depositColors} />
                 </>
             ) : (
-                <p>No deposits found.</p>
+                <p>{t("deposits.notFound")}</p>
             )}
 
             <div className="mt-6 flex justify-center gap-4">
@@ -68,11 +70,11 @@ const DepositsPage: React.FC = () => {
                     icon="pi pi-angle-left"
                     onClick={() => navigate("/")}
                 >
-                    Back
+                    {t("deposits.back")}
                 </Button>
 
                 <Button className="p-button-lg p-button-primary" disabled>
-                    + Create New Deposit
+                    {t("deposits.createNew")}
                 </Button>
             </div>
         </div>

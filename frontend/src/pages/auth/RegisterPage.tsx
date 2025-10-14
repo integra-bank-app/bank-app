@@ -6,10 +6,12 @@ import { useAuthentication } from "../../contexts/AuthenticationProvider";
 import FormInput from "../../components/FormInput";
 import FormDropdown from "../../components/FormDropdown";
 import { Message } from "primereact/message";
+import { useTranslation } from "react-i18next";
 
 export default function RegisterPage() {
     const navigate = useNavigate();
     const { register, logout, isAuthenticated } = useAuthentication();
+    const { t } = useTranslation();
 
     const [formData, setFormData] = useState({
         firstName: "",
@@ -38,46 +40,46 @@ export default function RegisterPage() {
     }, [isAuthenticated, navigate]);
 
     const roleOptions = [
-        { label: "Select a role", value: "" },
-        { label: "User", value: "USER" },
-        { label: "Admin", value: "ADMIN" },
+        { label: t("register.roleSelect"), value: "" },
+        { label: t("register.roleUser"), value: "USER" },
+        { label: t("register.roleAdmin"), value: "ADMIN" },
     ];
 
     const validateForm = (): boolean => {
         const newErrors: Record<string, string> = {};
 
         if (!formData.firstName.trim()) {
-            newErrors.firstName = "First name is required";
+            newErrors.firstName = t("register.errors.firstNameRequired");
         }
 
         if (!formData.lastName.trim()) {
-            newErrors.lastName = "Last name is required";
+            newErrors.lastName = t("register.errors.lastNameRequired");
         }
 
         if (!formData.branchId) {
-            newErrors.branchId = "Branch ID is required";
+            newErrors.branchId = t("register.errors.branchIdRequired");
         }
 
         if (!formData.role) {
-            newErrors.role = "Role is required";
+            newErrors.role = t("register.errors.roleRequired");
         }
 
         if (!formData.email.trim()) {
-            newErrors.email = "Email is required";
+            newErrors.email = t("register.errors.emailRequired");
         } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-            newErrors.email = "Email is invalid";
+            newErrors.email = t("register.errors.emailInvalid");
         }
 
         if (!formData.password) {
-            newErrors.password = "Password is required";
+            newErrors.password = t("register.errors.passwordRequired");
         } else if (formData.password.length < 6) {
-            newErrors.password = "Password must be at least 6 characters";
+            newErrors.password = t("register.errors.passwordTooShort");
         }
 
         if (!formData.confirmPassword) {
-            newErrors.confirmPassword = "Please confirm your password";
+            newErrors.confirmPassword = t("register.errors.confirmPasswordRequired");
         } else if (formData.password !== formData.confirmPassword) {
-            newErrors.confirmPassword = "Passwords do not match";
+            newErrors.confirmPassword = t("register.errors.passwordMismatch");
         }
 
         setErrors(newErrors);
@@ -111,7 +113,7 @@ export default function RegisterPage() {
                 navigate("/login");
             }, 2000);
         } else {
-            setRegisterError("Registration failed. Email may already be in use.");
+            setRegisterError(t("register.errors.registrationFailed"));
         }
     };
 
@@ -120,8 +122,8 @@ export default function RegisterPage() {
             <Card className="w-full max-w-3xl shadow-lg">
                 <div className="text-center mb-5">
                     <i className="pi pi-user-plus text-5xl text-primary mb-3"></i>
-                    <h1 className="text-3xl font-bold mb-2">Create Account</h1>
-                    <p className="text-gray-400">Join Integra Pay today</p>
+                    <h1 className="text-3xl font-bold mb-2">{t("register.title")}</h1>
+                    <p className="text-gray-400">{t("register.subtitle")}</p>
                 </div>
 
                 {registerError && (
@@ -131,7 +133,7 @@ export default function RegisterPage() {
                 {registerSuccess && (
                     <Message
                         severity="success"
-                        text="Registration successful! Redirecting to login..."
+                        text={t("register.success")}
                         className="mb-4 w-full"
                     />
                 )}
@@ -140,38 +142,38 @@ export default function RegisterPage() {
                     <div className="mb-5">
                         <h3 className="text-lg font-semibold mb-3 text-primary border-bottom-1 border-primary pb-2">
                             <i className="pi pi-user mr-2"></i>
-                            Personal Information
+                            {t("register.personalInfo")}
                         </h3>
                         <div className="grid">
                             <div className="col-12 md:col-6">
                                 <FormInput
                                     id="firstName"
-                                    label="First Name"
+                                    label={t("register.firstName")}
                                     value={formData.firstName}
                                     onChange={(value) => setFormData({ ...formData, firstName: value })}
                                     error={errors.firstName}
                                     required
-                                    placeholder="John"
+                                    placeholder={t("register.firstNamePlaceholder")}
                                 />
                             </div>
                             <div className="col-12 md:col-6">
                                 <FormInput
                                     id="lastName"
-                                    label="Last Name"
+                                    label={t("register.lastName")}
                                     value={formData.lastName}
                                     onChange={(value) => setFormData({ ...formData, lastName: value })}
                                     error={errors.lastName}
                                     required
-                                    placeholder="Doe"
+                                    placeholder={t("register.lastNamePlaceholder")}
                                 />
                             </div>
                             <div className="col-12">
                                 <FormInput
                                     id="middleName"
-                                    label="Middle Name"
+                                    label={t("register.middleName")}
                                     value={formData.middleName}
                                     onChange={(value) => setFormData({ ...formData, middleName: value })}
-                                    placeholder="Optional"
+                                    placeholder={t("register.middleNamePlaceholder")}
                                 />
                             </div>
                         </div>
@@ -180,30 +182,30 @@ export default function RegisterPage() {
                     <div className="mb-5">
                         <h3 className="text-lg font-semibold mb-3 text-primary border-bottom-1 border-primary pb-2">
                             <i className="pi pi-building mr-2"></i>
-                            Organization Information
+                            {t("register.organizationInfo")}
                         </h3>
                         <div className="grid">
                             <div className="col-12 md:col-6">
                                 <FormInput
                                     id="branchId"
-                                    label="Branch ID"
+                                    label={t("register.branchId")}
                                     value={formData.branchId}
                                     onChange={(value) => setFormData({ ...formData, branchId: value })}
                                     error={errors.branchId}
                                     required
-                                    placeholder="e246e2e6-d734-46a0-83e2-e6ee9b725977"
+                                    placeholder={t("register.branchIdPlaceholder")}
                                 />
                             </div>
                             <div className="col-12 md:col-6">
                                 <FormDropdown
                                     id="role"
-                                    label="Role"
+                                    label={t("register.role")}
                                     value={formData.role}
                                     onChange={(value) => setFormData({ ...formData, role: value })}
                                     options={roleOptions}
                                     error={errors.role}
                                     required
-                                    placeholder="Select a role"
+                                    placeholder={t("register.roleSelect")}
                                 />
                             </div>
                         </div>
@@ -212,43 +214,43 @@ export default function RegisterPage() {
                     <div className="mb-4">
                         <h3 className="text-lg font-semibold mb-3 text-primary border-bottom-1 border-primary pb-2">
                             <i className="pi pi-lock mr-2"></i>
-                            Account Security
+                            {t("register.accountSecurity")}
                         </h3>
                         <div className="grid">
                             <div className="col-12">
                                 <FormInput
                                     id="email"
-                                    label="Email"
+                                    label={t("register.email")}
                                     type="email"
                                     value={formData.email}
                                     onChange={(value) => setFormData({ ...formData, email: value })}
                                     error={errors.email}
                                     required
-                                    placeholder="john.doe@example.com"
+                                    placeholder={t("register.emailPlaceholder")}
                                 />
                             </div>
                             <div className="col-12 md:col-6">
                                 <FormInput
                                     id="password"
-                                    label="Password"
+                                    label={t("register.password")}
                                     type="password"
                                     value={formData.password}
                                     onChange={(value) => setFormData({ ...formData, password: value })}
                                     error={errors.password}
                                     required
-                                    placeholder="Minimum 6 characters"
+                                    placeholder={t("register.passwordPlaceholder")}
                                 />
                             </div>
                             <div className="col-12 md:col-6">
                                 <FormInput
                                     id="confirmPassword"
-                                    label="Confirm Password"
+                                    label={t("register.confirmPassword")}
                                     type="password"
                                     value={formData.confirmPassword}
                                     onChange={(value) => setFormData({ ...formData, confirmPassword: value })}
                                     error={errors.confirmPassword}
                                     required
-                                    placeholder="Re-enter password"
+                                    placeholder={t("register.confirmPasswordPlaceholder")}
                                 />
                             </div>
                         </div>
@@ -256,7 +258,7 @@ export default function RegisterPage() {
 
                     <Button
                         type="submit"
-                        label={loading ? "Creating Account..." : "Create Account"}
+                        label={loading ? t("register.creatingAccount") : t("register.createAccount")}
                         icon={loading ? "pi pi-spin pi-spinner" : "pi pi-user-plus"}
                         className="w-full mt-3"
                         disabled={loading || registerSuccess}
@@ -265,9 +267,9 @@ export default function RegisterPage() {
 
                 <div className="text-center mt-4">
                     <p className="text-sm text-gray-400">
-                        Already have an account?{" "}
+                        {t("register.hasAccount")}{" "}
                         <Link to="/login" className="text-primary hover:underline font-semibold">
-                            Sign in here
+                            {t("register.signInHere")}
                         </Link>
                     </p>
                 </div>

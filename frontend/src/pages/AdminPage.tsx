@@ -3,19 +3,21 @@ import { Button } from "primereact/button";
 import { useNavigate } from "react-router-dom";
 import { useAuthentication } from "../contexts/AuthenticationProvider";
 import AddUserToBranchDialog from "../components/AddUserToBranchDialog";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 function AdminPage() {
-	const { user } = useAuthentication();
-	const [showAddUser, setShowAddUser] = useState(false);
-	const navigate = useNavigate();
-    const {t} = useTranslation();
+    const { user } = useAuthentication();
+    const [showAddUser, setShowAddUser] = useState(false);
+    const navigate = useNavigate();
+    const { t } = useTranslation();
 
     return (
         <section className="flex flex-column align-items-center p-4 gap-4">
-            <h1 className="text-5xl font-bold">{t("adminPage.hello")}, {user.firstName}</h1>
+            <h1 className="text-5xl font-bold">
+                {t("adminPage.hello")}, {user?.firstName}
+            </h1>
 
-            <div className="grid w-full" style={{maxWidth: "600px"}}>
+            <div className="grid w-full" style={{ maxWidth: "600px" }}>
                 <div className="col-12 md:col-4">
                     <Button
                         label={t("adminPage.addUserLabel")}
@@ -24,14 +26,14 @@ function AdminPage() {
                     />
                 </div>
                 <div className="col-12 md:col-4">
-                    <Button label={t("adminPage.exportUserLabel")} className="w-full"/>
+                    <Button label={t("adminPage.exportUserLabel")} className="w-full" />
                 </div>
                 <div className="col-12 md:col-4">
-                    <Button label={t("adminPage.settingsLabel")} className="w-full"/>
+                    <Button label={t("adminPage.settingsLabel")} className="w-full" />
                 </div>
             </div>
 
-            <div className="w-full" style={{maxWidth: "800px"}}></div>
+            <div className="w-full" style={{ maxWidth: "800px" }}></div>
 
             <AddUserToBranchDialog
                 branchId={user?.branchId ?? ""}
