@@ -3,7 +3,7 @@ import { Button } from "primereact/button";
 import { depositColors } from "../../lib/utils";
 import DepositChart from "./DepositChart";
 import DepositsList from "./DepositsList";
-import { DepositsDTO, UserControllerApi } from "../../api";
+import { DepositsDTO } from "../../api";
 import { useNavigate } from "react-router-dom";
 import { useAuthentication } from "../../contexts/AuthenticationProvider";
 import { useTranslation } from "react-i18next";

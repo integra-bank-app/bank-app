@@ -1,6 +1,7 @@
 import { Checkbox } from "primereact/checkbox";
 import { Button } from "primereact/button";
 import ScrollablePdfViewer from "../ScrollablePdfViewer";
+import { useTranslation } from "react-i18next";
 
 type TermsStepProps = {
 	agreesToTerms: boolean;
@@ -17,9 +18,9 @@ export default function TermsStep({
 	setCheckboxEnabled,
 	onNext,
 }: TermsStepProps) {
+	const { t } = useTranslation();
 	return (
 		<div className="flex flex-col w-full">
-			{/* PDF Viewer container */}
 			<div className="flex flex-col items-center justify-center w-full min-h-[400px] sm:min-h-[500px] md:min-h-[560px]">
 				<div className="w-full max-w-3xl p-2 sm:p-4">
 					<ScrollablePdfViewer
@@ -29,7 +30,6 @@ export default function TermsStep({
 				</div>
 			</div>
 
-			{/* Agreement checkbox */}
 			<div className="flex flex-wrap items-center justify-start gap-2 pt-4 px-2 sm:px-4">
 				<Checkbox
 					inputId="agree"
@@ -44,16 +44,15 @@ export default function TermsStep({
 						checkboxEnabled ? "text-white" : "text-white/70"
 					}`}
 				>
-					I have read and agree to the terms and conditions
+					{t("deposits.termsStep.agreeToTerms")}
 				</label>
 			</div>
 
-			{/* Continue button */}
 			<div className="flex justify-end w-full pt-6 px-2 sm:px-4">
 				<Button
 					disabled={!agreesToTerms}
 					icon="pi pi-check"
-					label="Continue"
+					label={t("deposits.termsStep.continue")}
 					iconPos="right"
 					onClick={onNext}
 					className="w-full sm:w-auto"
