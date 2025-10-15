@@ -1,6 +1,7 @@
 import { Dialog } from "primereact/dialog";
 import { Stepper } from "primereact/stepper";
 import { StepperPanel } from "primereact/stepperpanel";
+import { useTranslation } from "react-i18next";
 import { useRef, useState } from "react";
 import { useNotificationContext, useUserContext } from "../lib/hooks";
 import ReviewStep from "./CreateDepositSteps/ReviewStep";
@@ -8,7 +9,6 @@ import ConfigureStep from "./CreateDepositSteps/ConfigureStep";
 import TermsStep from "./CreateDepositSteps/TermsStep";
 import { INTREST_RATE_OPTIONS } from "../lib/constants";
 import { DepositControllerApi, DepositsDTO } from "../api";
-import { TUser } from "../lib/types";
 
 type CreateDepositDialogProps = {
 	visible: boolean;
@@ -24,6 +24,7 @@ export function CreateDepositDialog({
 		value,
 	}));
 
+	const { t } = useTranslation();
 	const { user } = useUserContext();
 	const { toastRef } = useNotificationContext();
 	const [depositValue, setDepositValue] = useState<number | null>(null);
@@ -45,8 +46,8 @@ export function CreateDepositDialog({
 		if (!agreesToTerms) {
 			toastRef.current?.show({
 				severity: "warn",
-				summary: "Terms Not Agreed",
-				detail: "You must agree to the terms and conditions to proceed.",
+				summary: t("createDepositDialog.notifications.termsNotAgreed.summary"),
+				detail: t("createDepositDialog.notifications.termsNotAgreed.detail"),
 				life: 3000,
 			});
 			return;
@@ -54,8 +55,10 @@ export function CreateDepositDialog({
 
 		toastRef.current?.show({
 			severity: "info",
-			summary: "Creating Deposit",
-			detail: `Creating your deposit of $${depositValue.toFixed(2)}...`,
+			summary: t("createDepositDialog.notifications.creatingDeposit.summary"),
+			detail: t("createDepositDialog.notifications.creatingDeposit.detail", {
+				amount: depositValue.toFixed(2),
+			}),
 			life: 1500,
 		});
 
@@ -71,10 +74,12 @@ export function CreateDepositDialog({
 
 			toastRef.current?.show({
 				severity: "success",
-				summary: "Deposit Created",
-				detail: `Deposit of $${depositValue.toFixed(
-					2
-				)} at ${interestRate}% created successfully. ID: ${response.data}`,
+				summary: t("createDepositDialog.notifications.depositCreated.summary"),
+				detail: t("createDepositDialog.notifications.depositCreated.detail", {
+					amount: depositValue.toFixed(2),
+					interestRate: interestRate,
+					id: response.data,
+				}),
 				life: 3000,
 			});
 
@@ -89,11 +94,13 @@ export function CreateDepositDialog({
 		} catch (error: any) {
 			toastRef.current?.show({
 				severity: "error",
-				summary: "Error Creating Deposit",
+				summary: t(
+					"createDepositDialog.notifications.errorCreatingDeposit.summary"
+				),
 				detail:
 					error?.response?.data?.message ||
 					error?.message ||
-					"An unexpected error occurred.",
+					t("createDepositDialog.notifications.errorCreatingDeposit.default"),
 				life: 4000,
 			});
 		}
@@ -101,7 +108,7 @@ export function CreateDepositDialog({
 
 	return (
 		<Dialog
-			header="Create New Deposit"
+			header={t("createDepositDialog.title")}
 			visible={visible}
 			modal
 			onHide={onHide}
@@ -109,15 +116,14 @@ export function CreateDepositDialog({
 			contentClassName="p-0"
 		>
 			<div className="flex justify-center items-center w-full p-2 sm:p-4">
-				{/* Horizontal on medium+ screens */}
-				<div className="hidden sm:block w-full">
+				<div className="block w-full">
 					<Stepper
 						linear
 						ref={stepperRef}
 						orientation="horizontal"
 						className="w-full"
 					>
-						<StepperPanel header="Terms and Conditions">
+						<StepperPanel header={t("createDepositDialog.steps.terms.header")}>
 							<TermsStep
 								agreesToTerms={agreesToTerms}
 								setAgreesToTerms={setAgreesToTerms}
@@ -127,7 +133,9 @@ export function CreateDepositDialog({
 							/>
 						</StepperPanel>
 
-						<StepperPanel header="Configure">
+						<StepperPanel
+							header={t("createDepositDialog.steps.configure.header")}
+						>
 							<ConfigureStep
 								depositValue={depositValue}
 								setDepositValue={setDepositValue}
@@ -143,52 +151,7 @@ export function CreateDepositDialog({
 							/>
 						</StepperPanel>
 
-						<StepperPanel header="Review and Confirm">
-							<ReviewStep
-								depositValue={depositValue}
-								interestRate={interestRate}
-								onPrev={() => stepperRef.current?.prevCallback()}
-								onCreateDeposit={onCreateDeposit}
-							/>
-						</StepperPanel>
-					</Stepper>
-				</div>
-
-				{/* Vertical on mobile screens */}
-				<div className="block sm:hidden w-full">
-					<Stepper
-						linear
-						ref={stepperRef}
-						orientation="vertical"
-						className="w-full"
-					>
-						<StepperPanel header="Terms and Conditions">
-							<TermsStep
-								agreesToTerms={agreesToTerms}
-								setAgreesToTerms={setAgreesToTerms}
-								checkboxEnabled={checkboxEnabled}
-								setCheckboxEnabled={setCheckboxEnabled}
-								onNext={() => stepperRef.current?.nextCallback()}
-							/>
-						</StepperPanel>
-
-						<StepperPanel header="Configure">
-							<ConfigureStep
-								depositValue={depositValue}
-								setDepositValue={setDepositValue}
-								interestRate={interestRate}
-								setInterestRate={setInterestRate}
-								depositInvalid={depositInvalid}
-								setDepositInvalid={setDepositInvalid}
-								interestInvalid={interestInvalid}
-								setInterestInvalid={setInterestInvalid}
-								interestOptions={interestOptions}
-								onNext={() => stepperRef.current?.nextCallback()}
-								onPrev={() => stepperRef.current?.prevCallback()}
-							/>
-						</StepperPanel>
-
-						<StepperPanel header="Review and Confirm">
+						<StepperPanel header={t("createDepositDialog.steps.review.header")}>
 							<ReviewStep
 								depositValue={depositValue}
 								interestRate={interestRate}
