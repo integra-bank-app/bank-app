@@ -21,7 +21,7 @@ import java.util.UUID;
 public class DepositController {
     private DepositsService depositsService;
 
-    @PostMapping("/deposits/create/{userId}")
+    @PostMapping("/deposits/{userId}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER') and @userPermissionService.canAccessUserData(#userId, authentication)")
     public ResponseEntity<UUID> createDeposit(
             @PathVariable UUID userId,
