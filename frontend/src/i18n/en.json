@@ -1,7 +1,12 @@
 {
   "header": {
+    "title": "Integra Pay",
+    "home": "Home",
+    "deposits": "Deposits",
+    "admin": "Admin",
+    "users": "Users",
     "logout": "Logout",
-    "confirmLogout": "Are you sure you want to log out?"
+    "logoutConfirm": "Are you sure you want to log out?"
   },
   "footer": {
     "copyright": "© 2025 Integra Project UBB. All rights reserved."
@@ -18,10 +23,110 @@
     "middleNameLabel": "Middle Name",
     "lastNameLabel": "Last Name"
   },
+  "login": {
+    "title": "Integra Pay",
+    "subtitle": "Sign in to your account",
+    "email": "Email",
+    "emailPlaceholder": "Enter your email",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "signIn": "Sign In",
+    "signingIn": "Signing in...",
+    "noAccount": "Don't have an account?",
+    "registerHere": "Register here",
+    "errors": {
+      "emailRequired": "Email is required",
+      "emailInvalid": "Email is invalid",
+      "passwordRequired": "Password is required",
+      "passwordTooShort": "Password must be at least 6 characters",
+      "invalidCredentials": "Invalid email or password. Please try again."
+    }
+  },
+  "register": {
+    "title": "Create Account",
+    "subtitle": "Join Integra Pay today",
+    "personalInfo": "Personal Information",
+    "firstName": "First Name",
+    "firstNamePlaceholder": "John",
+    "lastName": "Last Name",
+    "lastNamePlaceholder": "Doe",
+    "middleName": "Middle Name",
+    "middleNamePlaceholder": "Optional",
+    "organizationInfo": "Organization Information",
+    "branchId": "Branch ID",
+    "branchIdPlaceholder": "e246e2e6-d734-46a0-83e2-e6ee9b725977",
+    "role": "Role",
+    "roleSelect": "Select a role",
+    "roleUser": "User",
+    "roleAdmin": "Admin",
+    "accountSecurity": "Account Security",
+    "email": "Email",
+    "emailPlaceholder": "john.doe@example.com",
+    "password": "Password",
+    "passwordPlaceholder": "Minimum 6 characters",
+    "confirmPassword": "Confirm Password",
+    "confirmPasswordPlaceholder": "Re-enter password",
+    "createAccount": "Create Account",
+    "creatingAccount": "Creating Account...",
+    "hasAccount": "Already have an account?",
+    "signInHere": "Sign in here",
+    "success": "Registration successful! Redirecting to login...",
+    "errors": {
+      "firstNameRequired": "First name is required",
+      "lastNameRequired": "Last name is required",
+      "branchIdRequired": "Branch ID is required",
+      "roleRequired": "Role is required",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Email is invalid",
+      "passwordRequired": "Password is required",
+      "passwordTooShort": "Password must be at least 6 characters",
+      "confirmPasswordRequired": "Please confirm your password",
+      "passwordMismatch": "Passwords do not match",
+      "registrationFailed": "Registration failed. Email may already be in use."
+    }
+  },
+  "deposits": {
+    "title": "My Deposits",
+    "loading": "Loading deposits...",
+    "notFound": "No deposits found.",
+    "back": "Back",
+    "createNew": "+ Create New Deposit"
+  },
   "adminPage": {
     "hello": "Hello",
     "addUserLabel": "Add User",
-    "exportUserLabel": "Export User",
+    "exportUserLabel": "Export Users",
     "settingsLabel": "Settings"
+  },
+  "notFound": {
+    "accessDenied": "Access Denied",
+    "pageNotFound": "Page Not Found",
+    "deniedDescription": "You don't have permission to access this page.",
+    "notFoundDescription": "The page you are looking for doesn't exist.",
+    "yourRole": "Your role",
+    "required": "Required",
+    "goHome": "Go to Home",
+    "goLogin": "Go to Login"
+  },
+  "users": {
+    "title": "Users in Branch",
+    "branchId": "Branch ID",
+    "firstName": "First Name",
+    "middleName": "Middle Name",
+    "lastName": "Last Name",
+    "fullName": "Full Name",
+    "errorFetch": "Failed to fetch users",
+    "loading": "Loading users...",
+    "error": "Error"
+  },
+  "userMain": {
+    "loading": "Loading your accounts...",
+    "myAccounts": "My Accounts",
+    "noAccounts": "No Accounts Found",
+    "noAccountsDesc": "You don't have any accounts yet. Please contact your bank to set up an account.",
+    "totalBalance": "Total Balance",
+    "accountWithId": "Account {{id}}",
+    "balance": "Balance",
+    "loadingBalance": "Loading..."
   }
 }

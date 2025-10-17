@@ -24,8 +24,6 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-
-
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
@@ -51,8 +49,12 @@ public class AuthController {
 
             return ResponseEntity.ok(new JwtResponseDTO(
                     jwt,
+                    user.getId(),           // ID-ul utilizatorului
+                    user.getFirstName(),    // Prenumele
+                    user.getLastName(),     // Numele
                     user.getEmail(),
-                    user.getRole().name()
+                    user.getRole().name(),
+                    user.getBranch().getId()
             ));
         } catch (BadCredentialsException e) {
             log.error("Bad credentials for user: {}", loginRequestDTO.getEmail());

@@ -1,7 +1,12 @@
 {
   "header": {
+    "title": "Integra Pay",
+    "home": "Acasă",
+    "deposits": "Depozite",
+    "admin": "Administrare",
+    "users": "Utilizatori",
     "logout": "Deconectare",
-    "confirmLogout": "Esti sigur ca vrei sa te deconectezi?"
+    "logoutConfirm": "Sigur vrei să te deconectezi?"
   },
   "footer": {
     "copyright": "© 2025 Proiectul Integra UBB. Toate drepturile rezervate."
@@ -18,10 +23,110 @@
     "middleNameLabel": "Al doilea nume",
     "lastNameLabel": "Nume de familie"
   },
+  "login": {
+    "title": "Integra Pay",
+    "subtitle": "Autentifică-te în cont",
+    "email": "Email",
+    "emailPlaceholder": "Introdu emailul",
+    "password": "Parolă",
+    "passwordPlaceholder": "Introdu parola",
+    "signIn": "Autentificare",
+    "signingIn": "Se autentifică...",
+    "noAccount": "Nu ai cont?",
+    "registerHere": "Înregistrează-te aici",
+    "errors": {
+      "emailRequired": "Emailul este obligatoriu",
+      "emailInvalid": "Emailul nu este valid",
+      "passwordRequired": "Parola este obligatorie",
+      "passwordTooShort": "Parola trebuie să aibă cel puțin 6 caractere",
+      "invalidCredentials": "Email sau parolă greșită. Încearcă din nou."
+    }
+  },
+  "register": {
+    "title": "Creează cont",
+    "subtitle": "Alătură-te Integra Pay azi",
+    "personalInfo": "Informații personale",
+    "firstName": "Prenume",
+    "firstNamePlaceholder": "Ion",
+    "lastName": "Nume",
+    "lastNamePlaceholder": "Popescu",
+    "middleName": "Al doilea prenume",
+    "middleNamePlaceholder": "Opțional",
+    "organizationInfo": "Informații organizație",
+    "branchId": "ID Sucursală",
+    "branchIdPlaceholder": "e246e2e6-d734-46a0-83e2-e6ee9b725977",
+    "role": "Rol",
+    "roleSelect": "Selectează un rol",
+    "roleUser": "Utilizator",
+    "roleAdmin": "Administrator",
+    "accountSecurity": "Securitatea contului",
+    "email": "Email",
+    "emailPlaceholder": "ion.popescu@exemplu.com",
+    "password": "Parolă",
+    "passwordPlaceholder": "Minim 6 caractere",
+    "confirmPassword": "Confirmă parola",
+    "confirmPasswordPlaceholder": "Reintrodu parola",
+    "createAccount": "Creează cont",
+    "creatingAccount": "Se creează contul...",
+    "hasAccount": "Ai deja cont?",
+    "signInHere": "Autentifică-te aici",
+    "success": "Înregistrare reușită! Redirecționare către login...",
+    "errors": {
+      "firstNameRequired": "Prenumele este obligatoriu",
+      "lastNameRequired": "Numele este obligatoriu",
+      "branchIdRequired": "ID-ul sucursalei este obligatoriu",
+      "roleRequired": "Rolul este obligatoriu",
+      "emailRequired": "Emailul este obligatoriu",
+      "emailInvalid": "Emailul nu este valid",
+      "passwordRequired": "Parola este obligatorie",
+      "passwordTooShort": "Parola trebuie să aibă cel puțin 6 caractere",
+      "confirmPasswordRequired": "Te rugăm să confirmi parola",
+      "passwordMismatch": "Parolele nu se potrivesc",
+      "registrationFailed": "Înregistrare eșuată. Emailul ar putea fi deja folosit."
+    }
+  },
+  "deposits": {
+    "title": "Depozitele mele",
+    "loading": "Se încarcă depozitele...",
+    "notFound": "Nu s-au găsit depozite.",
+    "back": "Înapoi",
+    "createNew": "+ Creează Depozit Nou"
+  },
   "adminPage": {
     "hello": "Salut",
-    "addUserLabel": "Adauga Utilizator",
-    "exportUserLabel": "Exporta Utilizator",
-    "settingsLabel": "Setari"
+    "addUserLabel": "Adaugă utilizator",
+    "exportUserLabel": "Exportă utilizatori",
+    "settingsLabel": "Setări"
+  },
+  "notFound": {
+    "accessDenied": "Acces interzis",
+    "pageNotFound": "Pagină negăsită",
+    "deniedDescription": "Nu aveți permisiunea să accesați această pagină.",
+    "notFoundDescription": "Pagina pe care o cauți nu există.",
+    "yourRole": "Rolul tău",
+    "required": "Necesar",
+    "goHome": "Mergi la Acasă",
+    "goLogin": "Mergi la Autentificare"
+  },
+  "users": {
+    "title": "Utilizatori în sucursală",
+    "branchId": "ID Sucursală",
+    "firstName": "Prenume",
+    "middleName": "Al doilea prenume",
+    "lastName": "Nume",
+    "fullName": "Nume complet",
+    "errorFetch": "Nu s-au putut prelua utilizatorii",
+    "loading": "Se încarcă utilizatorii...",
+    "error": "Eroare"
+  },
+  "userMain": {
+    "loading": "Se încarcă conturile...",
+    "myAccounts": "Conturile mele",
+    "noAccounts": "Nu s-au găsit conturi",
+    "noAccountsDesc": "Nu aveți încă niciun cont. Contactați banca pentru a deschide un cont.",
+    "totalBalance": "Sold total",
+    "accountWithId": "Cont {{id}}",
+    "balance": "Sold",
+    "loadingBalance": "Se încarcă..."
   }
 }
