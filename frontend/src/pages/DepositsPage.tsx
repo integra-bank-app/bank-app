@@ -7,7 +7,7 @@ type Deposit = {
     amount: number;
 };
 
-type PageKey = "start" | "deposits";
+export type PageKey = "start" | "deposits";
 
 interface DepositsPageProps {
     goToPage: (page: PageKey) => void;

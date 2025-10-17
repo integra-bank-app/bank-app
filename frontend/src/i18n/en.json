@@ -96,7 +96,29 @@
     "hello": "Hello",
     "addUserLabel": "Add User",
     "exportUserLabel": "Export Users",
-    "settingsLabel": "Settings"
+    "settingsLabel": "Settings",
+    "importLabel": "Import"
+  },
+  "bulkImportDeposits": {
+    "title": "Bulk Import Deposits",
+    "pasteJsonLabel": "Paste JSON",
+    "uploadFileLabel": "Or upload JSON file",
+    "chooseFile": "Choose File",
+    "noFileChosen": "No file chosen",
+    "importButton": "Import",
+    "cancelButton": "Cancel",
+    "invalidJson": "Invalid JSON",
+    "invalidFile": "Invalid File",
+    "errorNotArray": "JSON is not an array — a single object will be wrapped into an array on import.",
+    "errorReadingFile": "Failed to read file",
+    "nothingToImport": "Nothing to Import",
+    "provideJsonOrFile": "Please paste JSON or upload a file.",
+    "successTitle": "Success",
+    "successMessage": "Import successful!",
+    "errorTitle": "Error",
+    "unknownError": "Unknown error",
+    "confirmMessage": "You are about to import {{count}} deposit(s). Proceed?",
+    "jsonPlaceholder": "Example: [{\"id\":\"1\",\"amount\":100}, {\"id\":\"2\",\"amount\":200}]"
   },
   "notFound": {
     "accessDenied": "Access Denied",

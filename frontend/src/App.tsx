@@ -8,7 +8,9 @@ import "primereact/resources/themes/bootstrap4-dark-purple/theme.css";
 import "./App.css";
 import { NotificationProvider } from "./contexts/NotificationProvider";
 import UserMainPage from "./pages/UserMainPage";
-import DepositsPage from "./pages/DepositsPage/DepositsPage";
+import  DepositsPage  from "./pages/DepositsPage/DepositsPage";
+import { PageKey } from "./pages/DepositsPage"
+
 import AdminPageComponent from "./pages/AdminPage";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import UserListPage from "./pages/UserListPage";
