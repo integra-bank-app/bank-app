@@ -97,7 +97,8 @@
     "addUserLabel": "Adaugă utilizator",
     "exportUserLabel": "Exportă utilizatori",
     "settingsLabel": "Setări",
-    "importLabel": "Importa"
+    "importLabel": "Importa",
+    "exportLabel": "Exporta"
   },
   "bulkImportDeposits": {
     "title": "Importare Depozite",

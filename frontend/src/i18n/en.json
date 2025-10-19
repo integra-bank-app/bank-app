@@ -97,7 +97,8 @@
     "addUserLabel": "Add User",
     "exportUserLabel": "Export Users",
     "settingsLabel": "Settings",
-    "importLabel": "Import"
+    "importLabel": "Import",
+    "exportLabel": "Export"
   },
   "bulkImportDeposits": {
     "title": "Bulk Import Deposits",
