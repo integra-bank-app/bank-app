@@ -3,12 +3,13 @@ import { Stepper } from "primereact/stepper";
 import { StepperPanel } from "primereact/stepperpanel";
 import { useTranslation } from "react-i18next";
 import { useRef, useState } from "react";
-import { useNotificationContext, useUserContext } from "../lib/hooks";
+import { useNotificationContext } from "../lib/hooks";
 import ReviewStep from "./CreateDepositSteps/ReviewStep";
 import ConfigureStep from "./CreateDepositSteps/ConfigureStep";
 import TermsStep from "./CreateDepositSteps/TermsStep";
 import { INTREST_RATE_OPTIONS } from "../lib/constants";
 import { DepositControllerApi, DepositsDTO } from "../api";
+import { useAuthentication } from "../contexts/AuthenticationProvider";
 
 type CreateDepositDialogProps = {
 	visible: boolean;
@@ -25,7 +26,7 @@ export function CreateDepositDialog({
 	}));
 
 	const { t } = useTranslation();
-	const { user } = useUserContext();
+	const { user } = useAuthentication();
 	const { toastRef } = useNotificationContext();
 	const [depositValue, setDepositValue] = useState<number | null>(null);
 	const [interestRate, setInterestRate] = useState<number | null>(null);
@@ -69,8 +70,12 @@ export function CreateDepositDialog({
 				amount: depositValue,
 			};
 
+			if (!user) {
+				throw new Error("User not authenticated. Please log in.");
+			}
+
 			const api = new DepositControllerApi();
-			const response = await api.createDeposit(user.uuid, depositDTO);
+			const response = await api.createDeposit(user.id, depositDTO);
 
 			toastRef.current?.show({
 				severity: "success",
