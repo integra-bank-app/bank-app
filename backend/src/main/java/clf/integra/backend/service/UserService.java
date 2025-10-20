@@ -1,5 +1,6 @@
 package clf.integra.backend.service;
 
+import clf.integra.backend.dto.SalaryRequestMessage;
 import clf.integra.backend.dto.UserDTO;
 import clf.integra.backend.exceptions.BalanceUpdateFailedException;
 import clf.integra.backend.exceptions.InsufficientFundsException;
@@ -10,6 +11,7 @@ import clf.integra.backend.model.Branch;
 import clf.integra.backend.model.NotificationType;
 import clf.integra.backend.model.TransactionType;
 import clf.integra.backend.model.User;
+import clf.integra.backend.producer.MessageProducer;
 import clf.integra.backend.repository.BranchRepository;
 import clf.integra.backend.repository.UserRepository;
 import clf.integra.backend.utils.RandomUtils;
@@ -34,6 +36,7 @@ public class UserService {
     private final TransactionService transactionService;
     private final NotificationService notificationService;
     private final PasswordEncoder passwordEncoder;
+    private final MessageProducer messageProducer;
 
     @Transactional
     public UUID addUserWithName(String firstName, String middleName, String lastName, UUID branchId,
@@ -209,5 +212,10 @@ public class UserService {
 
     private String getFullName(User user) {
         return user.getFirstName() + " " + (user.getMiddleName() != null ? user.getMiddleName() + " " : "") + user.getLastName();
+    }
+
+    public void requestSalary(UUID userId) {
+        SalaryRequestMessage message = new SalaryRequestMessage(userId);
+        messageProducer.send(message);
     }
 }
