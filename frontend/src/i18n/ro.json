@@ -189,7 +189,7 @@
 			},
 			"depositCreated": {
 				"summary": "Depozit Creat",
-				"detail": "Depozitul de ${{amount}} la o dobândă de {{interestRate}}% a fost creat cu succes. ID: {{id}}"
+				"detail": "Depozitul de ${{amount}} la o dobândă de {{interestRate}}% a fost creat cu succes."
 			},
 			"errorCreatingDeposit": {
 				"summary": "Eroare la Crearea Depozitului",
@@ -199,6 +199,9 @@
 	},
 	"depositsPage": {
 		"title": "Depozitele Mele",
+		"list": {
+			"title": "Listă Depozite"
+		},
 		"loading": "Se Încarcă depozitele",
 		"noDeposits": "Fără depozite...",
 		"noDepositsFound": "Nu s-au găsit depozite.",
