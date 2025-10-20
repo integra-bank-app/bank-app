@@ -8,6 +8,7 @@ import clf.integra.backend.model.Account;
 import clf.integra.backend.model.Branch;
 import clf.integra.backend.model.TransactionType;
 import clf.integra.backend.model.User;
+import clf.integra.backend.producer.MessageProducer;
 import clf.integra.backend.repository.BranchRepository;
 import clf.integra.backend.repository.UserRepository;
 import clf.integra.backend.utils.RandomUtils;
@@ -33,9 +34,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -60,6 +63,8 @@ public class UserServiceTest {
 
     @Mock
     private PasswordEncoder passwordEncoder;
+    @Mock
+    private MessageProducer messageProducer;
 
     private User user;
     private Account account;
@@ -379,4 +384,27 @@ public class UserServiceTest {
         );
     }
 
+    @Test
+    void testRequestSalary_userNotFound_returnNotFound() {
+        UUID unknownUserId = UUID.randomUUID();
+
+        when(userRepository.existsById(unknownUserId)).thenReturn(false);
+
+        assertThrows(NotFoundException.class, () ->
+                userService.requestSalary(unknownUserId)
+        );
+    }
+
+    @Test
+    void testRequestSalary_validData_sendsMessage() {
+        UUID userId = UUID.randomUUID();
+
+        when(userRepository.existsById(userId)).thenReturn(true);
+
+        userService.requestSalary(userId);
+
+        verify(messageProducer, times(1)).send(argThat(
+                message -> message.userId().equals(userId)
+        ));
+    }
 }
