@@ -215,6 +215,9 @@ public class UserService {
     }
 
     public void requestSalary(UUID userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new NotFoundException("User not found");
+        }
         SalaryRequestMessage message = new SalaryRequestMessage(userId);
         messageProducer.send(message);
     }

@@ -89,7 +89,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("users/{userId}/requestSalary")
-    public ResponseEntity<String> requestSalary(@PathVariable UUID userId){
+    public ResponseEntity<String> requestSalary(@PathVariable UUID userId) throws NotFoundException{
         userService.requestSalary(userId);
         return ResponseEntity.ok("Salary requested successfully");
     }
