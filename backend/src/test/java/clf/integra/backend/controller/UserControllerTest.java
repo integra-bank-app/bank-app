@@ -29,6 +29,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -277,6 +279,28 @@ public class UserControllerTest {
         when(depositsService.getUserDeposits(eq(userId))).thenReturn(java.util.Collections.emptyList());
 
         mockMvc.perform(get("/users/" + userId + "/deposits"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void requestSalary_validUser_returnsOk() throws Exception {
+        UUID userId = UUID.randomUUID();
+
+        doNothing().when(userService).requestSalary(userId);
+
+        mockMvc.perform(post("/users/{userId}/requestSalary", userId))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Salary requested successfully"));
+    }
+
+    @Test
+    void requestSalary_userNotFound_returnsNotFound() throws Exception {
+        UUID userId = UUID.randomUUID();
+
+        doThrow(new NotFoundException("User not found"))
+                .when(userService).requestSalary(userId);
+
+        mockMvc.perform(post("/users/{userId}/requestSalary", userId))
                 .andExpect(status().isNotFound());
     }
 }
