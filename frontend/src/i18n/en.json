@@ -189,7 +189,7 @@
 			},
 			"depositCreated": {
 				"summary": "Deposit Created",
-				"detail": "Deposit of ${{amount}} at {{interestRate}}% created successfully. ID: {{id}}"
+				"detail": "Deposit of ${{amount}} at {{interestRate}}% created successfully."
 			},
 			"errorCreatingDeposit": {
 				"summary": "Error Creating Deposit",
@@ -199,6 +199,9 @@
 	},
 	"depositsPage": {
 		"title": "My Deposits",
+		"list": {
+			"title": "Depoists List"
+		},
 		"noDeposits": "No deposits...",
 		"loading": "Loading deposits...",
 		"noDepositsFound": "No deposits found.",

@@ -45,7 +45,7 @@ const DepositsPage: React.FC = () => {
 		} finally {
 			setLoading(false);
 		}
-	}, [user]);
+	}, [user, showAddDialog]);
 
 	useEffect(() => {
 		if (!isAuthenticated) {

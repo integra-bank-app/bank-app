@@ -8,8 +8,13 @@ import ReviewStep from "./CreateDepositSteps/ReviewStep";
 import ConfigureStep from "./CreateDepositSteps/ConfigureStep";
 import TermsStep from "./CreateDepositSteps/TermsStep";
 import { INTREST_RATE_OPTIONS } from "../lib/constants";
-import { DepositControllerApi, DepositsDTO } from "../api";
+
 import { useAuthentication } from "../contexts/AuthenticationProvider";
+export type DepositsDTO = {
+	id?: number;
+	interest_rate: number;
+	amount: number;
+};
 
 type CreateDepositDialogProps = {
 	visible: boolean;
@@ -74,8 +79,34 @@ export function CreateDepositDialog({
 				throw new Error("User not authenticated. Please log in.");
 			}
 
-			const api = new DepositControllerApi();
-			const response = await api.createDeposit(user.id, depositDTO);
+			const token = localStorage.getItem("authToken");
+			const response = await fetch(
+				`http://localhost:8080/api/deposits/${user.id}`,
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}`,
+					},
+					body: JSON.stringify(depositDTO),
+				}
+			);
+
+			if (!response.ok) {
+				const errorText = await response.text();
+				let errorMessage = errorText;
+				try {
+					const errorJson = JSON.parse(errorText);
+					if (errorJson && errorJson.message) {
+						errorMessage = errorJson.message;
+					}
+				} catch (e) {
+					// Not a JSON error, use the raw text
+				}
+				throw new Error(errorMessage || "Failed to create deposit");
+			}
+
+			const responseData = await response.text();
 
 			toastRef.current?.show({
 				severity: "success",
@@ -83,7 +114,6 @@ export function CreateDepositDialog({
 				detail: t("createDepositDialog.notifications.depositCreated.detail", {
 					amount: depositValue.toFixed(2),
 					interestRate: interestRate,
-					id: response.data,
 				}),
 				life: 3000,
 			});
