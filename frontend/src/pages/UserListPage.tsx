@@ -7,6 +7,7 @@ import { Paginator } from "primereact/paginator";
 import { USER_LIST_ROWS_PER_PAGE_OPTIONS } from "../lib/constants";
 import { Title } from "../components/TitleComponent";
 import { useTranslation } from "react-i18next";
+import { BranchControllerApi } from "../api/api";
 
 export default function UserListPage() {
 	const { user, isAuthenticated } = useAuthentication();
@@ -27,7 +28,7 @@ export default function UserListPage() {
 		let isMounted = true;
 
 		const fetchUsers = async () => {
-			if (!user?.id) {
+			if (!user?.id || !user.branchId) {
 				setLoading(false);
 				return;
 			}
@@ -35,26 +36,14 @@ export default function UserListPage() {
 			setLoading(true);
 
 			try {
-				const token = localStorage.getItem('authToken');
-				if (!token) {
-					throw new Error('No auth token found');
-				}
-
-				const response = await fetch(
-					`http://localhost:8080/api/branches/${user.branchId}/users?page=${page}&size=${rows}`,
-					{
-						headers: {
-							'Authorization': `Bearer ${token}`,
-							'Content-Type': 'application/json'
-						}
-					}
+				const branchControllerApi = new BranchControllerApi();
+				const response = await branchControllerApi.getUsersByBranch(
+					user.branchId,
+					page,
+					rows
 				);
 
-				if (!response.ok) {
-					throw new Error('Failed to fetch users');
-				}
-
-				const paged: PagedModelUserDTO = await response.json();
+				const paged: PagedModelUserDTO = response.data;
 
 				if (isMounted) {
 					setUsers(paged.content ?? []);
@@ -78,7 +67,7 @@ export default function UserListPage() {
 		return () => {
 			isMounted = false;
 		};
-	}, [isAuthenticated, user?.branchId, page, rows, t]);
+	}, [isAuthenticated, user?.branchId, page, rows, t, user?.id]);
 
 	if (loading) return (
 		<div className="flex justify-content-center align-items-center" style={{ minHeight: '30vh' }}>

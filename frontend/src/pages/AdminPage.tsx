@@ -72,8 +72,6 @@ function AdminPage() {
                 <div className={"col-12 md:col-4"}>
                     <Button label={t("adminPage.exportLabel")} icon="pi pi-download" onClick={handleExportDeposits}
                             className="w-full"/>
-
-
                 </div>
             </div>
 
@@ -87,14 +85,14 @@ function AdminPage() {
 
             <div className="w-full" style={{maxWidth: "800px"}}></div>
 
-            <AddUserToBranchDialog
-                branchId={user?.branchId ?? ""}
-                visible={showAddUser}
-                onHide={() => setShowAddUser(false)}
-                onUserAdded={() => navigate("/users")}
-            />
-        </section>
-    );
+			<AddUserToBranchDialog
+				branchId={user?.branchId ?? ""}
+				visible={showAddUser}
+				onHide={() => setShowAddUser(false)}
+				onUserAdded={() => navigate("/users")}
+			/>
+		</section>
+	);
 }
 
 export default AdminPage;
