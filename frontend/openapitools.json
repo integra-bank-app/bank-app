@@ -1,15 +1,15 @@
 {
-  "$schema": "./node_modules/@openapitools/openapi-generator-cli/config.schema.json",
-  "spaces": 2,
-  "generator-cli": {
-    "version": "7.14.0",
-    "generators": {
-      "typescript-axios": {
-        "generatorName": "typescript-axios",
-        "output": "src/api",
-        "inputSpec": "http://localhost:8080/api/v3/api-docs",
-        "templateDir": "src/api-configuration"
-      }
-    }
-  }
+	"$schema": "./node_modules/@openapitools/openapi-generator-cli/config.schema.json",
+	"spaces": 2,
+	"generator-cli": {
+		"version": "7.14.0",
+		"generators": {
+			"typescript-axios": {
+				"generatorName": "typescript-axios",
+				"output": "src/api",
+				"inputSpec": "http://localhost:8080/api/v3/api-docs",
+				"templateDir": "src/api-configuration"
+			}
+		}
+	}
 }
