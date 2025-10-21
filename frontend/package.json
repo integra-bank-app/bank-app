@@ -8,7 +8,7 @@
 		"build": "vite build",
 		"lint": "eslint .",
 		"preview": "vite preview",
-		"api:generate": "openapi-generator-cli generate -i http://localhost:8080/api/v3/api-docs -g typescript-axios -o src/api -t src/api-configuration"
+		"api:generate": "openapi-generator-cli generate -c openapitools.json"
 	},
 	"dependencies": {
 		"@tailwindcss/vite": "^4.1.12",
