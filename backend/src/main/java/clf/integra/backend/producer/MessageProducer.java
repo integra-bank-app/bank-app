@@ -13,6 +13,6 @@ public class MessageProducer {
     }
 
     public void send(SalaryRequestMessage message) {
-        rabbitTemplate.convertAndSend(ProducerConfig.INTEGRA_TO_ANAF, message);
+        rabbitTemplate.convertAndSend(RabbitConfig.INTEGRA_TO_ANAF, message);
     }
 }

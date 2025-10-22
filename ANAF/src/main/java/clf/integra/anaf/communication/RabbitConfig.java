@@ -1,13 +1,11 @@
-package clf.integra.backend.producer;
+package clf.integra.anaf.communication;
 
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
-@Configuration
-public class ProducerConfig {
+public class RabbitConfig {
     public static final String ANAF_TO_INTEGRA = "anaf-to-integra";
     public static final String INTEGRA_TO_ANAF = "integra-to-anaf";
 

@@ -30,7 +30,7 @@ class MessageProducerTest {
         messageProducer.send(message);
 
         verify(rabbitTemplate).convertAndSend(
-                ProducerConfig.INTEGRA_TO_ANAF,
+                RabbitConfig.INTEGRA_TO_ANAF,
                 message
         );
     }
