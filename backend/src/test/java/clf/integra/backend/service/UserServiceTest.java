@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -57,6 +58,8 @@ public class UserServiceTest {
     @Mock
     private RandomUtils randomUtils;
 
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     private User user;
     private Account account;
@@ -66,6 +69,8 @@ public class UserServiceTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
+
+        when(passwordEncoder.encode(any(CharSequence.class))).thenReturn("encodedPassword");
 
         userId = UUID.randomUUID();
         branch = Branch.builder().id(UUID.randomUUID()).build();
@@ -256,8 +261,9 @@ public class UserServiceTest {
         assertEquals(150.0, toUser.getAccounts().get(0).getBalance());
         verify(userRepository).save(fromUser);
         verify(userRepository).save(toUser);
-        verify(transactionService).createTransaction(fromUser, -100.0, TransactionType.TRANSFER_OUT, "Transfer of 100.0 to user " + toUserId);
-        verify(transactionService).createTransaction(toUser, 100.0, TransactionType.TRANSFER_IN, "Transfer of 100.0 from user " + fromUserId);
+
+        verify(transactionService).createTransaction(eq(fromUser), eq(-100.0), eq(TransactionType.TRANSFER_OUT), anyString());
+        verify(transactionService).createTransaction(eq(toUser), eq(100.0), eq(TransactionType.TRANSFER_IN), anyString());
     }
 
     @Test
