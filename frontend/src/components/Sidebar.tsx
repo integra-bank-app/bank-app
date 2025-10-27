@@ -42,7 +42,7 @@ const Sidebar: React.FC = () => {
 	return (
 		<div
 			className={`h-screen bg-gray-800 text-white p-4 flex flex-col shadow-2xl transition-width duration-300 ${
-				collapsed ? "w-20" : "w-64"
+				collapsed ? "w-20 sidebar-collapsed" : "w-64"
 			}`}
 		>
 			<div

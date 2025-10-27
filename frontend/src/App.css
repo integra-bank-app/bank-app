@@ -24,6 +24,23 @@ body,
 	border-color: rgba(255, 255, 255, 0.1); /* gray-600 */
 	color: white;
 }
-.collapsed-dropdown .p-dropdown-trigger {
-	display: none;
+
+.sidebar-collapsed .p-dropdown-trigger-icon {
+	display: none !important;
+}
+
+.sidebar-collapsed .p-dropdown {
+	padding: 0 !important;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.sidebar-collapsed .p-dropdown-trigger {
+	display: none !important;
+}
+
+.sidebar-collapsed .p-dropdown-label {
+	padding: 0 !important;
+	text-align: center;
 }
