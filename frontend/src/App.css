@@ -13,3 +13,17 @@ body,
 	background-color: var(--surface-card); /* matches demo site content */
 	border-radius: 8px;
 }
+
+.p-button.p-button-outlined.p-button-faint-gray {
+	border-color: rgba(255, 255, 255, 0.1); /* gray-600 */
+	color: white;
+}
+
+.p-button.p-button-outlined.p-button-faint-gray:hover {
+	background: rgba(255, 255, 255, 0.1);
+	border-color: rgba(255, 255, 255, 0.1); /* gray-600 */
+	color: white;
+}
+.collapsed-dropdown .p-dropdown-trigger {
+	display: none;
+}
