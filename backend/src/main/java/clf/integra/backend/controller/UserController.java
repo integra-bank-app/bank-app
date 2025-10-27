@@ -78,7 +78,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ADMIN') or (hasRole('USER') and @userPermissionService.canAccessUserData(#id, authentication))")
-    @GetMapping("users/{id}/deposits")
+    @GetMapping("/users/{id}/deposits")
     public ResponseEntity<List<DepositsDTO>> getUserDeposits(@PathVariable UUID id) {
         List<DepositsDTO> deposits = depositsService.getUserDeposits(id);
         if (deposits.isEmpty()) {

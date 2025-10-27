@@ -5,6 +5,7 @@ import { useAuthentication } from "./AuthenticationProvider";
 
 type NotificationContextType = {
 	isConnected: boolean;
+	toastRef: React.RefObject<Toast | null>;
 };
 
 type NotificationProviderProps = {
@@ -72,7 +73,7 @@ export function NotificationProvider({ children }: NotificationProviderProps) {
 	}, [isAuthenticated, user?.id]);
 
 	return (
-		<NotificationContext.Provider value={{ isConnected }}>
+		<NotificationContext.Provider value={{ isConnected, toastRef: toast }}>
 			<Toast ref={toast} />
 			{children}
 		</NotificationContext.Provider>

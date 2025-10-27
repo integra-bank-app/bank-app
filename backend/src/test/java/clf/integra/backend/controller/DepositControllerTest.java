@@ -2,6 +2,7 @@ package clf.integra.backend.controller;
 
 import clf.integra.backend.dto.DepositImportDTO;
 import clf.integra.backend.dto.DepositImportRequest;
+import clf.integra.backend.security.utils.JwtUtils;
 import clf.integra.backend.service.DepositsService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -31,6 +32,9 @@ public class DepositControllerTest {
 
     @MockitoBean
     DepositsService depositsService;
+
+    @MockitoBean
+    JwtUtils jwtUtils;
 
     private final ObjectMapper mapper = new ObjectMapper();
 
