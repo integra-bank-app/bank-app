@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(UserTransactionHistoryControlller.class)
+@WebMvcTest(UserTransactionHistoryController.class)
 @AutoConfigureMockMvc(addFilters = false)
 public class UserTransactionHistoryTest {
     @Autowired
@@ -67,7 +67,7 @@ public class UserTransactionHistoryTest {
         when(userTransactionHistoryService.getTransactionHistory(userId))
                 .thenReturn(List.of(tr1, feetax));
 
-        mockMvc.perform(get("/users/" +userId +"/transactions" ))
+        mockMvc.perform(get("/users/" + userId + "/transactions"))
                 .andExpect(status().isOk())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2))
