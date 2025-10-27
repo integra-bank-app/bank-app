@@ -28,7 +28,9 @@ configurations {
 repositories {
     mavenCentral()
 }
+task prepareKotlinBuildScriptModel {
 
+}
 dependencies {
     // Spring
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -59,6 +61,9 @@ dependencies {
 
     // RabbitMQ
     implementation("org.springframework.boot:spring-boot-starter-amqp")
+
+    // shared module
+    implementation project(':shared')
 
     // Junit + Mockito
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

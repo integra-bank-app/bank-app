@@ -1,6 +1,6 @@
 package clf.integra.backend.service;
 
-import clf.integra.backend.dto.SalaryRequestMessage;
+import clf.integra.SalaryRequestMessage;
 import clf.integra.backend.dto.UserDTO;
 import clf.integra.backend.exceptions.BalanceUpdateFailedException;
 import clf.integra.backend.exceptions.InsufficientFundsException;

@@ -1,4 +1,4 @@
-package clf.integra.backend.dto;
+package clf.integra;
 
 import java.util.UUID;
 

@@ -1,6 +1,6 @@
 package clf.integra.backend.producer;
 
-import clf.integra.backend.dto.SalaryRequestMessage;
+import clf.integra.SalaryRequestMessage;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
 

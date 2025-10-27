@@ -1,0 +1,5 @@
+rootProject.name = "bank-app"
+
+include 'ANAF'
+include 'backend'
+include 'shared'
