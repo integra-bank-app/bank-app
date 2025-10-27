@@ -1,7 +1,7 @@
 package clf.integra.backend.producer;
 
 
-import clf.integra.backend.dto.SalaryRequestMessage;
+import clf.integra.SalaryRequestMessage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
