@@ -22,7 +22,9 @@ task prepareKotlinBuildScriptModel {
 }
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
-    implementation("org.springframework.boot:spring-boot-starter-amqp")
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+
 
     // shared module
     implementation project(':shared')
