@@ -1,6 +1,7 @@
-package clf.integra.backend.producer;
+package clf.integra.backend.communication;
 
 
+import clf.integra.QueueName;
 import clf.integra.SalaryRequestMessage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,7 +31,7 @@ class MessageProducerTest {
         messageProducer.send(message);
 
         verify(rabbitTemplate).convertAndSend(
-                RabbitConfig.INTEGRA_TO_ANAF,
+                QueueName.INTEGRA_TO_ANAF,
                 message
         );
     }

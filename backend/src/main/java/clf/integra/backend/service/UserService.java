@@ -11,7 +11,7 @@ import clf.integra.backend.model.Branch;
 import clf.integra.backend.model.NotificationType;
 import clf.integra.backend.model.TransactionType;
 import clf.integra.backend.model.User;
-import clf.integra.backend.producer.MessageProducer;
+import clf.integra.backend.communication.MessageProducer;
 import clf.integra.backend.repository.BranchRepository;
 import clf.integra.backend.repository.UserRepository;
 import clf.integra.backend.utils.RandomUtils;

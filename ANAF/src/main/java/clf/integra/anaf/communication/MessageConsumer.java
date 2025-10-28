@@ -5,18 +5,19 @@ import clf.integra.anaf.service.AnafService;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
+import static clf.integra.QueueName.INTEGRA_TO_ANAF;
+
 @Component
-public class MessageListener {
+public class MessageConsumer {
     private final AnafService anafService;
 
-    public MessageListener(AnafService anafService) {
+    public MessageConsumer(AnafService anafService) {
         this.anafService = anafService;
     }
 
-    @RabbitListener(queues = "integra-to-anaf", containerFactory = "rabbitListenerContainerFactory")
+    @RabbitListener(queues = INTEGRA_TO_ANAF, containerFactory = "rabbitListenerContainerFactory")
     public void receiveMessage(SalaryRequestMessage message) {
         int salary = anafService.getUserSalary(message.userId());
-        System.out.println(salary);
-        // TODO: send salary back to integra-to-anaf queue
+        // TODO: send salary back to integra
     }
 }
