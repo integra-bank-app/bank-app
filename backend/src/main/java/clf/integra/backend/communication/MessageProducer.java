@@ -1,8 +1,10 @@
-package clf.integra.backend.producer;
+package clf.integra.backend.communication;
 
 import clf.integra.SalaryRequestMessage;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
+
+import static clf.integra.QueueName.INTEGRA_TO_ANAF;
 
 @Component
 public class MessageProducer {
@@ -13,6 +15,6 @@ public class MessageProducer {
     }
 
     public void send(SalaryRequestMessage message) {
-        rabbitTemplate.convertAndSend(RabbitConfig.INTEGRA_TO_ANAF, message);
+        rabbitTemplate.convertAndSend(INTEGRA_TO_ANAF, message);
     }
 }
