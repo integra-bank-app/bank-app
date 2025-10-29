@@ -6,6 +6,7 @@ import { TotalBalanceSlide } from "../components/TotalBalanceSlide";
 import { AccountSlide } from "../components/AccountSlide";
 import { Title } from "../components/TitleComponent";
 import { useTranslation } from "react-i18next";
+import { UserControllerApi } from "../api/api";
 
 export default function UserMainPage() {
 	const { user, isAuthenticated } = useAuthentication();
@@ -24,26 +25,10 @@ export default function UserMainPage() {
 		setLoading(true);
 
 		try {
-			const token = localStorage.getItem("authToken");
-			if (!token) {
-				throw new Error("No auth token found");
-			}
+			const userControllerApi = new UserControllerApi();
 
-			const accountsResponse = await fetch(
-				`http://localhost:8080/api/users/${user.id}/accounts`,
-				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-						"Content-Type": "application/json",
-					},
-				}
-			);
-
-			if (!accountsResponse.ok) {
-				throw new Error("Failed to fetch accounts");
-			}
-
-			const accountIds = await accountsResponse.json();
+			const accountsResponse = await userControllerApi.getUserAccounts(user.id);
+			const accountIds = accountsResponse.data;
 			setAccounts(accountIds);
 
 			if (!accountIds || accountIds.length === 0) {
@@ -56,19 +41,12 @@ export default function UserMainPage() {
 			const balancesObj: Record<string, number> = {};
 			for (const accountId of accountIds) {
 				try {
-					const balanceResponse = await fetch(
-						`http://localhost:8080/api/users/${user.id}/accounts/${accountId}`,
-						{
-							headers: {
-								Authorization: `Bearer ${token}`,
-								"Content-Type": "application/json",
-							},
-						}
+					const balanceResponse = await userControllerApi.getUserAccountBalance(
+						user.id,
+						accountId
 					);
-
-					if (balanceResponse.ok) {
-						const balance = await balanceResponse.json();
-						balancesObj[accountId] = balance;
+					if (balanceResponse.status === 200) {
+						balancesObj[accountId] = balanceResponse.data;
 					} else {
 						balancesObj[accountId] = 0;
 					}

@@ -3,7 +3,7 @@ import { Button } from "primereact/button";
 import { depositColors } from "../../lib/utils";
 import DepositChart from "./DepositChart";
 import DepositsList from "./DepositsList";
-import { DepositsDTO } from "../../api";
+import { DepositsDTO, UserControllerApi } from "../../api";
 import { useNavigate } from "react-router-dom";
 import { useAuthentication } from "../../contexts/AuthenticationProvider";
 import { useTranslation } from "react-i18next";
@@ -24,22 +24,10 @@ const DepositsPage: React.FC = () => {
 		}
 
 		setLoading(true);
-		const token = localStorage.getItem("authToken");
 		try {
-			const response = await fetch(
-				`http://localhost:8080/api/users/${user.id}/deposits`,
-				{
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: `Bearer ${token}`,
-					},
-				}
-			);
-			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
-			}
-			const data = await response.json();
-			setDeposits(data);
+			const userControllerApi = new UserControllerApi();
+			const response = await userControllerApi.getUserDeposits(user.id);
+			setDeposits(response.data);
 		} catch (err) {
 			console.error("Error fetching deposits:", err);
 		} finally {

@@ -5,6 +5,7 @@ import React, {
 	useEffect,
 	ReactNode,
 } from "react";
+import { AuthControllerApi, LoginRequestDTO, RegisterRequestDTO } from "../api";
 
 export interface User {
 	id: string;
@@ -23,13 +24,7 @@ interface AuthContextType {
 	logout: () => void;
 }
 
-interface RegisterData {
-	firstName: string;
-	lastName: string;
-	middleName?: string;
-	branchId: string;
-	email: string;
-	password: string;
+interface RegisterData extends RegisterRequestDTO {
 	role: string;
 }
 
@@ -73,17 +68,12 @@ export const AuthenticationProvider: React.FC<AuthenticationProviderProps> = ({
 
 	const login = async (email: string, password: string): Promise<boolean> => {
 		try {
-			const response = await fetch("http://localhost:8080/api/login", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({ email, password }),
-			});
+			const authApi = new AuthControllerApi();
+			const loginRequest: LoginRequestDTO = { email, password };
+			const response = await authApi.authenticateUser(loginRequest);
 
-			if (response.ok) {
-				const data = await response.json();
-
+			if (response.status === 200 && response.data) {
+				const data = response.data as any;
 				const userData: User = {
 					id: data.id,
 					firstName: data.firstName,
@@ -109,26 +99,21 @@ export const AuthenticationProvider: React.FC<AuthenticationProviderProps> = ({
 
 	const register = async (userData: RegisterData): Promise<boolean> => {
 		try {
-			const registerPayload = {
+			const authApi = new AuthControllerApi();
+			const registerRequest: RegisterRequestDTO = {
 				firstName: userData.firstName,
 				lastName: userData.lastName,
-				middleName: userData.middleName || null,
+				middleName: userData.middleName || undefined,
 				branchId: userData.branchId,
 				email: userData.email,
 				password: userData.password,
-				requestedRole: userData.role,
+				requestedRole: userData.role as any,
 			};
 
-			const response = await fetch("http://localhost:8080/api/register", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(registerPayload),
-			});
+			const response = await authApi.registerUser(registerRequest);
 
-			if (response.ok) {
-				const data = await response.json();
+			if (response.status === 200 && response.data) {
+				const data = response.data as any;
 				if (data?.token && data?.id && data?.branchId) {
 					const newUser: User = {
 						id: data.id,
@@ -145,7 +130,7 @@ export const AuthenticationProvider: React.FC<AuthenticationProviderProps> = ({
 				}
 			}
 
-			return response.ok;
+			return response.status === 200;
 		} catch (error) {
 			console.error("Registration error:", error);
 			return false;
