@@ -21,7 +21,20 @@
 		"addUserHeader": "Adaugare Utilizator",
 		"firstNameLabel": "Prenume",
 		"middleNameLabel": "Al doilea nume",
-		"lastNameLabel": "Nume de familie"
+		"lastNameLabel": "Nume de familie",
+		"emailLabel": "Email",
+		"roleLabel": "Rol",
+		"rolePlaceholder": "Selecteaza rolul",
+		"generatedPasswordLabel": "Parola generata",
+		"showPassword": "Arata Parola",
+		"hidePassword": "Ascunde Parola",
+		"copyPassword": "Copiaza Parola",
+		"passwordVisibleWarning": "Parola este generata automat si afisata o singura data. Copiati-o acum, nu va mai fi vizibila!",
+		"passwordCopied": "Parola copiata!",
+		"addingUser": "Se adauga utilizator...",
+		"errorEmail": "Email valid este necesar",
+		"invalidEmail": "Formatul email-ului este invalid",
+		"regeneratePassword": "Regenerare parolă"
 	},
 	"login": {
 		"title": "Integra Pay",
