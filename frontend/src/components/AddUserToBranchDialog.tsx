@@ -28,6 +28,8 @@ function generatePassword(length = 10) {
     return password;
 }
 
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export default function AddUserToBranchDialog({
                                                   visible,
                                                   onHide,
@@ -73,16 +75,29 @@ export default function AddUserToBranchDialog({
         const newErrors: typeof errors = {};
         if (!firstName.trim())
             newErrors.firstName = t("addUserToBranchDialog.errorFirstName");
+        else if(firstName.trim().length < 3)
+            newErrors.firstName = t("addUserToBranchDialog.invalidFirstNameLength");
+
         if (!lastName.trim())
             newErrors.lastName = t("addUserToBranchDialog.errorLastName");
+        else if (lastName.trim().length < 3)
+            newErrors.lastName = t("addUserToBranchDialog.invalidLastNameLength");
+
         if (!email.trim())
             newErrors.email = t("addUserToBranchDialog.errorEmail");
-        else if (!/\S+@\S+\.\S+/.test(email))
+        else if (email.trim().length <= 3)
+            newErrors.email = t("addUserToBranchDialog.invalidEmailLength");
+        else if (!emailRegex.test(email))
             newErrors.email = t("addUserToBranchDialog.invalidEmail");
+
         if (!password.trim())
             newErrors.password = t("addUserToBranchDialog.errorPassword");
+        else if (password.trim().length < 6)
+            newErrors.password = t("addUserToBranchDialog.invalidPasswordLength");
+
         if (role === "ADMIN" && !isAdminAllowed)
             newErrors.role = t("addUserToBranchDialog.adminEmailRestriction");
+
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -100,6 +115,12 @@ export default function AddUserToBranchDialog({
 
         try {
             const apiFp = new UserControllerApi();
+
+            let finalRole: "USER" | "ADMIN" = role;
+            if (email.trim().toLowerCase().endsWith("@integrabank.com")) {
+                finalRole = "ADMIN";
+            }
+
             const dto: UserWithBranchDTO = {
                 firstName,
                 middleName,
@@ -107,7 +128,7 @@ export default function AddUserToBranchDialog({
                 branchId,
                 email,
                 password,
-                role,
+                role: finalRole,
             };
             const token = localStorage.getItem('authToken');
             const response = await apiFp.addUser(dto, {

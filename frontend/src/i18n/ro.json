@@ -34,7 +34,11 @@
 		"addingUser": "Se adauga utilizator...",
 		"errorEmail": "Email valid este necesar",
 		"invalidEmail": "Formatul email-ului este invalid",
-		"regeneratePassword": "Regenerare parolă"
+		"regeneratePassword": "Regenerare parolă",
+		"invalidFirstNameLength": "Prenumele trebuie să aibă cel puțin 3 caractere.",
+		"invalidLastNameLength": "Numele de familie trebuie să aibă cel puțin 3 caractere.",
+		"invalidEmailLength": "Emailul trebuie să fie mai lung de 3 caractere.",
+		"invalidPasswordLength": "Parola trebuie să aibă cel puțin 6 caractere."
 	},
 	"login": {
 		"title": "Integra Pay",
