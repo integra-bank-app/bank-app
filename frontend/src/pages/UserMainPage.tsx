@@ -1,20 +1,21 @@
-import { useEffect, useState, useCallback } from "react";
-import { Carousel } from "primereact/carousel";
-import { Card } from "primereact/card";
-import { useAuthentication } from "../contexts/AuthenticationProvider";
-import { TotalBalanceSlide } from "../components/TotalBalanceSlide";
-import { AccountSlide } from "../components/AccountSlide";
-import { Title } from "../components/TitleComponent";
-import { useTranslation } from "react-i18next";
-import { UserControllerApi } from "../api/api";
+import {useEffect, useState, useCallback} from "react";
+import {Carousel} from "primereact/carousel";
+import {Card} from "primereact/card";
+import {useAuthentication} from "../contexts/AuthenticationProvider";
+import {TotalBalanceSlide} from "../components/TotalBalanceSlide";
+import {AccountSlide} from "../components/AccountSlide";
+import {Title} from "../components/TitleComponent";
+import {useTranslation} from "react-i18next";
+import {UserControllerApi} from "../api/api";
+import {SendMoney} from "../components/SendMoney";
 
 export default function UserMainPage() {
-	const { user, isAuthenticated } = useAuthentication();
+	const {user, isAuthenticated} = useAuthentication();
 	const [accounts, setAccounts] = useState<string[]>([]);
 	const [balances, setBalances] = useState<Record<string, number>>({});
 	const [totalBalance, setTotalBalance] = useState<number | null>(null);
 	const [loading, setLoading] = useState(true);
-	const { t } = useTranslation();
+	const {t} = useTranslation();
 
 	const fetchUserData = useCallback(async () => {
 		if (!user?.id) {
@@ -89,7 +90,7 @@ export default function UserMainPage() {
 		return (
 			<div
 				className="flex justify-content-center align-items-center"
-				style={{ minHeight: "60vh" }}
+				style={{minHeight: "60vh"}}
 			>
 				<div className="text-center">
 					<i className="pi pi-spinner pi-spin text-4xl text-primary mb-3"></i>
@@ -139,6 +140,7 @@ export default function UserMainPage() {
 				itemTemplate={itemTemplate}
 				className="custom-carousel md:w-1/2 rounded-lg shadow-lg layout-content"
 			/>
+			<SendMoney />
 		</div>
 	);
 }

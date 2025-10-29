@@ -164,7 +164,8 @@
     "totalBalance": "Sold total",
     "accountWithId": "Cont {{id}}",
     "balance": "Sold",
-    "loadingBalance": "Se încarcă..."
+    "loadingBalance": "Se încarcă...",
+    "sendMoney": "Trimite Bani"
   },
   "createDepositDialog": {
     "title": "Creează Depozit Nou",
@@ -186,11 +187,11 @@
       },
       "creatingDeposit": {
         "summary": "Se creează depozitul",
-        "detail": "Se creează depozitul dvs. de ${{amount}}..."
+        "detail": "Se creează depozitul dvs. de RON{{amount}}..."
       },
       "depositCreated": {
         "summary": "Depozit Creat",
-        "detail": "Depozitul de ${{amount}} la o dobândă de {{interestRate}}% a fost creat cu succes."
+        "detail": "Depozitul de RON{{amount}} la o dobândă de {{interestRate}}% a fost creat cu succes."
       },
       "errorCreatingDeposit": {
         "summary": "Eroare la Crearea Depozitului",
@@ -211,5 +212,30 @@
     "total": "Total",
     "deposit": "Depozit",
     "depositList": "Lista de Depozite"
+  },
+  "sendMoneyDialog": {
+    "title": "Trimite Bani",
+    "recipientId": "UUID Destinatar",
+    "amount": "Sumă",
+    "cancel": "Anulează",
+    "send": "Trimite",
+    "notifications": {
+      "sendingMoney": {
+        "summary": "Se trimit banii",
+        "detail": "Se trimit RON{{amount}} către {{recipient}}..."
+      },
+      "moneySent": {
+        "summary": "Bani trimiși",
+        "detail": "S-au trimis cu succes RON{{amount}} către {{recipient}}."
+      },
+      "negativeAmount": {
+        "summary": "Sumă Invalidă",
+        "detail": "Nu puteți trimite o sumă negativă de bani."
+      },
+      "errorSendingMoney": {
+        "summary": "Eroare la trimiterea banilor",
+        "default": "A apărut o eroare neașteptată."
+      }
+    }
   }
 }
