@@ -2,7 +2,9 @@ package clf.integra.backend.service;
 
 import clf.integra.backend.dto.DepositImportDTO;
 import clf.integra.backend.dto.DepositsDTO;
+import clf.integra.backend.dto.DepositsExportDTO;
 import clf.integra.backend.exceptions.NotFoundException;
+import clf.integra.backend.mapper.DepositsExportMapper;
 import clf.integra.backend.model.Deposits;
 import clf.integra.backend.model.User;
 import clf.integra.backend.repository.DepositsRepository;
@@ -10,9 +12,12 @@ import clf.integra.backend.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -55,4 +60,21 @@ public class DepositsService {
             depositsRepository.save(deposit);
         }
     }
+
+    public String bulkExport() {
+        List<Deposits> deposits = depositsRepository.findAll();
+
+        List<DepositsExportDTO> depositDTOs = deposits.stream()
+                .map(DepositsExportMapper::toDTO)
+                .collect(Collectors.toList());
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.enable(SerializationFeature.INDENT_OUTPUT);
+
+            return mapper.writeValueAsString(depositDTOs);
+        } catch (Exception e) {
+            throw new RuntimeException("Error generating JSON", e);
+        }
+    }
+
 }

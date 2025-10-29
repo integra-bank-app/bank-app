@@ -41,6 +41,9 @@ class FeeTaxServiceTest {
     @Mock
     private FeeTaxTransactionRepository taxRepository;
 
+    @Mock
+    private NotificationService notificationService;
+
     @InjectMocks
     private FeeTaxService feeTaxService;
 

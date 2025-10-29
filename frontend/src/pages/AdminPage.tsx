@@ -1,17 +1,45 @@
-import { useState } from "react";
-import { Button } from "primereact/button";
-import { useNavigate } from "react-router-dom";
-import { useAuthentication } from "../contexts/AuthenticationProvider";
+import {useState} from "react";
+import {Button} from "primereact/button";
+import {useNavigate} from "react-router-dom";
+import {useAuthentication} from "../contexts/AuthenticationProvider";
 import AddUserToBranchDialog from "../components/AddUserToBranchDialog";
 import BulkImportDeposits from "../components/BulkImportDeposits";
-import { useTranslation } from "react-i18next";
+import {useTranslation} from "react-i18next";
 
 function AdminPage() {
-    const { user } = useAuthentication();
+    const {user} = useAuthentication();
     const [showAddUser, setShowAddUser] = useState(false);
     const navigate = useNavigate();
-    const { t } = useTranslation();
-    const [showImportPanel, setShowImportPanel]= useState(false);
+    const {t} = useTranslation();
+    const [showImportPanel, setShowImportPanel] = useState(false);
+
+    const handleExportDeposits = async () => {
+        try {
+            const response = await fetch("http://localhost:8080/api/deposits/export", {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + localStorage.getItem('authToken'),
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to export deposits");
+            }
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "deposits_export.json";
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+        } catch (err) {
+            console.error("Error exporting deposits:", err);
+        }
+    };
+
 
     return (
         <section className="flex flex-column align-items-center p-4 gap-4">
@@ -19,7 +47,7 @@ function AdminPage() {
                 {t("adminPage.hello")}, {user?.firstName}
             </h1>
 
-            <div className="grid w-full" style={{ maxWidth: "600px" }}>
+            <div className="grid w-full" style={{maxWidth: "600px"}}>
                 <div className="col-12 md:col-4">
                     <Button
                         label={t("adminPage.addUserLabel")}
@@ -28,10 +56,10 @@ function AdminPage() {
                     />
                 </div>
                 <div className="col-12 md:col-4">
-                    <Button label={t("adminPage.exportUserLabel")} className="w-full" />
+                    <Button label={t("adminPage.exportUserLabel")} icon="pi pi-download" className="w-full"/>
                 </div>
                 <div className="col-12 md:col-4">
-                    <Button label={t("adminPage.settingsLabel")} className="w-full" />
+                    <Button label={t("adminPage.settingsLabel")} className="w-full"/>
                 </div>
                 <div className="col-12 md:col-4">
                     <Button
@@ -41,17 +69,23 @@ function AdminPage() {
                         className="w-full p-button-primary"
                     />
                 </div>
+                <div className={"col-12 md:col-4"}>
+                    <Button label={t("adminPage.exportLabel")} icon="pi pi-download" onClick={handleExportDeposits}
+                            className="w-full"/>
+
+
+                </div>
             </div>
 
-			{showImportPanel && (
-				<div className="w-full" style={{ maxWidth: "800px" }}>
-					<BulkImportDeposits
-						onClose={() => setShowImportPanel(false)}
-					/>
-				</div>
-			)}
+            {showImportPanel && (
+                <div className="w-full" style={{maxWidth: "800px"}}>
+                    <BulkImportDeposits
+                        onClose={() => setShowImportPanel(false)}
+                    />
+                </div>
+            )}
 
-            <div className="w-full" style={{ maxWidth: "800px" }}></div>
+            <div className="w-full" style={{maxWidth: "800px"}}></div>
 
             <AddUserToBranchDialog
                 branchId={user?.branchId ?? ""}
