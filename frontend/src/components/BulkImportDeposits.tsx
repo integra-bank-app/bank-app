@@ -3,12 +3,24 @@ import {Button} from "primereact/button";
 import {InputTextarea} from "primereact/inputtextarea";
 import {Toast} from "primereact/toast";
 import ConfirmationDialog from "./ConfirmationDialog";
-import { DepositsDTO, DepositControllerApi} from "../api";
 import {useTranslation} from "react-i18next";
 
 type BulkImportProps = {
     onClose: () => void;
 };
+
+function getUserIdFromToken(token: string | null): string | null {
+    if (!token) return null;
+    try {
+        const payloadBase64 = token.split(".")[1];
+        const payloadJson = atob(payloadBase64);
+        const payload = JSON.parse(payloadJson);
+        return payload.sub || payload.userId || null;
+    } catch (err) {
+        console.error("Failed to decode JWT:", err);
+        return null;
+    }
+}
 
 function safeParseJson(text: string): { ok: true; value: any } | { ok: false; error: string } {
     try {
@@ -83,6 +95,24 @@ const BulkImportDeposits: React.FC<BulkImportProps> = ({onClose}) => {
                 arrs.push(...(Array.isArray(parsed.value) ? parsed.value : [parsed.value]));
             }
         }
+
+        const token = localStorage.getItem("authToken");
+        const userId = getUserIdFromToken(token) || localStorage.getItem("userId");
+
+
+        if (!userId) {
+            toast.current?.show({
+                severity: "error",
+                summary: "User ID missing",
+                detail: "Cannot determine your user ID from JWT."
+            });
+            return null;
+        }
+
+
+        arrs.forEach(deposit => {
+            if (!deposit.userId) deposit.userId = userId;
+        });
         return arrs.length > 0 ? arrs : null;
     };
 
@@ -99,7 +129,7 @@ const BulkImportDeposits: React.FC<BulkImportProps> = ({onClose}) => {
             toast.current?.show({
                 severity: "error",
                 summary: t("bulkImportDeposits.invalidFile"),
-                detail: textError
+                detail: fileError
             });
             return;
         }
@@ -123,8 +153,15 @@ const BulkImportDeposits: React.FC<BulkImportProps> = ({onClose}) => {
             setShowConfirm(false);
             setIsSubmitting(true);
             try {
-                const api= new DepositControllerApi();
-                const resp= await api.importDeposits({ depositImports: pendingPayload });
+                const token = localStorage.getItem("authToken");
+                const response = await fetch("http://localhost:8080/api/deposits/import", {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ depositImports: pendingPayload }),
+                });
 
                 toast.current?.show({
                     severity: "success",
