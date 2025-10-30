@@ -1,217 +1,276 @@
 {
-  "header": {
-    "title": "Integra Pay",
-    "home": "Home",
-    "deposits": "Deposits",
-    "admin": "Admin",
-    "users": "Users",
-    "logout": "Logout",
-    "logoutConfirm": "Are you sure you want to log out?"
-  },
-  "footer": {
-    "copyright": "© 2025 Integra Project UBB. All rights reserved."
-  },
-  "addUserToBranchDialog": {
-    "errorFirstName": "First name is required",
-    "errorLastName": "Last name is required",
-    "errorAddingUser": "Error adding user",
-    "failedToAddUser": "Failed to add user",
-    "addingButton": "Adding...",
-    "addUserButton": "Add User",
-    "addUserHeader": "Add User",
-    "firstNameLabel": "First Name",
-    "middleNameLabel": "Middle Name",
-    "lastNameLabel": "Last Name"
-  },
-  "login": {
-    "title": "Integra Pay",
-    "subtitle": "Sign in to your account",
-    "email": "Email",
-    "emailPlaceholder": "Enter your email",
-    "password": "Password",
-    "passwordPlaceholder": "Enter your password",
-    "signIn": "Sign In",
-    "signingIn": "Signing in...",
-    "noAccount": "Don't have an account?",
-    "registerHere": "Register here",
-    "errors": {
-      "emailRequired": "Email is required",
-      "emailInvalid": "Email is invalid",
-      "passwordRequired": "Password is required",
-      "passwordTooShort": "Password must be at least 6 characters",
-      "invalidCredentials": "Invalid email or password. Please try again."
-    }
-  },
-  "register": {
-    "title": "Create Account",
-    "subtitle": "Join Integra Pay today",
-    "personalInfo": "Personal Information",
-    "firstName": "First Name",
-    "firstNamePlaceholder": "John",
-    "lastName": "Last Name",
-    "lastNamePlaceholder": "Doe",
-    "middleName": "Middle Name",
-    "middleNamePlaceholder": "Optional",
-    "organizationInfo": "Organization Information",
-    "branchId": "Branch ID",
-    "branchIdPlaceholder": "e246e2e6-d734-46a0-83e2-e6ee9b725977",
-    "role": "Role",
-    "roleSelect": "Select a role",
-    "roleUser": "User",
-    "roleAdmin": "Admin",
-    "accountSecurity": "Account Security",
-    "email": "Email",
-    "emailPlaceholder": "john.doe@example.com",
-    "password": "Password",
-    "passwordPlaceholder": "Minimum 6 characters",
-    "confirmPassword": "Confirm Password",
-    "confirmPasswordPlaceholder": "Re-enter password",
-    "createAccount": "Create Account",
-    "creatingAccount": "Creating Account...",
-    "hasAccount": "Already have an account?",
-    "signInHere": "Sign in here",
-    "success": "Registration successful! Redirecting to login...",
-    "errors": {
-      "firstNameRequired": "First name is required",
-      "lastNameRequired": "Last name is required",
-      "branchIdRequired": "Branch ID is required",
-      "roleRequired": "Role is required",
-      "emailRequired": "Email is required",
-      "emailInvalid": "Email is invalid",
-      "passwordRequired": "Password is required",
-      "passwordTooShort": "Password must be at least 6 characters",
-      "confirmPasswordRequired": "Please confirm your password",
-      "passwordMismatch": "Passwords do not match",
-      "registrationFailed": "Registration failed. Email may already be in use."
-    }
-  },
-  "deposits": {
+	"header": {
+		"title": "Integra Pay",
+		"home": "Home",
+		"deposits": "Deposits",
+		"admin": "Admin",
+		"users": "Users",
+		"logout": "Logout",
+		"logoutConfirm": "Are you sure you want to log out?",
+        "investments": "Investments"
+	},
+	"footer": {
+		"copyright": "© 2025 Integra Project UBB. All rights reserved."
+	},
+	"addUserToBranchDialog": {
+		"errorFirstName": "First name is required",
+		"errorLastName": "Last name is required",
+		"errorAddingUser": "Error adding user",
+		"failedToAddUser": "Failed to add user",
+		"addingButton": "Adding...",
+		"addUserButton": "Add User",
+		"addUserHeader": "Add User",
+		"firstNameLabel": "First Name",
+		"middleNameLabel": "Middle Name",
+		"lastNameLabel": "Last Name"
+	},
+	"login": {
+		"title": "Integra Pay",
+		"subtitle": "Sign in to your account",
+		"email": "Email",
+		"emailPlaceholder": "Enter your email",
+		"password": "Password",
+		"passwordPlaceholder": "Enter your password",
+		"signIn": "Sign In",
+		"signingIn": "Signing in...",
+		"noAccount": "Don't have an account?",
+		"registerHere": "Register here",
+		"errors": {
+			"emailRequired": "Email is required",
+			"emailInvalid": "Email is invalid",
+			"passwordRequired": "Password is required",
+			"passwordTooShort": "Password must be at least 6 characters",
+			"invalidCredentials": "Invalid email or password. Please try again."
+		}
+	},
+	"register": {
+		"title": "Create Account",
+		"subtitle": "Join Integra Pay today",
+		"personalInfo": "Personal Information",
+		"firstName": "First Name",
+		"firstNamePlaceholder": "John",
+		"lastName": "Last Name",
+		"lastNamePlaceholder": "Doe",
+		"middleName": "Middle Name",
+		"middleNamePlaceholder": "Optional",
+		"organizationInfo": "Organization Information",
+		"branchId": "Branch ID",
+		"branchIdPlaceholder": "e246e2e6-d734-46a0-83e2-e6ee9b725977",
+		"role": "Role",
+		"roleSelect": "Select a role",
+		"roleUser": "User",
+		"roleAdmin": "Admin",
+		"accountSecurity": "Account Security",
+		"email": "Email",
+		"emailPlaceholder": "john.doe@example.com",
+		"password": "Password",
+		"passwordPlaceholder": "Minimum 6 characters",
+		"confirmPassword": "Confirm Password",
+		"confirmPasswordPlaceholder": "Re-enter password",
+		"createAccount": "Create Account",
+		"creatingAccount": "Creating Account...",
+		"hasAccount": "Already have an account?",
+		"signInHere": "Sign in here",
+		"success": "Registration successful! Redirecting to login...",
+		"errors": {
+			"firstNameRequired": "First name is required",
+			"lastNameRequired": "Last name is required",
+			"branchIdRequired": "Branch ID is required",
+			"roleRequired": "Role is required",
+			"emailRequired": "Email is required",
+			"emailInvalid": "Email is invalid",
+			"passwordRequired": "Password is required",
+			"passwordTooShort": "Password must be at least 6 characters",
+			"confirmPasswordRequired": "Please confirm your password",
+			"passwordMismatch": "Passwords do not match",
+			"registrationFailed": "Registration failed. Email may already be in use."
+		}
+	},
+	"deposits": {
+		"configureStep": {
+			"depositAmount": "Deposit Amount",
+			"enterAmount": "Enter amount",
+			"interestRate": "Interest Rate",
+			"selectInterestRate": "Select interest rate",
+			"return": "Return",
+			"review": "Review"
+		},
+		"reviewStep": {
+			"depositSummary": "Deposit Summary",
+			"depositAmount": "Deposit Amount:",
+			"interestRate": "Interest Rate:",
+			"makeChanges": "Make Changes",
+			"createDeposit": "Create Deposit"
+		},
+		"termsStep": {
+			"agreeToTerms": "I have read and agree to the terms and conditions",
+			"continue": "Continue"
+		}
+	},
+	"adminPage": {
+		"hello": "Hello",
+		"addUserLabel": "Add User",
+		"exportUserLabel": "Export Users",
+		"settingsLabel": "Settings",
+		"importLabel": "Import"
+	},
+	"bulkImportDeposits": {
+		"title": "Bulk Import Deposits",
+		"pasteJsonLabel": "Paste JSON",
+		"uploadFileLabel": "Or upload JSON file",
+		"chooseFile": "Choose File",
+		"noFileChosen": "No file chosen",
+		"importButton": "Import",
+		"cancelButton": "Cancel",
+		"invalidJson": "Invalid JSON",
+		"invalidFile": "Invalid File",
+		"errorNotArray": "JSON is not an array — a single object will be wrapped into an array on import.",
+		"errorReadingFile": "Failed to read file",
+		"nothingToImport": "Nothing to Import",
+		"provideJsonOrFile": "Please paste JSON or upload a file.",
+		"successTitle": "Success",
+		"successMessage": "Import successful!",
+		"errorTitle": "Error",
+		"unknownError": "Unknown error",
+		"confirmMessage": "You are about to import {{count}} deposit(s). Proceed?",
+		"jsonPlaceholder": "Example: [{\"id\":\"1\",\"amount\":100}, {\"id\":\"2\",\"amount\":200}]"
+	},
+	"notFound": {
+		"accessDenied": "Access Denied",
+		"pageNotFound": "Page Not Found",
+		"deniedDescription": "You don't have permission to access this page.",
+		"notFoundDescription": "The page you are looking for doesn't exist.",
+		"yourRole": "Your role",
+		"required": "Required",
+		"goHome": "Go to Home",
+		"goLogin": "Go to Login"
+	},
+	"users": {
+		"title": "Users in Branch",
+		"branchId": "Branch ID",
+		"firstName": "First Name",
+		"middleName": "Middle Name",
+		"lastName": "Last Name",
+		"fullName": "Full Name",
+		"errorFetch": "Failed to fetch users",
+		"loading": "Loading users...",
+		"error": "Error"
+	},
+	"userMain": {
+		"loading": "Loading your accounts...",
+		"myAccounts": "My Accounts",
+		"noAccounts": "No Accounts Found",
+		"noAccountsDesc": "You don't have any accounts yet. Please contact your bank to set up an account.",
+		"totalBalance": "Total Balance",
+		"accountWithId": "Account {{id}}",
+		"balance": "Balance",
+		"loadingBalance": "Loading..."
+	},
+	"createDepositDialog": {
+		"title": "Create New Deposit",
+		"steps": {
+			"terms": {
+				"header": "Terms and Conditions"
+			},
+			"configure": {
+				"header": "Configure"
+			},
+			"review": {
+				"header": "Review and Confirm"
+			}
+		},
+		"notifications": {
+			"termsNotAgreed": {
+				"summary": "Terms Not Agreed",
+				"detail": "You must agree to the terms and conditions to proceed."
+			},
+			"creatingDeposit": {
+				"summary": "Creating Deposit",
+				"detail": "Creating your deposit of ${{amount}}..."
+			},
+			"depositCreated": {
+				"summary": "Deposit Created",
+				"detail": "Deposit of ${{amount}} at {{interestRate}}% created successfully."
+			},
+			"errorCreatingDeposit": {
+				"summary": "Error Creating Deposit",
+				"default": "An unexpected error occurred."
+			}
+		}
+	},
+	"depositsPage": {
+		"title": "My Deposits",
+		"list": {
+			"title": "Depoists List"
+		},
+		"noDeposits": "No deposits...",
+		"loading": "Loading deposits...",
+		"noDepositsFound": "No deposits found.",
+		"backButton": "Back",
+		"createButton": "+ Create New Deposit",
+		"total": "Total",
+		"deposit": "Deposit",
+		"depositList": "Deposit List"
+	},
+  "investmentsPage": {
+    "investmentsList": "Investments List",
+    "title": "My Investments",
+    "loading": "Loading Investments",
+    "noInvestments": "No Investments",
+    "backButton": "Back",
+    "createButton": "Create New Investment",
+    "total": "Total",
+    "investment": "Investment",
     "configureStep": {
-      "depositAmount": "Deposit Amount",
-      "enterAmount": "Enter amount",
-      "interestRate": "Interest Rate",
-      "selectInterestRate": "Select interest rate",
+      "invBalance": "Investment Balance",
+      "enterBalance": "Enter Balance",
+      "risk": "Risk",
+      "selectRisk": "Select risk",
       "return": "Return",
       "review": "Review"
     },
     "reviewStep": {
-      "depositSummary": "Deposit Summary",
-      "depositAmount": "Deposit Amount:",
-      "interestRate": "Interest Rate:",
+      "invSummary": "Deposit Summary",
+      "invBalance": "Investment Balance:",
+      "risk": "Risk:",
       "makeChanges": "Make Changes",
-      "createDeposit": "Create Deposit"
-    },
-    "termsStep": {
-      "agreeToTerms": "I have read and agree to the terms and conditions",
-      "continue": "Continue"
+      "createInvestment": "Create Investment"
     }
   },
-  "adminPage": {
-    "hello": "Hello",
-    "addUserLabel": "Add User",
-    "exportUserLabel": "Export Users",
-    "settingsLabel": "Settings",
-    "importLabel": "Import",
-    "exportLabel": "Export"
-  },
-  "bulkImportDeposits": {
-    "title": "Bulk Import Deposits",
-    "pasteJsonLabel": "Paste JSON",
-    "uploadFileLabel": "Or upload JSON file",
-    "chooseFile": "Choose File",
-    "noFileChosen": "No file chosen",
-    "importButton": "Import",
-    "cancelButton": "Cancel",
-    "invalidJson": "Invalid JSON",
-    "invalidFile": "Invalid File",
-    "errorNotArray": "JSON is not an array — a single object will be wrapped into an array on import.",
-    "errorReadingFile": "Failed to read file",
-    "nothingToImport": "Nothing to Import",
-    "provideJsonOrFile": "Please paste JSON or upload a file.",
-    "successTitle": "Success",
-    "successMessage": "Import successful!",
-    "errorTitle": "Error",
-    "unknownError": "Unknown error",
-    "confirmMessage": "You are about to import {{count}} deposit(s). Proceed?",
-    "jsonPlaceholder": "Example: [{\"id\":\"1\",\"amount\":100}, {\"id\":\"2\",\"amount\":200}]"
-  },
-  "notFound": {
-    "accessDenied": "Access Denied",
-    "pageNotFound": "Page Not Found",
-    "deniedDescription": "You don't have permission to access this page.",
-    "notFoundDescription": "The page you are looking for doesn't exist.",
-    "yourRole": "Your role",
-    "required": "Required",
-    "goHome": "Go to Home",
-    "goLogin": "Go to Login"
-  },
-  "users": {
-    "title": "Users in Branch",
-    "branchId": "Branch ID",
-    "firstName": "First Name",
-    "middleName": "Middle Name",
-    "lastName": "Last Name",
-    "fullName": "Full Name",
-    "errorFetch": "Failed to fetch users",
-    "loading": "Loading users...",
-    "error": "Error"
-  },
-  "userMain": {
-    "loading": "Loading your accounts...",
-    "myAccounts": "My Accounts",
-    "noAccounts": "No Accounts Found",
-    "noAccountsDesc": "You don't have any accounts yet. Please contact your bank to set up an account.",
-    "totalBalance": "Total Balance",
-    "accountWithId": "Account {{id}}",
-    "balance": "Balance",
-    "loadingBalance": "Loading...",
-    "sendMoney": "Send Money"
-  },
-  "createDepositDialog": {
-    "title": "Create New Deposit",
+  "createInvestmentDialog": {
+    "title": "Create New Investment",
     "steps": {
       "terms": {
         "header": "Terms and Conditions"
       },
       "configure": {
-        "header": "Configure"
+        "header": "Configure Investment"
       },
       "review": {
         "header": "Review and Confirm"
       }
     },
+    "lowrisk": "Low",
+    "mediumrisk": "Medium",
+    "highrisk": "High",
     "notifications": {
       "termsNotAgreed": {
         "summary": "Terms Not Agreed",
         "detail": "You must agree to the terms and conditions to proceed."
       },
-      "creatingDeposit": {
-        "summary": "Creating Deposit",
-        "detail": "Creating your deposit of RON{{amount}}..."
+      "creatingInvestment": {
+        "summary": "Creating Investment",
+        "detail": "Creating your investment of {{balance}} RON..."
       },
-      "depositCreated": {
-        "summary": "Deposit Created",
-        "detail": "Deposit of RON{{amount}} at {{interestRate}}% created successfully."
+      "investmentCreated": {
+        "summary": "Investment Created",
+        "detail": "Investment of {{balance}} RON at {{risk}}% created successfully."
       },
-      "errorCreatingDeposit": {
-        "summary": "Error Creating Deposit",
+      "errorCreatingInvestment": {
+        "summary": "Error Creating Investment",
         "default": "An unexpected error occurred."
       }
     }
-  },
-  "depositsPage": {
-    "title": "My Deposits",
-    "list": {
-      "title": "Depoists List"
-    },
-    "noDeposits": "No deposits...",
-    "loading": "Loading deposits...",
-    "noDepositsFound": "No deposits found.",
-    "backButton": "Back",
-    "createButton": "+ Create New Deposit",
-    "total": "Total",
-    "deposit": "Deposit",
-    "depositList": "Deposit List"
   },
   "sendMoneyDialog": {
     "title": "Send Money",

@@ -20,7 +20,7 @@ public class CronJobs {
         feeTaxService.feeAndTaxUsers();
     }
 
-    @Scheduled(cron = "0 0 0 * * *", zone = "Europe/Bucharest")
+    @Scheduled(fixedRate = 60000)
     public void runInvestmentJob() {
         investmentService.updateBalanceByRisk();
     }

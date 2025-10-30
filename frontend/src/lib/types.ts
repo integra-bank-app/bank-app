@@ -13,3 +13,10 @@ export type TUser = {
 	middleName?: string;
 	lastName: string;
 };
+
+// export const RISK_OPTIONS = [
+// 	{ nameKey: "createInvestmentDialog.lowrisk", value: 1, color: "text-green-400" },
+// 	{ nameKey: "createInvestmentDialog.mediumrisk", value: 2, color: "text-yellow-400" },
+// 	{ nameKey: "createInvestmentDialog.highrisk", value: 3, color: "text-red-400" },
+// ];
+

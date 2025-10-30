@@ -20,20 +20,61 @@ import { ProtectedRoute, PublicRoute } from "./components/ProtectedRoute";
 import ProtectedLayout from "./components/ProtectedLayout";
 import PublicLayout from "./components/PublicLayout";
 
+import { Link } from "react-router-dom";
+import {InvestmentsPage} from "./pages/InvestmentsPage/InvestmentPage";
 function App() {
 	return (
 		<PrimeReactProvider>
 			<AuthenticationProvider>
 				<NotificationProvider>
 					<BrowserRouter>
-						<Routes>
-							{/* Public Routes */}
-							<Route element={<PublicRoute />}>
-								<Route element={<PublicLayout />}>
-									<Route path="/login" element={<LoginPage />} />
-									<Route path="/register" element={<RegisterPage />} />
-								</Route>
-							</Route>
+						<div className="flex flex-col min-h-screen">
+							<Header />
+							<main className="flex-grow p-4">
+								<Routes>
+									{/* Public Routes */}
+									<Route
+										path="/login"
+										element={
+											<PublicRoute>
+												<LoginPage />
+											</PublicRoute>
+										}
+									/>
+									<Route
+										path="/register"
+										element={
+											<PublicRoute>
+												<RegisterPage />
+											</PublicRoute>
+										}
+									/>
+
+									{/* Protected Routes - Any authenticated user */}
+									<Route
+										path="/home"
+										element={
+											<ProtectedRoute>
+												<UserMainPage />
+											</ProtectedRoute>
+										}
+									/>
+									<Route
+										path="/deposits"
+										element={
+											<ProtectedRoute>
+												<DepositsPage />
+											</ProtectedRoute>
+										}
+									/>
+									<Route
+										path="/investments"
+										element={
+											<ProtectedRoute>
+												<InvestmentsPage />
+											</ProtectedRoute>
+										}
+									/>
 
 							{/* Protected Routes */}
 							<Route element={<ProtectedRoute />}>

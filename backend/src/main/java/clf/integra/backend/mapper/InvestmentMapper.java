@@ -8,9 +8,10 @@ public class InvestmentMapper {
     public static InvestmentDTO toDTO(Investment investment) {
         if (investment == null) return null;
 
-        return InvestmentDTO.builder()
+        return InvestmentDTO.builder().id(investment.getId())
                 .risk(investment.getRisk())
                 .balance(investment.getBalance())
+                .createdDate(investment.getCreatedDate())
                 .build();
     }
 }
