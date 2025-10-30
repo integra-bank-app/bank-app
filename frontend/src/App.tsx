@@ -28,59 +28,20 @@ function App() {
 			<AuthenticationProvider>
 				<NotificationProvider>
 					<BrowserRouter>
-						<div className="flex flex-col min-h-screen">
-							<Header />
-							<main className="flex-grow p-4">
-								<Routes>
-									{/* Public Routes */}
-									<Route
-										path="/login"
-										element={
-											<PublicRoute>
-												<LoginPage />
-											</PublicRoute>
-										}
-									/>
-									<Route
-										path="/register"
-										element={
-											<PublicRoute>
-												<RegisterPage />
-											</PublicRoute>
-										}
-									/>
-
-									{/* Protected Routes - Any authenticated user */}
-									<Route
-										path="/home"
-										element={
-											<ProtectedRoute>
-												<UserMainPage />
-											</ProtectedRoute>
-										}
-									/>
-									<Route
-										path="/deposits"
-										element={
-											<ProtectedRoute>
-												<DepositsPage />
-											</ProtectedRoute>
-										}
-									/>
-									<Route
-										path="/investments"
-										element={
-											<ProtectedRoute>
-												<InvestmentsPage />
-											</ProtectedRoute>
-										}
-									/>
-
+						<Routes>
+							{/* Public Routes */}
+							<Route element={<PublicRoute />}>
+								<Route element={<PublicLayout />}>
+									<Route path="/login" element={<LoginPage />} />
+									<Route path="/register" element={<RegisterPage />} />
+								</Route>
+							</Route>
 							{/* Protected Routes */}
 							<Route element={<ProtectedRoute />}>
 								<Route element={<ProtectedLayout />}>
 									<Route path="/home" element={<UserMainPage />} />
 									<Route path="/deposits" element={<DepositsPage />} />
+									<Route path="/investments" element={<InvestmentsPage />} />
 									<Route path="/" element={<StartComponent />} />
 									<Route element={<ProtectedRoute requiredRole="ADMIN" />}>
 										<Route path="/admin" element={<AdminPageComponent />} />
