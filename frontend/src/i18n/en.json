@@ -164,7 +164,8 @@
     "totalBalance": "Total Balance",
     "accountWithId": "Account {{id}}",
     "balance": "Balance",
-    "loadingBalance": "Loading..."
+    "loadingBalance": "Loading...",
+    "sendMoney": "Send Money"
   },
   "createDepositDialog": {
     "title": "Create New Deposit",
@@ -186,11 +187,11 @@
       },
       "creatingDeposit": {
         "summary": "Creating Deposit",
-        "detail": "Creating your deposit of ${{amount}}..."
+        "detail": "Creating your deposit of RON{{amount}}..."
       },
       "depositCreated": {
         "summary": "Deposit Created",
-        "detail": "Deposit of ${{amount}} at {{interestRate}}% created successfully."
+        "detail": "Deposit of RON{{amount}} at {{interestRate}}% created successfully."
       },
       "errorCreatingDeposit": {
         "summary": "Error Creating Deposit",
@@ -211,5 +212,30 @@
     "total": "Total",
     "deposit": "Deposit",
     "depositList": "Deposit List"
+  },
+  "sendMoneyDialog": {
+    "title": "Send Money",
+    "recipientId": "Recipient UUID",
+    "amount": "Amount",
+    "cancel": "Cancel",
+    "send": "Send",
+    "notifications": {
+      "sendingMoney": {
+        "summary": "Sending Money",
+        "detail": "Sending RON{{amount}} to {{recipient}}..."
+      },
+      "moneySent": {
+        "summary": "Money Sent",
+        "detail": "Successfully sent RON{{amount}} to {{recipient}}."
+      },
+      "negativeAmount": {
+        "summary": "Invalid Amount",
+        "detail": "You cannot send a negative amount of money."
+      },
+      "errorSendingMoney": {
+        "summary": "Error Sending Money",
+        "default": "An unexpected error occurred."
+      }
+    }
   }
 }

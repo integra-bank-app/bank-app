@@ -78,7 +78,7 @@ public class UserService {
         userRepository.save(user);
 
         transactionService.createTransaction(user, amount, TransactionType.TOP_UP, "Top-up of " + amount);
-        notificationService.sendNotificationToUser(NotificationType.SUCCESS, "You have received " + amount + "$", uuid);
+        notificationService.sendNotificationToUser(NotificationType.SUCCESS, "You have received " + amount + "RON", uuid);
         return user.getAccounts().getFirst().getBalance();
     }
 
@@ -145,7 +145,7 @@ public class UserService {
                 revenue += fee;
 
                 transactionService.createTransaction(user, -fee, TransactionType.FEE, "Fee of " + fee + " collected");
-                notificationService.sendNotificationToUser(NotificationType.SUCCESS, "A fee of " + fee + "$ has been collected from your account", user.getId());
+                notificationService.sendNotificationToUser(NotificationType.SUCCESS, "A fee of " + fee + "RON has been collected from your account", user.getId());
             }
         }
         userRepository.saveAll(usersBranch);
@@ -182,8 +182,8 @@ public class UserService {
         transactionService.createTransaction(fromUser, -amount, TransactionType.TRANSFER_OUT, "Transfer of " + amount + " to user " + getFullName(toUser));
         transactionService.createTransaction(toUser, amount, TransactionType.TRANSFER_IN, "Transfer of " + amount + " from user " + getFullName(fromUser));
 
-        notificationService.sendNotificationToUser(NotificationType.SUCCESS, "You have sent " + amount + "$", fromUserId);
-        notificationService.sendNotificationToUser(NotificationType.SUCCESS, "You have received " + amount + "$", toUserId);
+        notificationService.sendNotificationToUser(NotificationType.SUCCESS, "You have sent " + amount + "RON", fromUserId);
+        notificationService.sendNotificationToUser(NotificationType.SUCCESS, "You have received " + amount + "RON", toUserId);
         return fromUser.getAccounts().getFirst().getBalance();
     }
 
