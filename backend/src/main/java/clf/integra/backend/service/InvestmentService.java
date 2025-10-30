@@ -13,7 +13,10 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -47,7 +50,7 @@ public class InvestmentService {
                 InvestmentHistory.builder()
                         .investment(investment)
                         .balance(balance)
-                        .date(LocalDate.now())
+                        .date(LocalDateTime.now())
                         .build()
         );
 
@@ -88,13 +91,17 @@ public class InvestmentService {
                 balance += changeAmount;
             }
 
-            investment.setBalance(balance);
+            double roundedBalance = BigDecimal.valueOf(balance)
+                    .setScale(2, RoundingMode.HALF_UP)
+                    .doubleValue();
+
+            investment.setBalance(roundedBalance);
 
             investmentHistoryRepository.save(
                     InvestmentHistory.builder()
                             .investment(investment)
-                            .balance(balance)
-                            .date(LocalDate.now())
+                            .balance(roundedBalance)
+                            .date(LocalDateTime.now())
                             .build()
             );
         }

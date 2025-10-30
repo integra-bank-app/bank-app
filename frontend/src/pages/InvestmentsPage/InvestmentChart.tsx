@@ -54,7 +54,7 @@ export const InvestmentChart: React.FC<InvestmentChartProps> = ({ total }) => {
         };
 
         fetchData(); // initial load
-        const interval = setInterval(fetchData, 5000); // every 5s
+        const interval = setInterval(fetchData, 30000);
 
         return () => clearInterval(interval); // cleanup on unmount
     }, [user?.id]);
@@ -66,7 +66,6 @@ export const InvestmentChart: React.FC<InvestmentChartProps> = ({ total }) => {
                 .filter((d): d is string => !!d) // filter out undefined/null
                 .map(d => {
                     const date = new Date(d);
-                    // Round to nearest 30 minutes
                     const rounded = new Date(date);
                     rounded.setMinutes(Math.floor(date.getMinutes() / 30) * 30, 0, 0);
                     return rounded.toISOString();})
@@ -77,9 +76,14 @@ export const InvestmentChart: React.FC<InvestmentChartProps> = ({ total }) => {
         const invHistory = history.filter(h => h.investmentId === inv.id);
 
         const data = dates.map(dateLabel => {
-            const h = invHistory.find(
-                h => h.date && new Date(h.date).toISOString().slice(0,16) === dateLabel.slice(0,16)
-            );
+            const validHistory = invHistory.filter(h => !!h.date);
+
+            const h = validHistory
+                .sort((a, b) => new Date(a.date as string).getTime() - new Date(b.date as string).getTime())
+                .reverse()
+                .find(h =>
+                    Math.abs(new Date(h.date as string).getTime() - new Date(dateLabel).getTime()) < 30 * 60 * 1000
+                );
             const balance = Number(h?.balance ?? 0);
 
             return balance;
