@@ -28,7 +28,9 @@ configurations {
 repositories {
     mavenCentral()
 }
+task prepareKotlinBuildScriptModel {
 
+}
 dependencies {
     // Spring
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -57,6 +59,12 @@ dependencies {
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
+    // RabbitMQ
+    implementation("org.springframework.boot:spring-boot-starter-amqp")
+
+    // shared module
+    implementation project(':shared')
+
     // Junit + Mockito
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testImplementation 'org.mockito:mockito-junit-jupiter:5.+'
@@ -65,8 +73,10 @@ dependencies {
     mockitoAgent('org.mockito:mockito-core:5.14.0') {
         transitive = false
     }
-}
 
+    //Jackson
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
+}
 tasks.named('test') {
     useJUnitPlatform()
 }

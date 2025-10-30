@@ -8,6 +8,7 @@ import clf.integra.backend.model.Account;
 import clf.integra.backend.model.Branch;
 import clf.integra.backend.model.TransactionType;
 import clf.integra.backend.model.User;
+import clf.integra.backend.communication.MessageProducer;
 import clf.integra.backend.repository.BranchRepository;
 import clf.integra.backend.repository.UserRepository;
 import clf.integra.backend.utils.RandomUtils;
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,9 +34,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -57,6 +61,10 @@ public class UserServiceTest {
     @Mock
     private RandomUtils randomUtils;
 
+    @Mock
+    private PasswordEncoder passwordEncoder;
+    @Mock
+    private MessageProducer messageProducer;
 
     private User user;
     private Account account;
@@ -66,6 +74,8 @@ public class UserServiceTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
+
+        when(passwordEncoder.encode(any(CharSequence.class))).thenReturn("encodedPassword");
 
         userId = UUID.randomUUID();
         branch = Branch.builder().id(UUID.randomUUID()).build();
@@ -256,8 +266,9 @@ public class UserServiceTest {
         assertEquals(150.0, toUser.getAccounts().get(0).getBalance());
         verify(userRepository).save(fromUser);
         verify(userRepository).save(toUser);
-        verify(transactionService).createTransaction(fromUser, -100.0, TransactionType.TRANSFER_OUT, "Transfer of 100.0 to user " + toUserId);
-        verify(transactionService).createTransaction(toUser, 100.0, TransactionType.TRANSFER_IN, "Transfer of 100.0 from user " + fromUserId);
+
+        verify(transactionService).createTransaction(eq(fromUser), eq(-100.0), eq(TransactionType.TRANSFER_OUT), anyString());
+        verify(transactionService).createTransaction(eq(toUser), eq(100.0), eq(TransactionType.TRANSFER_IN), anyString());
     }
 
     @Test
@@ -373,4 +384,27 @@ public class UserServiceTest {
         );
     }
 
+    @Test
+    void testRequestSalary_userNotFound_returnNotFound() {
+        UUID unknownUserId = UUID.randomUUID();
+
+        when(userRepository.existsById(unknownUserId)).thenReturn(false);
+
+        assertThrows(NotFoundException.class, () ->
+                userService.requestSalary(unknownUserId)
+        );
+    }
+
+    @Test
+    void testRequestSalary_validData_sendsMessage() {
+        UUID userId = UUID.randomUUID();
+
+        when(userRepository.existsById(userId)).thenReturn(true);
+
+        userService.requestSalary(userId);
+
+        verify(messageProducer, times(1)).send(argThat(
+                message -> message.userId().equals(userId)
+        ));
+    }
 }

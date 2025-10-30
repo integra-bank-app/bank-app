@@ -1,19 +1,21 @@
-import { useEffect, useState, useCallback } from "react";
-import { Carousel } from "primereact/carousel";
-import { Card } from "primereact/card";
-import { useAuthentication } from "../contexts/AuthenticationProvider";
-import { TotalBalanceSlide } from "../components/TotalBalanceSlide";
-import { AccountSlide } from "../components/AccountSlide";
-import { Title } from "../components/TitleComponent";
-import { useTranslation } from "react-i18next";
+import {useEffect, useState, useCallback} from "react";
+import {Carousel} from "primereact/carousel";
+import {Card} from "primereact/card";
+import {useAuthentication} from "../contexts/AuthenticationProvider";
+import {TotalBalanceSlide} from "../components/TotalBalanceSlide";
+import {AccountSlide} from "../components/AccountSlide";
+import {Title} from "../components/TitleComponent";
+import {useTranslation} from "react-i18next";
+import {UserControllerApi} from "../api/api";
+import {SendMoney} from "../components/SendMoney";
 
 export default function UserMainPage() {
-	const { user, isAuthenticated } = useAuthentication();
+	const {user, isAuthenticated} = useAuthentication();
 	const [accounts, setAccounts] = useState<string[]>([]);
 	const [balances, setBalances] = useState<Record<string, number>>({});
 	const [totalBalance, setTotalBalance] = useState<number | null>(null);
 	const [loading, setLoading] = useState(true);
-	const { t } = useTranslation();
+	const {t} = useTranslation();
 
 	const fetchUserData = useCallback(async () => {
 		if (!user?.id) {
@@ -24,26 +26,10 @@ export default function UserMainPage() {
 		setLoading(true);
 
 		try {
-			const token = localStorage.getItem("authToken");
-			if (!token) {
-				throw new Error("No auth token found");
-			}
+			const userControllerApi = new UserControllerApi();
 
-			const accountsResponse = await fetch(
-				`http://localhost:8080/api/users/${user.id}/accounts`,
-				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-						"Content-Type": "application/json",
-					},
-				}
-			);
-
-			if (!accountsResponse.ok) {
-				throw new Error("Failed to fetch accounts");
-			}
-
-			const accountIds = await accountsResponse.json();
+			const accountsResponse = await userControllerApi.getUserAccounts(user.id);
+			const accountIds = accountsResponse.data;
 			setAccounts(accountIds);
 
 			if (!accountIds || accountIds.length === 0) {
@@ -56,19 +42,12 @@ export default function UserMainPage() {
 			const balancesObj: Record<string, number> = {};
 			for (const accountId of accountIds) {
 				try {
-					const balanceResponse = await fetch(
-						`http://localhost:8080/api/users/${user.id}/accounts/${accountId}`,
-						{
-							headers: {
-								Authorization: `Bearer ${token}`,
-								"Content-Type": "application/json",
-							},
-						}
+					const balanceResponse = await userControllerApi.getUserAccountBalance(
+						user.id,
+						accountId
 					);
-
-					if (balanceResponse.ok) {
-						const balance = await balanceResponse.json();
-						balancesObj[accountId] = balance;
+					if (balanceResponse.status === 200) {
+						balancesObj[accountId] = balanceResponse.data;
 					} else {
 						balancesObj[accountId] = 0;
 					}
@@ -111,7 +90,7 @@ export default function UserMainPage() {
 		return (
 			<div
 				className="flex justify-content-center align-items-center"
-				style={{ minHeight: "60vh" }}
+				style={{minHeight: "60vh"}}
 			>
 				<div className="text-center">
 					<i className="pi pi-spinner pi-spin text-4xl text-primary mb-3"></i>
@@ -161,6 +140,7 @@ export default function UserMainPage() {
 				itemTemplate={itemTemplate}
 				className="custom-carousel md:w-1/2 rounded-lg shadow-lg layout-content"
 			/>
+			<SendMoney />
 		</div>
 	);
 }

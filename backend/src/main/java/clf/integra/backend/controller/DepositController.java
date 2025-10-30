@@ -5,14 +5,18 @@ import clf.integra.backend.dto.DepositsDTO;
 import clf.integra.backend.service.DepositsService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 @RestController
@@ -30,7 +34,7 @@ public class DepositController {
         UUID depositId = depositsService.createDeposits(depositsDTO, userId);
         return ResponseEntity.ok(depositId);
     }
- 
+
 
     @PostMapping("/deposits/import")
     @PreAuthorize("hasRole('ADMIN')")
@@ -39,4 +43,21 @@ public class DepositController {
         return ResponseEntity.ok("Deposits imported successfully");
     }
 
+    @GetMapping("/deposits/export")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<byte[]> exportDeposits() {
+        try {
+            String json = depositsService.bulkExport(); // Should return JSON string
+            byte[] jsonBytes = json.getBytes(StandardCharsets.UTF_8);
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"deposits_export.json\"")
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .body(jsonBytes);
+
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError()
+                    .body(("Error exporting deposits: " + e.getMessage()).getBytes(StandardCharsets.UTF_8));
+        }
+    }
 }

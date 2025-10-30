@@ -1,5 +1,6 @@
 package clf.integra.backend.service;
 
+import clf.integra.SalaryRequestMessage;
 import clf.integra.backend.dto.UserDTO;
 import clf.integra.backend.exceptions.BalanceUpdateFailedException;
 import clf.integra.backend.exceptions.InsufficientFundsException;
@@ -10,6 +11,7 @@ import clf.integra.backend.model.Branch;
 import clf.integra.backend.model.NotificationType;
 import clf.integra.backend.model.TransactionType;
 import clf.integra.backend.model.User;
+import clf.integra.backend.communication.MessageProducer;
 import clf.integra.backend.repository.BranchRepository;
 import clf.integra.backend.repository.UserRepository;
 import clf.integra.backend.utils.RandomUtils;
@@ -34,6 +36,7 @@ public class UserService {
     private final TransactionService transactionService;
     private final NotificationService notificationService;
     private final PasswordEncoder passwordEncoder;
+    private final MessageProducer messageProducer;
 
     @Transactional
     public UUID addUserWithName(String firstName, String middleName, String lastName, UUID branchId,
@@ -78,7 +81,7 @@ public class UserService {
         userRepository.save(user);
 
         transactionService.createTransaction(user, amount, TransactionType.TOP_UP, "Top-up of " + amount);
-        notificationService.sendNotificationToUser(NotificationType.SUCCESS, "You have received " + amount + "$", uuid);
+        notificationService.sendNotificationToUser(NotificationType.SUCCESS, "You have received " + amount + "RON", uuid);
         return user.getAccounts().getFirst().getBalance();
     }
 
@@ -145,7 +148,7 @@ public class UserService {
                 revenue += fee;
 
                 transactionService.createTransaction(user, -fee, TransactionType.FEE, "Fee of " + fee + " collected");
-                notificationService.sendNotificationToUser(NotificationType.SUCCESS, "A fee of " + fee + "$ has been collected from your account", user.getId());
+                notificationService.sendNotificationToUser(NotificationType.SUCCESS, "A fee of " + fee + "RON has been collected from your account", user.getId());
             }
         }
         userRepository.saveAll(usersBranch);
@@ -182,8 +185,8 @@ public class UserService {
         transactionService.createTransaction(fromUser, -amount, TransactionType.TRANSFER_OUT, "Transfer of " + amount + " to user " + getFullName(toUser));
         transactionService.createTransaction(toUser, amount, TransactionType.TRANSFER_IN, "Transfer of " + amount + " from user " + getFullName(fromUser));
 
-        notificationService.sendNotificationToUser(NotificationType.SUCCESS, "You have sent " + amount + "$", fromUserId);
-        notificationService.sendNotificationToUser(NotificationType.SUCCESS, "You have received " + amount + "$", toUserId);
+        notificationService.sendNotificationToUser(NotificationType.SUCCESS, "You have sent " + amount + "RON", fromUserId);
+        notificationService.sendNotificationToUser(NotificationType.SUCCESS, "You have received " + amount + "RON", toUserId);
         return fromUser.getAccounts().getFirst().getBalance();
     }
 
@@ -209,5 +212,13 @@ public class UserService {
 
     private String getFullName(User user) {
         return user.getFirstName() + " " + (user.getMiddleName() != null ? user.getMiddleName() + " " : "") + user.getLastName();
+    }
+
+    public void requestSalary(UUID userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new NotFoundException("User not found");
+        }
+        SalaryRequestMessage message = new SalaryRequestMessage(userId);
+        messageProducer.send(message);
     }
 }
