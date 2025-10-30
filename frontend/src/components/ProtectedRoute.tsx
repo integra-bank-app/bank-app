@@ -1,14 +1,12 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 import { useAuthentication } from '../contexts/AuthenticationProvider';
 
 interface ProtectedRouteProps {
-    children: React.ReactNode;
     requiredRole?: 'USER' | 'ADMIN';
 }
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
-                                                                  children,
                                                                   requiredRole,
                                                               }) => {
     const { isAuthenticated, user } = useAuthentication();
@@ -25,17 +23,15 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
         return <Navigate to="/home" replace />;
     }
 
-    return <>{children}</>;
+    return <Outlet />;
 };
 
-export const PublicRoute: React.FC<{ children: React.ReactNode }> = ({
-                                                                         children,
-                                                                     }) => {
+export const PublicRoute: React.FC = () => {
     const { isAuthenticated } = useAuthentication();
 
     if (isAuthenticated) {
         return <Navigate to="/home" replace />;
     }
 
-    return <>{children}</>;
+    return <Outlet />;
 };
