@@ -5,6 +5,7 @@ import {Toast} from "primereact/toast";
 import ConfirmationDialog from "./ConfirmationDialog";
 import { DepositsDTO, DepositControllerApi} from "../api";
 import {useTranslation} from "react-i18next";
+import {useAuthentication} from "../contexts/AuthenticationProvider";
 
 type BulkImportProps = {
     onClose: () => void;
@@ -29,6 +30,7 @@ const BulkImportDeposits: React.FC<BulkImportProps> = ({onClose}) => {
     const [showConfirm, setShowConfirm] = useState(false);
     const [pendingPayload, setPendingPayload] = useState<any[] | null>(null);
     const {t} = useTranslation();
+    const {user} = useAuthentication();
 
     const toast = useRef<Toast>(null);
 
@@ -124,7 +126,8 @@ const BulkImportDeposits: React.FC<BulkImportProps> = ({onClose}) => {
             setIsSubmitting(true);
             try {
                 const api= new DepositControllerApi();
-                const resp= await api.importDeposits({ depositImports: pendingPayload });
+                const payloadWithUserId = pendingPayload.map(deposit => ({ ...deposit, userId: user?.id }));
+                const resp= await api.importDeposits({ depositImports: payloadWithUserId });
 
                 toast.current?.show({
                     severity: "success",

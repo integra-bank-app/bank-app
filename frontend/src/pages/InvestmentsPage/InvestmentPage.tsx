@@ -5,7 +5,7 @@ import { useAuthentication } from "../../contexts/AuthenticationProvider";
 import { Button } from "primereact/button";
 import { InvestmentChart } from "./InvestmentChart";
 import { InvestmentList } from "./InvestmentList";
-import { InvestmentDTO } from "../../api";
+import { InvestmentDTO, InvestmentsControllerApi } from "../../api";
 import { depositColors } from "../../lib/utils";
 import CreateInvestmentDialog from "../../components/CreateInvestmentDialog";
 import {InvestmentHistoryDTO} from "../../api";
@@ -27,32 +27,16 @@ export const InvestmentsPage: React.FC = () => {
             return;
         }
 
-        const token = localStorage.getItem("authToken");
+        const investmentsApi = new InvestmentsControllerApi();
+
         try {
-            const [investmentsRes, historyRes] = await Promise.all([
-                fetch(`http://localhost:8080/api/users/${user.id}/investment`, {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                }),
-                fetch(`http://localhost:8080/api/users/${user.id}/investments/history`, {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                }),
+            const [investmentsResponse, historyResponse] = await Promise.all([
+                investmentsApi.getAllInvestmentsByUserId(user.id),
+                investmentsApi.getInvestmentHistoryByUser(user.id),
             ]);
 
-            if (!investmentsRes.ok || !historyRes.ok) throw new Error("Failed to fetch data");
-
-            const [investmentsData, historyData] = await Promise.all([
-                investmentsRes.json(),
-                historyRes.json(),
-            ]);
-
-            setInvestments(investmentsData);
-            setInvestmentsHistory(historyData);
+            setInvestments(investmentsResponse.data);
+            setInvestmentsHistory(historyResponse.data);
         } catch (err) {
             console.error("Error fetching investments:", err);
         } finally {

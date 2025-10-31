@@ -1,7 +1,7 @@
 import React from "react";
 import {Chart} from "primereact/chart";
 import {depositColors} from "../../lib/utils";
-import {InvestmentDTO,InvestmentHistoryDTO} from "../../api";
+import {InvestmentDTO,InvestmentHistoryDTO, InvestmentsControllerApi} from "../../api";
 import { useState } from "react";
 import {useEffect} from "react";
 import {useAuthentication} from "../../contexts/AuthenticationProvider";
@@ -22,32 +22,17 @@ export const InvestmentChart: React.FC<InvestmentChartProps> = ({ total }) => {
             return;
         }
 
-        const token = localStorage.getItem("authToken");
+        const investmentsApi = new InvestmentsControllerApi();
 
         const fetchData = async () => {
             try {
                 const [invRes, histRes] = await Promise.all([
-                    fetch(`http://localhost:8080/api/users/${user.id}/investment`, {
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }),
-                    fetch(`http://localhost:8080/api/users/${user.id}/investments/history`, {
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }),
+                    investmentsApi.getAllInvestmentsByUserId(user.id),
+                    investmentsApi.getInvestmentHistoryByUser(user.id),
                 ]);
 
-                if (!invRes.ok || !histRes.ok) throw new Error("Network error");
-
-                const invData = await invRes.json();
-                const histData = await histRes.json();
-
-                setInvestments(invData);
-                setHistory(histData);
+                setInvestments(invRes.data);
+                setHistory(histRes.data);
             } catch (error) {
                 console.error("Failed to fetch investments:", error);
             }

@@ -8,7 +8,7 @@ import ConfigureInvestmentStep from "./CreateInvestmentSteps/ConfInvestmentStep"
 import ReviewInvestmentStep from "./CreateInvestmentSteps/ReviewInvestmentStep";
 import TermsStep from "./CreateDepositSteps/TermsStep";
 import { useAuthentication } from "../contexts/AuthenticationProvider";
-
+import { InvestmentsControllerApi } from "../api";
 
 
 export type InvestmentDTO = {
@@ -75,30 +75,10 @@ export default function CreateInvestmentDialog({
         try {
             if (!user) throw new Error("User not authenticated. Please log in.");
 
-            const token = localStorage.getItem("authToken");
+            const investmentsApi = new InvestmentsControllerApi();
             const investmentDTO: InvestmentDTO = { risk, balance };
 
-            const response = await fetch(
-                `http://localhost:8080/api/users/${user.id}/investments`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                    body: JSON.stringify(investmentDTO),
-                }
-            );
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                let errorMessage = errorText;
-                try {
-                    const errorJson = JSON.parse(errorText);
-                    if (errorJson?.message) errorMessage = errorJson.message;
-                } catch {}
-                throw new Error(errorMessage || "Failed to create investment");
-            }
+            await investmentsApi.createInvestment(user.id, investmentDTO);
 
             toastRef.current?.show({
                 severity: "success",
