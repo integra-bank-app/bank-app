@@ -8,7 +8,7 @@ The application is built with Java (Spring Boot) for the backend and TypeScript 
 - Internationalization (i18n) for multilingual support
 - RESTful APIs documented with OpenAPI/Swagger
 - Automated database schema migrations (Flyway)
-- Integration with ANAF (Romanian tax authority) for simulating tax and fee collection
+- Asynchronous event processing with Message Brokers (RabbitMQ)
 - Real-time notifications (frontend and backend events)
 - Responsive UI for both users and admins
 
@@ -41,7 +41,7 @@ The application is built with Java (Spring Boot) for the backend and TypeScript 
 - **Admin Dashboard:** User and account management, audit logs
 - **RESTful API:** Integration-ready endpoints, documented with OpenAPI/Swagger
 - **Database Migration:** Automated DB migrations for schema updates (Flyway)
-- **ANAF Integration:** Simulates interaction with ANAF for tax and fee collection at branch level
+- **Event-Driven Architecture:** Uses RabbitMQ for asynchronous messaging and decoupling services (e.g., notifications, transaction processing)
 - **Notifications:** Real-time alerts/updates for users (transaction confirmations, account changes, salary requests)
 
 ---
@@ -55,7 +55,7 @@ Bank App for Integra Project is built as a modular, full-stack web application, 
   - Exposes RESTful endpoints for all banking operations (users, accounts, transactions, deposits, investments, taxes).
   - **Spring Security:** Robust JWT authentication and role-based authorization.
   - **Internationalization:** Multi-language error/response messages.
-  - **ANAF Simulation:** Branches collect taxes and fees via endpoints simulating communication with ANAF.
+  - **Message Broker**: Integrates with RabbitMQ to manage asynchronous tasks, such as sending notifications or processing background jobs.
   - **Notifications:** Publishes events for actions (e.g., transaction complete, salary requested). Can be extended to use email, SMS, or push notifications.
   - **Swagger/OpenAPI:** Interactive documentation for all endpoints.
 
