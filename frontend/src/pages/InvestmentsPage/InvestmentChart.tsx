@@ -53,17 +53,16 @@ export const InvestmentChart: React.FC<InvestmentChartProps> = ({ total }) => {
             }
         };
 
-        fetchData(); // initial load
+        fetchData();
         const interval = setInterval(fetchData, 30000);
-
-        return () => clearInterval(interval); // cleanup on unmount
+        return () => clearInterval(interval);
     }, [user?.id]);
 
     const dates = Array.from(
         new Set(
             history
-                .map(h => h.date)           // map to date
-                .filter((d): d is string => !!d) // filter out undefined/null
+                .map(h => h.date)
+                .filter((d): d is string => !!d)
                 .map(d => {
                     const date = new Date(d);
                     const rounded = new Date(date);
