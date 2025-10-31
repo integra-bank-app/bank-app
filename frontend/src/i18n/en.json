@@ -165,7 +165,9 @@
     "accountWithId": "Account {{id}}",
     "balance": "Balance",
     "loadingBalance": "Loading...",
-    "sendMoney": "Send Money"
+    "sendMoney": "Send Money",
+    "transactionHistoryLabel": "Transaction History",
+    "noTransactions": "No transaction"
   },
   "createDepositDialog": {
     "title": "Create New Deposit",
@@ -187,11 +189,11 @@
       },
       "creatingDeposit": {
         "summary": "Creating Deposit",
-        "detail": "Creating your deposit of RON{{amount}}..."
+        "detail": "Creating your deposit of ${{amount}}..."
       },
       "depositCreated": {
         "summary": "Deposit Created",
-        "detail": "Deposit of RON{{amount}} at {{interestRate}}% created successfully."
+        "detail": "Deposit of ${{amount}} at {{interestRate}}% created successfully."
       },
       "errorCreatingDeposit": {
         "summary": "Error Creating Deposit",
