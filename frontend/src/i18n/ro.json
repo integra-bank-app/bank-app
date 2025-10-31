@@ -1,217 +1,242 @@
 {
-	"header": {
-		"title": "Integra Pay",
-		"home": "Acasă",
-		"deposits": "Depozite",
-		"admin": "Administrare",
-		"users": "Utilizatori",
-		"logout": "Deconectare",
-		"logoutConfirm": "Sigur vrei să te deconectezi?"
-	},
-	"footer": {
-		"copyright": "© 2025 Proiectul Integra UBB. Toate drepturile rezervate."
-	},
-	"addUserToBranchDialog": {
-		"errorFirstName": "Prenumele este necesar",
-		"errorLastName": "Numele este necesar",
-		"errorAddingUser": "Erroare adaugare Utilizator",
-		"failedToAddUser": "Adaugarea utilizatorului nu a functionat",
-		"addingButton": "Adaugare...",
-		"addUserButton": "Adaugare Utilizator",
-		"addUserHeader": "Adaugare Utilizator",
-		"firstNameLabel": "Prenume",
-		"middleNameLabel": "Al doilea nume",
-		"lastNameLabel": "Nume de familie"
-	},
-	"login": {
-		"title": "Integra Pay",
-		"subtitle": "Autentifică-te în cont",
-		"email": "Email",
-		"emailPlaceholder": "Introdu emailul",
-		"password": "Parolă",
-		"passwordPlaceholder": "Introdu parola",
-		"signIn": "Autentificare",
-		"signingIn": "Se autentifică...",
-		"noAccount": "Nu ai cont?",
-		"registerHere": "Înregistrează-te aici",
-		"errors": {
-			"emailRequired": "Emailul este obligatoriu",
-			"emailInvalid": "Emailul nu este valid",
-			"passwordRequired": "Parola este obligatorie",
-			"passwordTooShort": "Parola trebuie să aibă cel puțin 6 caractere",
-			"invalidCredentials": "Email sau parolă greșită. Încearcă din nou."
-		}
-	},
-	"register": {
-		"title": "Creează cont",
-		"subtitle": "Alătură-te Integra Pay azi",
-		"personalInfo": "Informații personale",
-		"firstName": "Prenume",
-		"firstNamePlaceholder": "Ion",
-		"lastName": "Nume",
-		"lastNamePlaceholder": "Popescu",
-		"middleName": "Al doilea prenume",
-		"middleNamePlaceholder": "Opțional",
-		"organizationInfo": "Informații organizație",
-		"branchId": "ID Sucursală",
-		"branchIdPlaceholder": "e246e2e6-d734-46a0-83e2-e6ee9b725977",
-		"role": "Rol",
-		"roleSelect": "Selectează un rol",
-		"roleUser": "Utilizator",
-		"roleAdmin": "Administrator",
-		"accountSecurity": "Securitatea contului",
-		"email": "Email",
-		"emailPlaceholder": "ion.popescu@exemplu.com",
-		"password": "Parolă",
-		"passwordPlaceholder": "Minim 6 caractere",
-		"confirmPassword": "Confirmă parola",
-		"confirmPasswordPlaceholder": "Reintrodu parola",
-		"createAccount": "Creează cont",
-		"creatingAccount": "Se creează contul...",
-		"hasAccount": "Ai deja cont?",
-		"signInHere": "Autentifică-te aici",
-		"success": "Înregistrare reușită! Redirecționare către login...",
-		"errors": {
-			"firstNameRequired": "Prenumele este obligatoriu",
-			"lastNameRequired": "Numele este obligatoriu",
-			"branchIdRequired": "ID-ul sucursalei este obligatoriu",
-			"roleRequired": "Rolul este obligatoriu",
-			"emailRequired": "Emailul este obligatoriu",
-			"emailInvalid": "Emailul nu este valid",
-			"passwordRequired": "Parola este obligatorie",
-			"passwordTooShort": "Parola trebuie să aibă cel puțin 6 caractere",
-			"confirmPasswordRequired": "Te rugăm să confirmi parola",
-			"passwordMismatch": "Parolele nu se potrivesc",
-			"registrationFailed": "Înregistrare eșuată. Emailul ar putea fi deja folosit."
-		}
-	},
-	"deposits": {
-		"configureStep": {
-			"depositAmount": "Suma Depozitului",
-			"enterAmount": "Introduceți suma",
-			"interestRate": "Rata Dobânzii",
-			"selectInterestRate": "Selectați rata dobânzii",
-			"return": "Înapoi",
-			"review": "Revizuire"
-		},
-		"reviewStep": {
-			"depositSummary": "Sumar Depozit",
-			"depositAmount": "Suma Depozitului:",
-			"interestRate": "Rata Dobânzii:",
-			"makeChanges": "Modifică",
-			"createDeposit": "Creează Depozit"
-		},
-		"termsStep": {
-			"agreeToTerms": "Am citit și sunt de acord cu termenii și condițiile",
-			"continue": "Continuă"
-		}
-	},
-	"adminPage": {
-		"hello": "Salut",
-		"addUserLabel": "Adaugă utilizator",
-		"exportUserLabel": "Exportă utilizatori",
-		"settingsLabel": "Setări",
-		"importLabel": "Importa",
-        "exportLabel": "Exporta"
+  "header": {
+    "title": "Integra Pay",
+    "home": "Acasă",
+    "deposits": "Depozite",
+    "admin": "Administrare",
+    "users": "Utilizatori",
+    "logout": "Deconectare",
+    "logoutConfirm": "Sigur vrei să te deconectezi?"
+  },
+  "footer": {
+    "copyright": "© 2025 Proiectul Integra UBB. Toate drepturile rezervate."
+  },
+  "addUserToBranchDialog": {
+    "errorFirstName": "Prenumele este necesar",
+    "errorLastName": "Numele este necesar",
+    "errorAddingUser": "Erroare adaugare Utilizator",
+    "failedToAddUser": "Adaugarea utilizatorului nu a functionat",
+    "addingButton": "Adaugare...",
+    "addUserButton": "Adaugare Utilizator",
+    "addUserHeader": "Adaugare Utilizator",
+    "firstNameLabel": "Prenume",
+    "middleNameLabel": "Al doilea nume",
+    "lastNameLabel": "Nume de familie"
+  },
+  "login": {
+    "title": "Integra Pay",
+    "subtitle": "Autentifică-te în cont",
+    "email": "Email",
+    "emailPlaceholder": "Introdu emailul",
+    "password": "Parolă",
+    "passwordPlaceholder": "Introdu parola",
+    "signIn": "Autentificare",
+    "signingIn": "Se autentifică...",
+    "noAccount": "Nu ai cont?",
+    "registerHere": "Înregistrează-te aici",
+    "errors": {
+      "emailRequired": "Emailul este obligatoriu",
+      "emailInvalid": "Emailul nu este valid",
+      "passwordRequired": "Parola este obligatorie",
+      "passwordTooShort": "Parola trebuie să aibă cel puțin 6 caractere",
+      "invalidCredentials": "Email sau parolă greșită. Încearcă din nou."
+    }
+  },
+  "register": {
+    "title": "Creează cont",
+    "subtitle": "Alătură-te Integra Pay azi",
+    "personalInfo": "Informații personale",
+    "firstName": "Prenume",
+    "firstNamePlaceholder": "Ion",
+    "lastName": "Nume",
+    "lastNamePlaceholder": "Popescu",
+    "middleName": "Al doilea prenume",
+    "middleNamePlaceholder": "Opțional",
+    "organizationInfo": "Informații organizație",
+    "branchId": "ID Sucursală",
+    "branchIdPlaceholder": "e246e2e6-d734-46a0-83e2-e6ee9b725977",
+    "role": "Rol",
+    "roleSelect": "Selectează un rol",
+    "roleUser": "Utilizator",
+    "roleAdmin": "Administrator",
+    "accountSecurity": "Securitatea contului",
+    "email": "Email",
+    "emailPlaceholder": "ion.popescu@exemplu.com",
+    "password": "Parolă",
+    "passwordPlaceholder": "Minim 6 caractere",
+    "confirmPassword": "Confirmă parola",
+    "confirmPasswordPlaceholder": "Reintrodu parola",
+    "createAccount": "Creează cont",
+    "creatingAccount": "Se creează contul...",
+    "hasAccount": "Ai deja cont?",
+    "signInHere": "Autentifică-te aici",
+    "success": "Înregistrare reușită! Redirecționare către login...",
+    "errors": {
+      "firstNameRequired": "Prenumele este obligatoriu",
+      "lastNameRequired": "Numele este obligatoriu",
+      "branchIdRequired": "ID-ul sucursalei este obligatoriu",
+      "roleRequired": "Rolul este obligatoriu",
+      "emailRequired": "Emailul este obligatoriu",
+      "emailInvalid": "Emailul nu este valid",
+      "passwordRequired": "Parola este obligatorie",
+      "passwordTooShort": "Parola trebuie să aibă cel puțin 6 caractere",
+      "confirmPasswordRequired": "Te rugăm să confirmi parola",
+      "passwordMismatch": "Parolele nu se potrivesc",
+      "registrationFailed": "Înregistrare eșuată. Emailul ar putea fi deja folosit."
+    }
+  },
+  "deposits": {
+    "configureStep": {
+      "depositAmount": "Suma Depozitului",
+      "enterAmount": "Introduceți suma",
+      "interestRate": "Rata Dobânzii",
+      "selectInterestRate": "Selectați rata dobânzii",
+      "return": "Înapoi",
+      "review": "Revizuire"
     },
-	"bulkImportDeposits": {
-		"title": "Importare Depozite",
-		"pasteJsonLabel": "Lipește JSON",
-		"uploadFileLabel": "Sau încarcă un fișier JSON",
-		"chooseFile": "Alege fișierul",
-		"noFileChosen": "Niciun fișier selectat",
-		"importButton": "Importă",
-		"cancelButton": "Anulează",
-		"invalidJson": "JSON invalid",
-		"invalidFile": "Fișier invalid",
-		"errorNotArray": "JSON-ul nu este un array",
-		"errorReadingFile": "Citirea fișierului a eșuat",
-		"nothingToImport": "Nimic de importat",
-		"provideJsonOrFile": "Te rog lipește un JSON sau încarcă un fișier.",
-		"successTitle": "Succes",
-		"successMessage": "Import realizat cu succes!",
-		"errorTitle": "Eroare",
-		"unknownError": "Eroare necunoscută",
-		"confirmMessage": "Urmează să imporți {{count}} depozit(e). Continui?",
-		"jsonPlaceholder": "Exemplu: [{\"id\":\"1\",\"amount\":100}, {\"id\":\"2\",\"amount\":200}]"
-	},
-	"notFound": {
-		"accessDenied": "Acces interzis",
-		"pageNotFound": "Pagină negăsită",
-		"deniedDescription": "Nu aveți permisiunea să accesați această pagină.",
-		"notFoundDescription": "Pagina pe care o cauți nu există.",
-		"yourRole": "Rolul tău",
-		"required": "Necesar",
-		"goHome": "Mergi la Acasă",
-		"goLogin": "Mergi la Autentificare"
-	},
-	"users": {
-		"title": "Utilizatori în sucursală",
-		"branchId": "ID Sucursală",
-		"firstName": "Prenume",
-		"middleName": "Al doilea prenume",
-		"lastName": "Nume",
-		"fullName": "Nume complet",
-		"errorFetch": "Nu s-au putut prelua utilizatorii",
-		"loading": "Se încarcă utilizatorii...",
-		"error": "Eroare"
-	},
-	"userMain": {
-		"loading": "Se încarcă conturile...",
-		"myAccounts": "Conturile mele",
-		"noAccounts": "Nu s-au găsit conturi",
-		"noAccountsDesc": "Nu aveți încă niciun cont. Contactați banca pentru a deschide un cont.",
-		"totalBalance": "Sold total",
-		"accountWithId": "Cont {{id}}",
-		"balance": "Sold",
-		"loadingBalance": "Se încarcă...",
-        "transactionHistoryLabel": "Istoric Tranzactii",
-        "noTransactions": "Nicio tranzactie"
-	},
-	"createDepositDialog": {
-		"title": "Creează Depozit Nou",
-		"steps": {
-			"terms": {
-				"header": "Termeni și Condiții"
-			},
-			"configure": {
-				"header": "Configurare"
-			},
-			"review": {
-				"header": "Revizuire și Confirmare"
-			}
-		},
-		"notifications": {
-			"termsNotAgreed": {
-				"summary": "Termenii nu au fost acceptați",
-				"detail": "Trebuie să fiți de acord cu termenii și condițiile pentru a continua."
-			},
-			"creatingDeposit": {
-				"summary": "Se creează depozitul",
-				"detail": "Se creează depozitul dvs. de ${{amount}}..."
-			},
-			"depositCreated": {
-				"summary": "Depozit Creat",
-				"detail": "Depozitul de ${{amount}} la o dobândă de {{interestRate}}% a fost creat cu succes."
-			},
-			"errorCreatingDeposit": {
-				"summary": "Eroare la Crearea Depozitului",
-				"default": "A apărut o eroare neașteptată."
-			}
-		}
-	},
-	"depositsPage": {
-		"title": "Depozitele Mele",
-		"list": {
-			"title": "Listă Depozite"
-		},
-		"loading": "Se Încarcă depozitele",
-		"noDeposits": "Fără depozite...",
-		"noDepositsFound": "Nu s-au găsit depozite.",
-		"backButton": "Înapoi",
-		"createButton": "+ Creează Depozit Nou",
-		"total": "Total",
-		"deposit": "Depozit",
-		"depositList": "Lista de Depozite"
-	}
+    "reviewStep": {
+      "depositSummary": "Sumar Depozit",
+      "depositAmount": "Suma Depozitului:",
+      "interestRate": "Rata Dobânzii:",
+      "makeChanges": "Modifică",
+      "createDeposit": "Creează Depozit"
+    },
+    "termsStep": {
+      "agreeToTerms": "Am citit și sunt de acord cu termenii și condițiile",
+      "continue": "Continuă"
+    }
+  },
+  "adminPage": {
+    "hello": "Salut",
+    "addUserLabel": "Adaugă utilizator",
+    "exportUserLabel": "Exportă utilizatori",
+    "settingsLabel": "Setări",
+    "importLabel": "Importa",
+    "exportLabel": "Exporta"
+  },
+  "bulkImportDeposits": {
+    "title": "Importare Depozite",
+    "pasteJsonLabel": "Lipește JSON",
+    "uploadFileLabel": "Sau încarcă un fișier JSON",
+    "chooseFile": "Alege fișierul",
+    "noFileChosen": "Niciun fișier selectat",
+    "importButton": "Importă",
+    "cancelButton": "Anulează",
+    "invalidJson": "JSON invalid",
+    "invalidFile": "Fișier invalid",
+    "errorNotArray": "JSON-ul nu este un array",
+    "errorReadingFile": "Citirea fișierului a eșuat",
+    "nothingToImport": "Nimic de importat",
+    "provideJsonOrFile": "Te rog lipește un JSON sau încarcă un fișier.",
+    "successTitle": "Succes",
+    "successMessage": "Import realizat cu succes!",
+    "errorTitle": "Eroare",
+    "unknownError": "Eroare necunoscută",
+    "confirmMessage": "Urmează să imporți {{count}} depozit(e). Continui?",
+    "jsonPlaceholder": "Exemplu: [{\"id\":\"1\",\"amount\":100}, {\"id\":\"2\",\"amount\":200}]"
+  },
+  "notFound": {
+    "accessDenied": "Acces interzis",
+    "pageNotFound": "Pagină negăsită",
+    "deniedDescription": "Nu aveți permisiunea să accesați această pagină.",
+    "notFoundDescription": "Pagina pe care o cauți nu există.",
+    "yourRole": "Rolul tău",
+    "required": "Necesar",
+    "goHome": "Mergi la Acasă",
+    "goLogin": "Mergi la Autentificare"
+  },
+  "users": {
+    "title": "Utilizatori în sucursală",
+    "branchId": "ID Sucursală",
+    "firstName": "Prenume",
+    "middleName": "Al doilea prenume",
+    "lastName": "Nume",
+    "fullName": "Nume complet",
+    "errorFetch": "Nu s-au putut prelua utilizatorii",
+    "loading": "Se încarcă utilizatorii...",
+    "error": "Eroare"
+  },
+  "userMain": {
+    "loading": "Se încarcă conturile...",
+    "myAccounts": "Conturile mele",
+    "noAccounts": "Nu s-au găsit conturi",
+    "noAccountsDesc": "Nu aveți încă niciun cont. Contactați banca pentru a deschide un cont.",
+    "totalBalance": "Sold total",
+    "accountWithId": "Cont {{id}}",
+    "balance": "Sold",
+    "loadingBalance": "Se încarcă...",
+    "transactionHistoryLabel": "Istoric Tranzactii",
+    "noTransactions": "Nicio tranzactie"
+  },
+  "createDepositDialog": {
+    "title": "Creează Depozit Nou",
+    "steps": {
+      "terms": {
+        "header": "Termeni și Condiții"
+      },
+      "configure": {
+        "header": "Configurare"
+      },
+      "review": {
+        "header": "Revizuire și Confirmare"
+      }
+    },
+    "notifications": {
+      "termsNotAgreed": {
+        "summary": "Termenii nu au fost acceptați",
+        "detail": "Trebuie să fiți de acord cu termenii și condițiile pentru a continua."
+      },
+      "creatingDeposit": {
+        "summary": "Se creează depozitul",
+        "detail": "Se creează depozitul dvs. de ${{amount}}..."
+      },
+      "depositCreated": {
+        "summary": "Depozit Creat",
+        "detail": "Depozitul de ${{amount}} la o dobândă de {{interestRate}}% a fost creat cu succes."
+      },
+      "errorCreatingDeposit": {
+        "summary": "Eroare la Crearea Depozitului",
+        "default": "A apărut o eroare neașteptată."
+      }
+    }
+  },
+  "depositsPage": {
+    "title": "Depozitele Mele",
+    "list": {
+      "title": "Listă Depozite"
+    },
+    "loading": "Se Încarcă depozitele",
+    "noDeposits": "Fără depozite...",
+    "noDepositsFound": "Nu s-au găsit depozite.",
+    "backButton": "Înapoi",
+    "createButton": "+ Creează Depozit Nou",
+    "total": "Total",
+    "deposit": "Depozit",
+    "depositList": "Lista de Depozite"
+  },
+  "sendMoneyDialog": {
+    "title": "Trimite Bani",
+    "recipientId": "UUID Destinatar",
+    "amount": "Sumă",
+    "cancel": "Anulează",
+    "send": "Trimite",
+    "notifications": {
+      "sendingMoney": {
+        "summary": "Se trimit banii",
+        "detail": "Se trimit RON{{amount}} către {{recipient}}..."
+      },
+      "moneySent": {
+        "summary": "Bani trimiși",
+        "detail": "S-au trimis cu succes RON{{amount}} către {{recipient}}."
+      },
+      "negativeAmount": {
+        "summary": "Sumă Invalidă",
+        "detail": "Nu puteți trimite o sumă negativă de bani."
+      },
+      "errorSendingMoney": {
+        "summary": "Eroare la trimiterea banilor",
+        "default": "A apărut o eroare neașteptată."
+      }
+    }
+  }
 }

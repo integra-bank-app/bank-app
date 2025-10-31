@@ -43,7 +43,7 @@ public class FeeTaxService {
                             .build()
             );
             try {
-                notificationService.sendNotificationToUser(NotificationType.SUCCESS," A fee and tax of $" + deductedValue + " has been deducted from your account due to low balance.", user.getId());
+                notificationService.sendNotificationToUser(NotificationType.SUCCESS," A fee and tax of RON" + deductedValue + " has been deducted from your account due to low balance.", user.getId());
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
             }
