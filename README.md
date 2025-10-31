@@ -1,14 +1,16 @@
 # Bank App for Integra Project
 
-**Bank App for Integra Project** is a modern, full-stack web application developed as part of the Integra initiative.  
-Its primary purpose is to simulate and manage core banking operations—including user management, account handling, deposits, transactions, and investments—using a secure, scalable, and extensible architecture.
+**Bank App for Integra Project** is a modern, full-stack web application. 
+Its primary purpose is to simulate and manage core banking operations—including user management, account handling, deposits, transactions, investments, and compliance processes—using a secure, scalable, and extensible architecture.
 
 The application is built with Java (Spring Boot) for the backend and TypeScript (React) for the frontend, featuring:
-- robust JWT-based authentication and authorization,
-- internationalization (i18n) for multilingual support,
-- RESTful APIs documented with OpenAPI/Swagger,
-- automated database schema migrations (Flyway),
-- and a responsive UI for both users and admins.
+- Robust JWT-based authentication and authorization
+- Internationalization (i18n) for multilingual support
+- RESTful APIs documented with OpenAPI/Swagger
+- Automated database schema migrations (Flyway)
+- Integration with ANAF (Romanian tax authority) for simulating tax and fee collection
+- Real-time notifications (frontend and backend events)
+- Responsive UI for both users and admins
 
 ## Table of Contents
 
@@ -17,6 +19,8 @@ The application is built with Java (Spring Boot) for the backend and TypeScript 
 - [Security: Login & Registration](#security-login--registration)
 - [Internationalization (i18n)](#internationalization-i18n)
 - [Database Migration](#database-migration)
+- [Notifications](#notifications)
+- [ANAF Integration](#anaf-integration)
 - [OpenAPI Documentation](#openapi-documentation)
 - [API Endpoints](#api-endpoints)
 - [API Request/Response Examples](#api-requestresponse-examples)
@@ -37,67 +41,80 @@ The application is built with Java (Spring Boot) for the backend and TypeScript 
 - **Admin Dashboard:** User and account management, audit logs
 - **RESTful API:** Integration-ready endpoints, documented with OpenAPI/Swagger
 - **Database Migration:** Automated DB migrations for schema updates (Flyway)
+- **ANAF Integration:** Simulates interaction with ANAF for tax and fee collection at branch level
+- **Notifications:** Real-time alerts/updates for users (transaction confirmations, account changes, salary requests)
 
 ---
 
 ## Architecture Overview
 
-The Bank App for Integra Project is built as a modular, full-stack web application, following modern best practices for scalability, maintainability, and security.
+Bank App for Integra Project is built as a modular, full-stack web application, following best practices for scalability, maintainability, and security.
 
 - **Backend:**  
-  Developed in Java using Spring Boot, the backend serves as the core of the application, handling business logic, data storage, security, and API exposure.  
-  It offers RESTful endpoints for all core banking operations (user management, account operations, transactions, deposits, investments, etc.).  
-  Key components include:
-    - **Spring Security:** Ensures robust authentication (JWT) and role-based authorization.
-    - **Database Layer:** Uses JPA/Hibernate for ORM, and Flyway for automated schema migrations.
-    - **OpenAPI/Swagger:** Provides interactive API documentation for developers.
-    - **Internationalization:** Supports multi-language error and response messages.
+  - Java (Spring Boot), JPA/Hibernate ORM, Flyway migrations
+  - Exposes RESTful endpoints for all banking operations (users, accounts, transactions, deposits, investments, taxes).
+  - **Spring Security:** Robust JWT authentication and role-based authorization.
+  - **Internationalization:** Multi-language error/response messages.
+  - **ANAF Simulation:** Branches collect taxes and fees via endpoints simulating communication with ANAF.
+  - **Notifications:** Publishes events for actions (e.g., transaction complete, salary requested). Can be extended to use email, SMS, or push notifications.
+  - **Swagger/OpenAPI:** Interactive documentation for all endpoints.
 
 - **Frontend:**  
-  Built with React and TypeScript, the frontend provides a responsive, user-friendly interface for both regular users and admins.  
-  Key components:
-    - **React Router & State Management:** Efficient navigation and dynamic data handling.
-    - **react-i18next:** Enables multi-language support throughout the user interface.
-    - **API Integration:** Communicates securely with the backend via JWT-protected API calls.
-    - **UI Components:** Uses modern component libraries for a clean and accessible design.
-
-- **Inter-service Communication:**  
-  The frontend consumes backend APIs via REST calls, using JWT tokens for secure communication.
+  - TypeScript (React), react-i18next (i18n), modern UI component libraries
+  - Responsive user/admin interface for all banking features
+  - **Notifications:** Displays alerts for important events (e.g., transfer success, deposit creation)
+  - **API Integration:** Uses JWT to securely access backend endpoints
 
 - **Deployment:**  
-  Both backend and frontend are containerized with Docker, making it easy to deploy and scale in various environments.
-
-This architecture ensures that the application is extensible (easy to add new modules), secure (modern authentication and authorization), and user-centric (responsive, localized UI).
+  Both backend and frontend are containerized with Docker, supporting easy local development and production scaling.
 
 ---
 
 ## Security: Login & Registration
 
 - **JWT Authentication:** All API endpoints require a valid JWT token in the `Authorization` header.
-- **Registration:** Users can sign up with email and password (securely hashed).
+- **Registration:** Users sign up with email and password (securely hashed).
 - **Password Reset:** Secure flows for forgotten passwords.
-- **Role-based Access:** Endpoints are protected according to user roles (`user`, `admin`).
+- **Role-based Access Control:** Endpoints protected for `user` and `admin` roles.
 
 ---
 
 ## Internationalization (i18n)
 
 - **Frontend:** Uses [react-i18next](https://react.i18next.com/) for UI translations.
-- **Backend:** Localized error and response messages; supports language preference via the `Accept-Language` header.
+- **Backend:** Localized error and response messages, `Accept-Language` header supported.
 
 ---
 
 ## Database Migration
 
 - **Tool:** [Flyway](https://flywaydb.org/) is used for database schema migrations.
-- **Workflow:** On backend startup, Flyway automatically applies migrations from `src/main/resources/db/migration`.
-- **Configuration:** Database connection via the `DB_URL` environment variable in `application.properties`.
+- **Workflow:** Migrations applied automatically from `src/main/resources/db/migration` on backend startup.
+- **Configuration:** Database via `DB_URL` in `application.properties`.
+
+---
+
+## Notifications
+
+- **Transaction alerts:** Users receive confirmations for transfers, deposits, withdrawals.
+- **Account updates:** Changes to user/account info trigger notifications.
+- **Salary requests:** Admin actions or salary disbursements notify users.
+- **Branch operations:** Tax/fee collections (ANAF simulation) can notify branch managers.
+- **Tech:** Notifications are displayed in the frontend UI; backend can be extended for email, SMS, or push.
+
+---
+
+## ANAF Integration
+
+- **Purpose:** Simulates communication with ANAF (Agenția Națională de Administrare Fiscală) for tax and fee collection.
+- **Endpoints:** Branches can collect taxes/fees, and export related data.
+- **Extensibility:** Designed for real ANAF API integration in future roadmap.
 
 ---
 
 ## OpenAPI Documentation
 
-- **Swagger UI:** Interactive API docs available at `/swagger-ui.html` on the backend after startup.
+- **Swagger UI:** Interactive docs at `/swagger-ui.html` after backend starts.
 - **OpenAPI Spec:** Available at `/v3/api-docs` (JSON).
 
 ---
@@ -122,7 +139,7 @@ All endpoints are available under the `/api` prefix and require JWT authenticati
 
 ### Branch Management
 - `GET /api/branches/{branchId}/users?page={page}&size={size}` – List users for a branch (paginated)
-- `POST /api/branches/{branchId}/collect-taxes-and-fees` – Collect taxes and fees for branch
+- `POST /api/branches/{branchId}/collect-taxes-and-fees` – Collect taxes and fees for branch (simulated ANAF integration)
 
 ### Deposits
 - `GET /api/deposits/{userId}` – List deposits for a user
@@ -227,6 +244,39 @@ Authorization: Bearer <JWT_TOKEN>
 
 ---
 
+### Simulate ANAF Tax Collection
+
+**Request**
+```http
+POST /api/branches/{branchId}/collect-taxes-and-fees
+Authorization: Bearer <JWT_TOKEN>
+```
+
+**Response**
+```json
+{
+  "collectedAmount": 3200.00
+}
+```
+
+---
+
+### Notification Example
+
+**Scenario:**  
+A user requests a salary payout. Upon completion, the system sends a notification (visible in the UI, or potentially via email/push).
+
+**Notification**
+```json
+{
+  "type": "salaryRequest",
+  "message": "Your salary request has been processed.",
+  "timestamp": "2025-10-31T06:40:00Z"
+}
+```
+
+---
+
 ## Backend
 
 - **Tech:** Java (Spring Boot), Mustache, Flyway, OpenAPI/Swagger
@@ -281,8 +331,9 @@ Authorization: Bearer <JWT_TOKEN>
 - Advanced transaction filtering/search
 - Accessibility improvements for frontend
 - Performance and scalability enhancements
+- Real ANAF API integration for production scenarios
+- Push/email/SMS notification channels
 
 ---
 
 ## Screenshots
-<!-- Add screenshots here if available -->
