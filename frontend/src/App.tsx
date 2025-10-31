@@ -20,6 +20,8 @@ import { ProtectedRoute, PublicRoute } from "./components/ProtectedRoute";
 import ProtectedLayout from "./components/ProtectedLayout";
 import PublicLayout from "./components/PublicLayout";
 
+import { Link } from "react-router-dom";
+import {InvestmentsPage} from "./pages/InvestmentsPage/InvestmentPage";
 function App() {
 	return (
 		<PrimeReactProvider>
@@ -34,12 +36,12 @@ function App() {
 									<Route path="/register" element={<RegisterPage />} />
 								</Route>
 							</Route>
-
 							{/* Protected Routes */}
 							<Route element={<ProtectedRoute />}>
 								<Route element={<ProtectedLayout />}>
 									<Route path="/home" element={<UserMainPage />} />
 									<Route path="/deposits" element={<DepositsPage />} />
+									<Route path="/investments" element={<InvestmentsPage />} />
 									<Route path="/" element={<StartComponent />} />
 									<Route element={<ProtectedRoute requiredRole="ADMIN" />}>
 										<Route path="/admin" element={<AdminPageComponent />} />

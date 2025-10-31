@@ -72,7 +72,7 @@ const Sidebar: React.FC = () => {
 					</li>
 					<li>
 						<Button
-							icon="pi pi-chart-line"
+							icon="pi pi-chart-pie"
 							label={collapsed ? "" : t("header.deposits")}
 							className={`w-full ${
 								collapsed
@@ -80,6 +80,18 @@ const Sidebar: React.FC = () => {
 									: "justify-content-start"
 							} ${getButtonClass("/deposits")}`}
 							onClick={() => navigate("/deposits")}
+						/>
+					</li>
+					<li>
+						<Button
+							icon="pi pi-chart-line"
+							label={collapsed ? "" : t("header.investments")}
+							className={`w-full ${
+								collapsed
+									? "h-3rem w-3rem justify-content-center"
+									: "justify-content-start"
+							} ${getButtonClass("/investments")}`}
+							onClick={() => navigate("/investments")}
 						/>
 					</li>
 					{user?.role === "ADMIN" && (

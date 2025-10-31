@@ -13,3 +13,4 @@ export type TUser = {
 	middleName?: string;
 	lastName: string;
 };
+
