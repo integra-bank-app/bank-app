@@ -38,6 +38,30 @@ export default function UserMainPage() {
     const [loading, setLoading] = useState(true);
     const {t} = useTranslation();
 
+    const fetchAndSetTransactions = useCallback(async (userId: string, token: string) => {
+        try {
+            const transactionsResponse = await fetch(
+                `http://localhost:8080/api/users/${userId}/transactions`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+            if (transactionsResponse.ok) {
+                const fetchedTransactions: Transaction[] = await transactionsResponse.json();
+                setTransactions(fetchedTransactions);
+            } else {
+                setTransactions([]);
+                console.error("Failed to fetch transactions");
+            }
+        } catch (err) {
+            console.error("Error fetching transactions:", err);
+            setTransactions([]);
+        }
+    }, [setTransactions]);
+
     const fetchUserData = useCallback(async () => {
         if (!user?.id) {
             setLoading(false);
@@ -109,21 +133,7 @@ export default function UserMainPage() {
             setTotalBalance(total);
 
             // Transactions
-            const transactionsResponse = await fetch(
-                `http://localhost:8080/api/users/${user.id}/transactions`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "application/json",
-                    },
-                });
-            if (transactionsResponse.ok) {
-                const fetchedTransactions: Transaction[] = await transactionsResponse.json();
-                setTransactions(fetchedTransactions); // Save transactions to state
-            } else {
-                setTransactions([]); // Set empty array on failure
-                console.error("Failed to fetch transactions");
-            }
+            await fetchAndSetTransactions(user.id, token);
 
         } catch (err) {
             console.error("Error fetching user data:", err);
